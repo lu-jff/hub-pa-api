@@ -10,6 +10,7 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+- template: azure-templates/setup-project.yml
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
