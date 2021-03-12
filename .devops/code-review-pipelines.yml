@@ -13,6 +13,7 @@ steps:
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
+    options: '-DskipTests'
     mavenOptions: '-Xmx3072m'
     javaHomeOption: 'JDKVersion'
     jdkVersionOption: '1.8'
@@ -20,3 +21,4 @@ steps:
     publishJUnitResults: false
 #    testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
+    sonarQubeRunAnalysis: true
