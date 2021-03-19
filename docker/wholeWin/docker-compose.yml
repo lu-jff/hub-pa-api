@@ -1,0 +1,42 @@
+version: '2'
+
+services:
+  microservice:
+    image: 'hub-pa-api:latest'
+    build:
+      context: ./microservice
+    ports:
+      - "8081:8081"
+    container_name: hub-pa-api
+    depends_on:
+      - postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/hubpa
+      - SPRING_DATASOURCE_USERNAME=postgres-user-test
+      - SPRING_DATASOURCE_PASSWORD=postgres-pwd-test
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+          
+  auth-service:
+    image: 'hub-pa-api2:latest'
+    build:
+      context: ./auth-service
+    ports:
+      - "8080:8080"
+    container_name: hub-pa-api2
+    depends_on:
+      - postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/hubpa
+      - SPRING_DATASOURCE_USERNAME=postgres-user-test
+      - SPRING_DATASOURCE_PASSWORD=postgres-pwd-test
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+          
+  postgres:
+    image: 'postgres'
+    build:
+      context: ./postgres
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres-user-test
+      - POSTGRES_PASSWORD=postgres-pwd-test
+      - POSTGRES_DB=hubpa
