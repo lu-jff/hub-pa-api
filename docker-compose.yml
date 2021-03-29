@@ -1,0 +1,51 @@
+version: '3.3'
+
+services:
+  
+  auth-spid:
+    build:
+      context: ./auth-spid
+      dockerfile: ./Dockerfile
+    environment:
+      - NODE_ENV=dev
+      - REDIS_URL=redis://redis
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
+    image: node:10.14.2-alpine
+    working_dir: /usr/src/app
+    command: ["yarn", "dev"]
+    depends_on:
+      - spid-testenv2
+    
+
+  spid-testenv2:
+    image: italia/spid-testenv2:1.1.0
+    ports:
+      - "8088:8088"
+    volumes:
+      - "./auth-spid/conf-testenv/config.yaml:/app/conf/config.yaml"
+      - "./auth-spid/conf-testenv/users.json:/app/conf/users.json"
+    depends_on:
+      - redis
+
+  
+  redis:
+    image: wodby/redis:3.2-2.1.5
+    environment:
+      REDIS_TIMEOUT: 300
+      REDIS_TCP_KEEPALIVE: 60
+      REDIS_MAXMEMORY: 182m
+    
+          
+  postgres:
+    image: 'postgres'
+    build:
+      context: ./postgres
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres-user-test
+      - POSTGRES_PASSWORD=postgres-pwd-test
+      - POSTGRES_DB=hubpa
