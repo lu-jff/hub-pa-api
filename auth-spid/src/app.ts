@@ -106,8 +106,6 @@ const acs: AssertionConsumerServiceT = async user => {
   /* Should validate the user */
   // Create token
   const token = crypto.randomBytes(32).toString("hex");
-  debug("*** ACS : TOKEN ***", token);
-  debug("*** ACS : USER  ***", user);
 
   // Write token in redis
   redisClient.set(
@@ -118,7 +116,6 @@ const acs: AssertionConsumerServiceT = async user => {
     (err, response) =>
       new Error("Error setting session token")
   );
-
 
   // Add token in query string
   return ResponsePermanentRedirect({
