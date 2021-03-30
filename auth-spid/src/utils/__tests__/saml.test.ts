@@ -3,7 +3,7 @@ import { isSome, tryCatch } from "fp-ts/lib/Option";
 import { fromEither } from "fp-ts/lib/TaskEither";
 import { SamlConfig } from "passport-saml";
 import { DOMParser } from "xmldom";
-import { EventTracker } from "../../index";
+import { EventTracker } from "../../spid/spid";
 import {
   getSamlAssertion,
   getSamlResponse,
