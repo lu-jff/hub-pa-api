@@ -25,8 +25,7 @@
 	</properties>
 	<modules>
 		<module>microservice</module>
-		<module>spid-spring-integration</module>
-		<module>auth-service</module>
+		
 	</modules>
 
 
