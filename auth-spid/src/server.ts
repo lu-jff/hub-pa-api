@@ -1,5 +1,5 @@
 import * as express from "express";
-import { createAppTask } from './app';
+import { createAppTask } from "./app";
 
 // Create a Proxy to forward local calls to spid validator container
 const proxyApp = express();

@@ -20,6 +20,7 @@ import {
 import { withSpid, IApplicationConfig } from "@pagopa/io-spid-commons";
 import { IServiceProviderConfig } from "./utils/middleware";
 import { SamlAttributeT } from "./utils/saml";
+import { promisify } from "util";
 
 export const SpidUser = t.intersection([
   t.interface({
@@ -84,6 +85,8 @@ const serviceProviderConfig: IServiceProviderConfig = {
 const redisClient = redis.createClient({
   host: process.env.REDIS_HOST // Can't work in production
 });
+
+const redisGetAsync = promisify(redisClient.get).bind(redisClient);
 
 const samlConfig: SamlConfig = {
   RACComparison: "minimum",
@@ -154,13 +157,6 @@ export const createAppTask = withSpid({
 })
   .map(({ app: withSpidApp, idpMetadataRefresher }) => {
     withSpidApp.get("/success", (req, res) => {
-      // Receive token in query string
-      debug("*** SUCCESS : HEADERS ***", req.headers);
-      debug("*** SUCCESS : PAYLOAD ***", req.body);
-      debug("*** SUCCESS : TOKEN   ***", req.query.token);
-      debug("*** SUCCESS : SESSION ***", redisClient.get(`session-token:${req.query.token}`, (_, value) => {
-        debug("*** SUCCESS : VALUE   ***", value);
-      }));
 
       return res.json({
         success: "success",
@@ -181,6 +177,11 @@ export const createAppTask = withSpid({
       res.json({
         metadataUpdate: "completed"
       });
+    });
+    withSpidApp.post("/introspect", async (req, res) => {
+      res.json({
+        active: (await redisGetAsync(`session-token:${req.body.token}`)) !== null
+      })
     });
     withSpidApp.use(
       (

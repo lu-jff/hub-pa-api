@@ -16,6 +16,9 @@
   "scripts": {
     "prebuild": "shx rm -rf dist",
     "build": "tsc",
+    "start": " node -r dotenv/config dist/server.jst",
+    "premake-certs": "shx rm -rf certs && shx mkdir certs",
+    "make-certs": "./scripts/make-certs.sh",
     "dev": "nodemon --inspect=0.0.0.0 dist/server.js",
     "postversion": "git push && git push --tags",
     "test": "jest -i",
@@ -38,6 +41,7 @@
     "auto-changelog": "^2.2.1",
     "danger": "^7.0.0",
     "danger-plugin-digitalcitizenship": "*",
+    "dotenv": "^8.2.0",
     "express": "4.17.0",
     "italia-tslint-rules": "*",
     "jest": "^24.8.0",
