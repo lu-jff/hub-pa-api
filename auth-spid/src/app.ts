@@ -82,7 +82,7 @@ const serviceProviderConfig: IServiceProviderConfig = {
 };
 
 const redisClient = redis.createClient({
-  host: "redis" // Can't work in production
+  host: process.env.REDIS_HOST // Can't work in production
 });
 
 const samlConfig: SamlConfig = {

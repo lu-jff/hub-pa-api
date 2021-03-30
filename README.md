@@ -40,10 +40,6 @@ From the root dir of the project
 ## Use docker for the whole system
 
 ```
-> cd microservice
-> ./mvnw clean package -DskipTests
-> cp target/hub-pa-api-0.0.1-SNAPSHOT.jar ../docker/whole/microservice
-> cd ../docker/whole
 > docker-compose up --build
 ```
 
@@ -52,6 +48,18 @@ To shutdown press `CTRL+C` then the following command
 ```
 > docker-compose down
 ```
+
+## Test SPID
+
+Point the browser to 
+
+```
+http://localhost:3000/login?entityID=xx_testenv2&authLevel=SpidL2
+```
+
+and use one of the identities in `auth-spid/conf-testenv/users.json`.
+
+Auth workflow should end with the browser receiving a `sessionToken` in the body.
 
 ## Test the endpoint
 
