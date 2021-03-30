@@ -4,12 +4,11 @@ import { fromEither } from "fp-ts/lib/TaskEither";
 import { ResponsePermanentRedirect } from "italia-ts-commons/lib/responses";
 import { createMockRedis } from "mock-redis-client";
 import { RedisClient } from "redis";
-import {
-  IApplicationConfig,
-  IServiceProviderConfig,
-  SamlConfig,
-  withSpid
-} from "../";
+import { SamlConfig } from "passport-saml";
+import { withSpid, IApplicationConfig } from "@pagopa/io-spid-commons";
+import { IServiceProviderConfig } from "../utils/middleware";
+
+
 import { IDPEntityDescriptor } from "../types/IDPEntityDescriptor";
 import * as metadata from "../utils/metadata";
 import { getSpidStrategyOption } from "../utils/middleware";
@@ -84,19 +83,17 @@ const IDPMetadataUrl =
 const spidCieUrl =
   "https://preproduzione.idserver.servizicie.interno.gov.it/idp/shibboleth?Metadata";
 
-const expectedLoginPath = "/login";
-const expectedSloPath = "/logout";
-const expectedAssertionConsumerServicePath = "/assertionConsumerService";
-const metadataPath = "/metadata";
 
-const appConfig: IApplicationConfig = {
-  assertionConsumerServicePath: expectedAssertionConsumerServicePath,
+export const appConfig: IApplicationConfig = {
+  assertionConsumerServicePath: '/acs',
   clientErrorRedirectionUrl: "/error",
   clientLoginRedirectionUrl: "/success",
-  loginPath: expectedLoginPath,
-  metadataPath,
-  sloPath: expectedSloPath
+  loginPath: "/login",
+  metadataPath: "/metadata",
+  sloPath: "/logout",
+  spidLevelsWhitelist: ["SpidL1", "SpidL2", "SpidL3"],
 };
+
 
 const samlConfig: SamlConfig = {
   RACComparison: "minimum",
@@ -159,7 +156,10 @@ describe("spid-express withSpid", () => {
       acs: async () => ResponsePermanentRedirect({ href: "/success?acs" }),
       logout: async () => ResponsePermanentRedirect({ href: "/success?logout" })
     }).run();
+
+
     expect(mockFetchIdpsMetadata).toBeCalledTimes(3);
+    
     const emptySpidStrategyOption = getSpidStrategyOption(spid.app);
     expect(emptySpidStrategyOption).toHaveProperty("idp", {});
 
