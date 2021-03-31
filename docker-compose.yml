@@ -1,6 +1,21 @@
 version: '3.3'
 
 services:
+
+  microservice:
+    image: 'microservice:latest'
+    build:
+      context: ./microservice
+    ports:
+      - "8081:8081"
+    container_name: microservice
+    depends_on:
+      - postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/hubpa
+      - SPRING_DATASOURCE_USERNAME=postgres-user-test
+      - SPRING_DATASOURCE_PASSWORD=postgres-pwd-test
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
   
   auth-spid:
     build:
