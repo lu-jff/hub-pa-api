@@ -17,6 +17,21 @@ services:
       - SPRING_DATASOURCE_PASSWORD=postgres-pwd-test
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
   
+  ente-creditore:
+    image: 'ente-creditore:latest'
+    build:
+      context: ./ente-creditore
+    ports:
+      - "8082:8082"
+    container_name: ente-creditore
+    depends_on:
+      - postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/entec
+      - SPRING_DATASOURCE_USERNAME=postgres-user-test
+      - SPRING_DATASOURCE_PASSWORD=postgres-pwd-test
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+  
   auth-spid:
     build:
       context: ./auth-spid
@@ -57,13 +72,12 @@ services:
           
   postgres:
     image: 'postgres'
-    build:
-      context: ./postgres
     container_name: postgres
+    volumes:
+      - "./postgres/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh"
     environment:
       - POSTGRES_USER=postgres-user-test
       - POSTGRES_PASSWORD=postgres-pwd-test
-      - POSTGRES_DB=hubpa
       
   api-gateway:
     image: nginx
