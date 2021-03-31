@@ -1,10 +1,10 @@
-package it.gov.pagopa.hubpa.api.customer;
+package it.gov.pagopa.hubpa.api.ente;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "customer")
-public class Customer {
+@Table(name = "ente")
+public class EnteCreditore {
 
     @Id
     @GeneratedValue(generator = "customer_generator")
