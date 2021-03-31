@@ -176,8 +176,11 @@ export const createAppTask = withSpid({
       });
     });
     withSpidApp.post("/introspect", async (req, res) => {
+      const token = req.headers.authorization?.substr(7);
+      debug("INTROSPECTION", `session-token:${token}` );
+
       res.json({
-        active: (await redisGetAsync(`session-token:${req.body.token}`)) !== null
+        active: (await redisGetAsync(`session-token:${token}`)) !== null
       })
     });
     withSpidApp.use(
