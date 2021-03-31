@@ -15,7 +15,6 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.4.3</version>
-		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
 
@@ -24,8 +23,8 @@
 		<spring.version>4.3.0.RELEASE</spring.version>
 	</properties>
 	<modules>
+	
 		<module>microservice</module>
-		
 	</modules>
 
 
