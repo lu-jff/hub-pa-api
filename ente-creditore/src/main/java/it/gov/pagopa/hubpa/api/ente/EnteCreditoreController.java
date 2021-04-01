@@ -35,16 +35,5 @@ public class EnteCreditoreController {
     return modelMapper.map(ecEntity, EnteCreditoreMinimalDto.class);
   }
 
-  /*
-   * private Post convertToEntity(PostDto postDto) throws ParseException { Post
-   * post = modelMapper.map(postDto, Post.class); post.setSubmissionDate(
-   * postDto.getSubmissionDateConverted(userService.getCurrentUser().getPreference
-   * ().getTimezone()));
-   * 
-   * if (postDto.getId() != null) { Post oldPost =
-   * postService.getPostById(postDto.getId());
-   * post.setRedditID(oldPost.getRedditID()); post.setSent(oldPost.isSent()); }
-   * return post; }
-   */
 
 }
