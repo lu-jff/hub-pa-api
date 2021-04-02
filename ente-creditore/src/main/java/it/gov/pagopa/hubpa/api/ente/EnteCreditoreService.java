@@ -9,9 +9,14 @@ public class EnteCreditoreService {
   @Autowired
   private EnteCreditoreRepository enteCreditoreRepository;
 
-  public EnteCreditoreEntity getEnteCreditoreByRefP(String codiceFiscaleRefP) {
+  public EnteCreditoreEntity getByRefP(String codiceFiscaleRefP) {
 
     return enteCreditoreRepository.findEnteCreditoreByCodiceFiscaleRp(codiceFiscaleRefP);
+  }
+
+  public EnteCreditoreEntity create(EnteCreditoreEntity ecEntity) {
+    return enteCreditoreRepository.save(ecEntity);
+
   }
 
 }

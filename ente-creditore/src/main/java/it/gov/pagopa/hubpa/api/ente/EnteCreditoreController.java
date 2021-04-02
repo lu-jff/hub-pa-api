@@ -6,7 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
+import java.text.ParseException;
 
 @RestController
 public class EnteCreditoreController {
@@ -19,21 +20,24 @@ public class EnteCreditoreController {
 
   Logger logger = LoggerFactory.getLogger(EnteCreditoreController.class);
 
+  @PostMapping(value = "ente")
+  @ResponseStatus(HttpStatus.CREATED)
+  @ResponseBody
+  public EnteCreditoreDto createPost(@RequestBody EnteCreditoreDto ecDto) throws ParseException {
+    EnteCreditoreEntity ecCreated = enteCreditoreService.create(modelMapper.map(ecDto, EnteCreditoreEntity.class));
+    return modelMapper.map(ecCreated, EnteCreditoreDto.class);
+  }
+
   @GetMapping(value = "/ente/{codiceFiscaleRefP}")
   public EnteCreditoreMinimalDto getEnteCreditoreByRefP(@PathVariable("codiceFiscaleRefP") String codiceFiscaleRefP) {
     logger.info("GET ENTE CREDITORE BY REF-P");
-    EnteCreditoreEntity ecE = enteCreditoreService.getEnteCreditoreByRefP(codiceFiscaleRefP);
+    EnteCreditoreEntity ecE = enteCreditoreService.getByRefP(codiceFiscaleRefP);
     if (ecE != null) {
-      return convertToDto(ecE);
+      return modelMapper.map(ecE, EnteCreditoreMinimalDto.class);
     } else {
       return null;
     }
 
   }
-
-  private EnteCreditoreMinimalDto convertToDto(EnteCreditoreEntity ecEntity) {
-    return modelMapper.map(ecEntity, EnteCreditoreMinimalDto.class);
-  }
-
 
 }
