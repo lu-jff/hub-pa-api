@@ -1,0 +1,140 @@
+swagger: '2.0'
+info:
+  description: Servizi rest di autenticazione SPID per l'applicazione TariTefa
+  version: 0.0.1
+  title: SPID REST API
+host: 'localhost:8083'
+basePath: /
+tags:
+  - name: service-management-controller
+    description: Service Management Controller
+paths:
+  /service:
+    post:
+      tags:
+        - service-management-controller
+      summary: Salva il tributo
+      description: Servizio REST per creare un tributo
+      operationId: saveServiceUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: tributeService
+          description: Modello del tributo
+          required: true
+          schema:
+            $ref: '#/definitions/TributeServiceModel'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ServiceConfiguratedModel'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/service/info/{creditorId}':
+    get:
+      tags:
+        - service-management-controller
+      summary: Indica se è presente un tributo
+      description: Servizio REST per ottenere l'informazione della presenza di un tributo configurato
+      operationId: isServiceConfiguratedUsingGET
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: creditorId
+          in: path
+          description: creditorId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ServiceConfiguratedModel'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/service/{creditorId}':
+    get:
+      tags:
+        - service-management-controller
+      summary: Recupera i dati del tributo
+      description: Servizio REST per recuperare i dati di un tributo
+      operationId: getServiceUsingGET
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: creditorId
+          in: path
+          description: creditorId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/TributeServiceModel'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+definitions:
+  InstallmentModel:
+    type: object
+    properties:
+      dueDate:
+        type: string
+        format: date
+      percentagePrimary:
+        type: number
+      percentageSecondary:
+        type: number
+  ServiceConfiguratedModel:
+    type: object
+    properties:
+      result:
+        type: boolean
+  TributeServiceModel:
+    type: object
+    properties:
+      denomination:
+        type: string
+      dueDateUnique:
+        type: string
+        format: date
+      ibanPrimary:
+        type: string
+      ibanSecondary:
+        type: string
+      idPrimaryCreditor:
+        type: integer
+        format: int64
+      idSecondaryCreditor:
+        type: integer
+        format: int64
+      installments:
+        type: array
+        items:
+          $ref: '#/definitions/InstallmentModel'
+      percentageSecondary:
+        type: number
