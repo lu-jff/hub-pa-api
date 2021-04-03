@@ -26,6 +26,7 @@
 	<modules>
 		<module>microservice</module>
 		<module>ente-creditore</module>
+		<module>service-managment</module>
 	</modules>
 
 
