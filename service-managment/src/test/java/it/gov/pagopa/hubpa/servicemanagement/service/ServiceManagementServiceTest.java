@@ -17,8 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import it.gov.pagopa.hubpa.servicemanagement.entity.Service;
 import it.gov.pagopa.hubpa.servicemanagement.mock.ServiceMock;
-import it.gov.pagopa.hubpa.servicemanagement.mock.TributeServiceModelMock;
-import it.gov.pagopa.hubpa.servicemanagement.model.TributeServiceModel;
 import it.gov.pagopa.hubpa.servicemanagement.repository.ServiceRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -45,16 +43,15 @@ class ServiceManagementServiceTest {
 	serviceMockList.add(serviceMock);
 
 	when(serviceRepository.findByCreditorId(any(Long.class))).thenReturn(serviceMockList);
-	TributeServiceModel tributeServiceModel = serviceManagementService.getService(5L);
-	assertThat(tributeServiceModel.getDenomination()).isEqualTo("TariTefa2021");
+	Service serviceModel = serviceManagementService.getService(5L);
+	assertThat(serviceModel.getDenomination()).isEqualTo("TariTefa2021");
     }
 
     @Test
     void saveServiceTest() throws ServletException {
 	Service serviceMock = ServiceMock.getMock();
-	TributeServiceModel tributeServiceModelMock = TributeServiceModelMock.getMock();
 	when(serviceRepository.saveAndFlush(any(Service.class))).thenReturn(serviceMock);
-	Boolean result = serviceManagementService.saveService(tributeServiceModelMock);
+	Boolean result = serviceManagementService.saveService(serviceMock);
 	assertThat(result).isTrue();
     }
 }
