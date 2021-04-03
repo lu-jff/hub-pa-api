@@ -32,6 +32,22 @@ services:
       - SPRING_DATASOURCE_PASSWORD=postgres-pwd-test
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
   
+  service-managment:
+    image: 'service-managment:latest'
+    build:
+      context: ./service-managment
+    ports:
+      - "8083:8083"
+    container_name: service-managment
+    depends_on:
+      - postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/sermng
+      - SPRING_DATASOURCE_USERNAME=postgres-user-test
+      - SPRING_DATASOURCE_PASSWORD=postgres-pwd-test
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_CORS_ORIGINS=http://localhost:8083,http://service-managment:8083
+  
   auth-spid:
     build:
       context: ./auth-spid
