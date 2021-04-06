@@ -6,7 +6,6 @@ import it.gov.pagopa.hubpa.servicemanagement.entity.PaymentOptionTemplate;
 import it.gov.pagopa.hubpa.servicemanagement.entity.Service;
 import it.gov.pagopa.hubpa.servicemanagement.entity.TransferTemplate;
 
-
 public class ServiceMock {
     public final static Service getMock() {
 	Service ss = new Service();
@@ -65,7 +64,7 @@ public class ServiceMock {
 	pp.addTransferTemplate(tt);
 	ss.removePaymentOptionTemplate(pp);
 	ss.addPaymentOptionTemplate(pp);
-	
+
 	// installment 3
 	pp = new PaymentOptionTemplate();
 	pp.setDueDate(LocalDate.now().plusMonths(4));
@@ -87,4 +86,5 @@ public class ServiceMock {
 
 	return ss;
     }
+
 }
