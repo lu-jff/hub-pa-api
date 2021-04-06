@@ -94,6 +94,13 @@ public class TributeServiceModelMock {
 	return modelMock;
     }
 
+    public final static TributeServiceModel validationKOCase8() {
+	TributeServiceModel modelMock = validationOKCase1();
+	modelMock.setIbanPrimary("IT0121221212121212121212121122121212121");
+	modelMock.setIbanSecondary("IT0121221212121212121212121122121212121");
+	return modelMock;
+    }
+
     public final static TributeServiceModel validationOKCase2() {
 	TributeServiceModel modelMock = TributeServiceModelMock.validationOKCase1();
 	modelMock.setDueDateUnique(null);

@@ -118,6 +118,8 @@ class ServiceManagementControllerTest {
 	assertThat(results.hasErrors()).isTrue();
 	results = getResultValidation(TributeServiceModelMock.validationKOCase7());
 	assertThat(results.hasErrors()).isTrue();
+	results = getResultValidation(TributeServiceModelMock.validationKOCase8());
+	assertThat(results.hasErrors()).isTrue();
 
 	results = getResultValidation(TributeServiceModelMock.validationOKCase2());
 	assertThat(results.hasErrors()).isFalse();
