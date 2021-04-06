@@ -10,6 +10,14 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+  
+# Prepare Analysis Configuration task
+- task: SonarQubePrepare@4
+  inputs:
+    SonarQube: $(SONARURL)
+    scannerMode: 'Other'
+    extraProperties: 'sonar.projectKey=$(SONARPRJKEY)'
+    
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
@@ -21,4 +29,9 @@ steps:
     publishJUnitResults: false
 #    testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
-#    sonarQubeRunAnalysis: true
+    sonarQubeRunAnalysis: true
+
+# Publish Quality Gate Result task
+- task: SonarQubePublish@4
+  inputs:
+    pollingTimeoutSec: '300'
