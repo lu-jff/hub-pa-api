@@ -10,7 +10,6 @@ public class EnteCreditoreService {
   private EnteCreditoreRepository enteCreditoreRepository;
 
   public EnteCreditoreEntity getByRefP(String codiceFiscaleRefP) {
-
     return enteCreditoreRepository.findEnteCreditoreByCodiceFiscaleRp(codiceFiscaleRefP);
   }
 
