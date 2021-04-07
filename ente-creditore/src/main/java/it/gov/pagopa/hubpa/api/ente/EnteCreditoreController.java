@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 
-import java.text.ParseException;
-
 @RestController
 public class EnteCreditoreController {
 
@@ -23,8 +21,9 @@ public class EnteCreditoreController {
   @PostMapping(value = "ente")
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
-  public EnteCreditoreDto createPost(@RequestBody EnteCreditoreDto ecDto) throws ParseException {
+  public EnteCreditoreDto createPost(@RequestBody EnteCreditoreDto ecDto) {
     EnteCreditoreEntity ecCreated = enteCreditoreService.create(modelMapper.map(ecDto, EnteCreditoreEntity.class));
+
     return modelMapper.map(ecCreated, EnteCreditoreDto.class);
   }
 
