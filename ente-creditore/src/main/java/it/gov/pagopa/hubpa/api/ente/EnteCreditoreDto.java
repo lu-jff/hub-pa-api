@@ -1,6 +1,6 @@
 package it.gov.pagopa.hubpa.api.ente;
 
-import java.sql.Date;
+import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,6 +29,7 @@ public class EnteCreditoreDto {
     private String telefonoRt;
     private String cellulareRt;
     private Integer statoConnessione;
+    private String modello;
     private Date dataCollaudo;
     private Date dataPreEsercizio;
     private Date dataEsercizio;
@@ -38,5 +39,5 @@ public class EnteCreditoreDto {
     private String codiceInterbancario;
     private String idStazione;
     private String statoAssociazione;
-    private String dataStatoAssociazione;
+    private Date dataStatoAssociazione;
 }

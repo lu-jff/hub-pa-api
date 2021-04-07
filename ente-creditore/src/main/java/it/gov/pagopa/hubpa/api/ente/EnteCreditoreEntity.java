@@ -1,6 +1,6 @@
 package it.gov.pagopa.hubpa.api.ente;
 
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.*;
 
@@ -59,7 +59,7 @@ public class EnteCreditoreEntity {
     private String denominazioneEnte;
 
     // codAmm istsc_baee15800a (Foreign Key)
-    @Column(name = "codAmm", nullable = false)
+    @Column(name = "codAmm")
     private String codAmm;
 
     // codiceFiscale 80012320729
@@ -134,6 +134,10 @@ public class EnteCreditoreEntity {
     @Column(name = "statoConnessione")
     private Integer statoConnessione;
 
+    // modello MODELLO 3
+    @Column(name = "modello")
+    private String modello;
+
     // dataCollaudo NULL
     @Column(name = "dataCollaudo")
     private Date dataCollaudo;
@@ -172,5 +176,5 @@ public class EnteCreditoreEntity {
 
     // dataStatoAssociazione 2018-07-19
     @Column(name = "dataStatoAssociazione")
-    private String dataStatoAssociazione;
+    private Date dataStatoAssociazione;
 }
