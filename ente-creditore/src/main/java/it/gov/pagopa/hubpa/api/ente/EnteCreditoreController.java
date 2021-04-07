@@ -16,20 +16,11 @@ public class EnteCreditoreController {
   @Autowired
   private ModelMapper modelMapper;
 
-  Logger logger = LoggerFactory.getLogger(EnteCreditoreController.class);
-
-  @PostMapping(value = "ente")
-  @ResponseStatus(HttpStatus.CREATED)
-  @ResponseBody
-  public EnteCreditoreDto createPost(@RequestBody EnteCreditoreDto ecDto) {
-    EnteCreditoreEntity ecCreated = enteCreditoreService.create(modelMapper.map(ecDto, EnteCreditoreEntity.class));
-
-    return modelMapper.map(ecCreated, EnteCreditoreDto.class);
-  }
+  private Logger logger = LoggerFactory.getLogger(EnteCreditoreController.class);
 
   @GetMapping(value = "/ente/{codiceFiscaleRefP}")
   public EnteCreditoreMinimalDto getEnteCreditoreByRefP(@PathVariable("codiceFiscaleRefP") String codiceFiscaleRefP) {
-    logger.info("GET ENTE CREDITORE BY REF-P");
+    logger.info("GET Ente Creditore");
     EnteCreditoreEntity ecE = enteCreditoreService.getByRefP(codiceFiscaleRefP);
     if (ecE != null) {
       return modelMapper.map(ecE, EnteCreditoreMinimalDto.class);
@@ -37,6 +28,15 @@ public class EnteCreditoreController {
       return null;
     }
 
+  }
+
+  @PostMapping(value = "ente")
+  @ResponseStatus(HttpStatus.CREATED)
+  @ResponseBody
+  public EnteCreditoreDto createEcPost(@RequestBody EnteCreditoreDto ecDto) {
+    EnteCreditoreEntity ecCreated = enteCreditoreService.create(modelMapper.map(ecDto, EnteCreditoreEntity.class));
+
+    return modelMapper.map(ecCreated, EnteCreditoreDto.class);
   }
 
 }
