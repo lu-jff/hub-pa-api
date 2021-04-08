@@ -6,6 +6,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import it.gov.pagopa.hubpa.api.iban.IbanDto;
 import it.gov.pagopa.hubpa.api.iban.IbanEntity;
 import it.gov.pagopa.hubpa.api.iban.IbanService;
+import it.gov.pagopa.hubpa.api.pa.PaDto;
+import it.gov.pagopa.hubpa.api.pa.PaEntity;
+import it.gov.pagopa.hubpa.api.pa.PaService;
 import it.gov.pagopa.hubpa.api.ente.EnteCreditoreService;
 import it.gov.pagopa.hubpa.api.ente.EnteCreditoreDto;
 import it.gov.pagopa.hubpa.api.ente.EnteCreditoreEntity;
@@ -44,12 +47,20 @@ class ApiTest {
 	@MockBean
 	private IbanService ibanService;
 
+	@MockBean
+	private PaService paService;
+
 	private JsonMapper jsonMapper = new JsonMapper();
 	private ModelMapper modelMapper = new ModelMapper();
 
 	@Test
 	public void shouldGetEnte() throws Exception {
-		this.mockMvc.perform(get("/ente/tttt")).andExpect(status().isOk());
+		this.mockMvc.perform(get("/ente/refp/tttt")).andExpect(status().isOk());
+	}
+
+	@Test
+	public void shouldNotGetEnte() throws Exception {
+		this.mockMvc.perform(get("/ente/xxx/tttt")).andExpect(status().is(404));
 	}
 
 	@Test
@@ -62,11 +73,6 @@ class ApiTest {
 		String myJson = jsonMapper.writeValueAsString(goodEc);
 		this.mockMvc.perform(post("/ente").content(myJson).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful());
-	}
-
-	@Test
-	public void shouldNotGetEnte() throws Exception {
-		this.mockMvc.perform(get("/entxe/tttt")).andExpect(status().is(404));
 	}
 
 	@Test
@@ -88,6 +94,27 @@ class ApiTest {
 		String myJson = jsonMapper.writeValueAsString(goodIban);
 		System.out.println(myJson);
 		this.mockMvc.perform(post("/ente/iban").content(myJson).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().is2xxSuccessful());
+	}
+
+	@Test
+	public void shouldGetPa() throws Exception {
+		this.mockMvc.perform(get("/ente/secondary")).andExpect(status().isOk());
+	}
+
+	@Test
+	public void shouldNotGetPa() throws Exception {
+		this.mockMvc.perform(get("/ente/secondarry")).andExpect(status().is(404));
+	}
+
+	@Test
+	public void shouldPostPa() throws Exception {
+		PaDto goodPa = buildPaOK();
+		// Mock service response
+		when(paService.create(any(PaEntity.class))).thenReturn(modelMapper.map(goodPa, PaEntity.class));
+		String myJson = jsonMapper.writeValueAsString(goodPa);
+		System.out.println(myJson);
+		this.mockMvc.perform(post("/ente/secondary").content(myJson).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful());
 	}
 
@@ -145,6 +172,25 @@ class ApiTest {
 		ibanDto.setDescrizione("Inserito_AgID");
 
 		return ibanDto;
+
+	}
+
+	private PaDto buildPaOK() throws ParseException {
+		PaDto paDto = new PaDto();
+
+		paDto.setId(0L);
+		paDto.setCodAmm("p_mt");
+		paDto.setDesAmm("Provincia di Matera");
+		paDto.setTipologiaIstat("Province e loro Consorzi e Associazioni");
+		paDto.setCodiceFiscale("80000970774");
+		paDto.setIndirizzo("Via Ridola, 60");
+		paDto.setComune("Matera");
+		paDto.setCap("75100");
+		paDto.setProvincia("MT");
+		paDto.setEmailCertificata("provincia.matera@cert.ruparbasilicata.it");
+		paDto.setSitoIstituzionale("www.provincia.matera.it");
+
+		return paDto;
 
 	}
 

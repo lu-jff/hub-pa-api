@@ -34,7 +34,7 @@ public class IbanController {
 
   }
 
-  @PostMapping(value = "ente/iban")
+  @PostMapping(value = "/ente/iban")
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
   public IbanDto createIbanPost(@RequestBody IbanDto ibanDto) {
