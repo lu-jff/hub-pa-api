@@ -23,7 +23,7 @@ public class PaController {
 
   private Logger logger = LoggerFactory.getLogger(PaController.class);
 
-  @GetMapping(value = "/ente/secondary")
+  @GetMapping(value = "/ente/pa")
   public List<PaDescriptionDto> getAllEcForTefa() {
     logger.info("GET PROVINCE E CITTA METROPOLITANE");
     List<String> tipologieIstat = Arrays.asList("Citta' Metropolitane", "Province e loro Consorzi e Associazioni");
@@ -37,7 +37,7 @@ public class PaController {
 
   }
 
-  @PostMapping(value = "/ente/secondary")
+  @PostMapping(value = "/ente/pa")
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
   public PaDto createIbanPost(@RequestBody PaDto paDto) {
