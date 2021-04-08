@@ -99,12 +99,12 @@ class ApiTest {
 
 	@Test
 	public void shouldGetPa() throws Exception {
-		this.mockMvc.perform(get("/ente/secondary")).andExpect(status().isOk());
+		this.mockMvc.perform(get("/ente/pa")).andExpect(status().isOk());
 	}
 
 	@Test
 	public void shouldNotGetPa() throws Exception {
-		this.mockMvc.perform(get("/ente/secondarry")).andExpect(status().is(404));
+		this.mockMvc.perform(get("/ente/pax")).andExpect(status().is(404));
 	}
 
 	@Test
@@ -114,7 +114,7 @@ class ApiTest {
 		when(paService.create(any(PaEntity.class))).thenReturn(modelMapper.map(goodPa, PaEntity.class));
 		String myJson = jsonMapper.writeValueAsString(goodPa);
 		System.out.println(myJson);
-		this.mockMvc.perform(post("/ente/secondary").content(myJson).contentType(MediaType.APPLICATION_JSON))
+		this.mockMvc.perform(post("/ente/pa").content(myJson).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful());
 	}
 
