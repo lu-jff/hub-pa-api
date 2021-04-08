@@ -1,5 +1,7 @@
 package it.gov.pagopa.hubpa.servicemanagement.entity;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -25,7 +27,7 @@ public class TransferTemplate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "percentage", nullable = false)
-    private int percentage;
+    private BigDecimal percentage;
 
     @Column(name = "iban", nullable = false)
     private String iban;

@@ -1,5 +1,6 @@
 package it.gov.pagopa.hubpa.servicemanagement.mock;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import it.gov.pagopa.hubpa.servicemanagement.entity.PaymentOptionTemplate;
@@ -11,7 +12,7 @@ public class ServiceMock {
 	Service ss = new Service();
 	ss.setCreditorId(1L);
 	ss.setDenomination("TariTefa2021");
-	ss.setPercentage(5);
+	ss.setPercentage(BigDecimal.valueOf(5));
 	ss.setSecondaryCreditorId(2L);
 	ss.setTotalInstallments(3);
 
@@ -24,12 +25,12 @@ public class ServiceMock {
 	TransferTemplate tt = new TransferTemplate();
 	tt.setIban("IT67P0300203280575369338247");
 	tt.setIsSecondaryCreditor(false);
-	tt.setPercentage(100);
+	tt.setPercentage(BigDecimal.valueOf(100));
 	pp.addTransferTemplate(tt);
 	tt = new TransferTemplate();
 	tt.setIban("IT76N0300203280879483594963");
 	tt.setIsSecondaryCreditor(true);
-	tt.setPercentage(100);
+	tt.setPercentage(BigDecimal.valueOf(100));
 	pp.addTransferTemplate(tt);
 	ss.addPaymentOptionTemplate(pp);
 
@@ -42,7 +43,7 @@ public class ServiceMock {
 	tt = new TransferTemplate();
 	tt.setIban("IT67P0300203280575369338247");
 	tt.setIsSecondaryCreditor(false);
-	tt.setPercentage(20);
+	tt.setPercentage(BigDecimal.valueOf(20));
 	pp.addTransferTemplate(tt);
 	ss.addPaymentOptionTemplate(pp);
 
@@ -55,12 +56,12 @@ public class ServiceMock {
 	tt = new TransferTemplate();
 	tt.setIban("IT67P0300203280575369338247");
 	tt.setIsSecondaryCreditor(false);
-	tt.setPercentage(50);
+	tt.setPercentage(BigDecimal.valueOf(50));
 	pp.addTransferTemplate(tt);
 	tt = new TransferTemplate();
 	tt.setIban("IT76N0300203280879483594963");
 	tt.setIsSecondaryCreditor(true);
-	tt.setPercentage(20);
+	tt.setPercentage(BigDecimal.valueOf(20));
 	pp.addTransferTemplate(tt);
 	ss.removePaymentOptionTemplate(pp);
 	ss.addPaymentOptionTemplate(pp);
@@ -74,12 +75,12 @@ public class ServiceMock {
 	tt = new TransferTemplate();
 	tt.setIban("IT67P0300203280575369338247");
 	tt.setIsSecondaryCreditor(false);
-	tt.setPercentage(30);
+	tt.setPercentage(BigDecimal.valueOf(30));
 	pp.addTransferTemplate(tt);
 	tt = new TransferTemplate();
 	tt.setIban("IT76N0300203280879483594963");
 	tt.setIsSecondaryCreditor(true);
-	tt.setPercentage(80);
+	tt.setPercentage(BigDecimal.valueOf(80));
 	pp.removeTransferTemplate(tt);
 	pp.addTransferTemplate(tt);
 	ss.addPaymentOptionTemplate(pp);

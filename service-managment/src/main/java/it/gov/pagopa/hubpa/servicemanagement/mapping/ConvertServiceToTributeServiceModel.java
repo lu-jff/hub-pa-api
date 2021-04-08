@@ -1,5 +1,6 @@
 package it.gov.pagopa.hubpa.servicemanagement.mapping;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,7 +23,7 @@ public class ConvertServiceToTributeServiceModel implements Converter<Service, T
 	String denomination = source.getDenomination();
 	    long creditorId = source.getCreditorId();
 	    long secondaryCreditorId = source.getSecondaryCreditorId();
-	    Integer percentageSecondary = source.getPercentage();
+	    BigDecimal percentageSecondary = source.getPercentage();
 
 	    destination.setDenomination(denomination);
 	    destination.setIdPrimaryCreditor(creditorId);
@@ -57,7 +58,7 @@ public class ConvertServiceToTributeServiceModel implements Converter<Service, T
 	List<TransferTemplate> transferTemplateList = paymentOptionTemplate.getTransferTemplate();
 	if (!transferTemplateList.isEmpty()) {
 	    for (TransferTemplate transferTemplate : transferTemplateList) {
-		Integer percentage = transferTemplate.getPercentage();
+		BigDecimal percentage = transferTemplate.getPercentage();
 		String iban = transferTemplate.getIban();
 		if (Boolean.TRUE.equals(transferTemplate.getIsSecondaryCreditor())) {
 		    installmentModel.setPercentageSecondary(percentage);
