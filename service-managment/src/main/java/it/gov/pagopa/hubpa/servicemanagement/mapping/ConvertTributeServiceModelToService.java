@@ -1,5 +1,6 @@
 package it.gov.pagopa.hubpa.servicemanagement.mapping;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class ConvertTributeServiceModelToService implements Converter<TributeSer
 	int installmentNumber = 0;
 	if (duoDateUnique != null) {
 	    destination.addPaymentOptionTemplate(addPaymentOptionTemplateUnique(duoDateUnique,
-		    Integer.valueOf(installmentNumber), true, ibanPrimary, ibanSecondary, 100, 100));
+		    Integer.valueOf(installmentNumber), true, ibanPrimary, ibanSecondary, BigDecimal.valueOf(100), BigDecimal.valueOf(100)));
 	}
 
 	for (InstallmentModel installment : installments) {
@@ -49,8 +50,8 @@ public class ConvertTributeServiceModelToService implements Converter<TributeSer
     }
 
     private PaymentOptionTemplate addPaymentOptionTemplateUnique(LocalDate duoDate, Integer installmentNumber,
-	    Boolean isFinal, String primaryIban, String secondaryIban, Integer primaryPercentage,
-	    Integer secondaryPercentage) {
+	    Boolean isFinal, String primaryIban, String secondaryIban, BigDecimal primaryPercentage,
+	    BigDecimal secondaryPercentage) {
 	PaymentOptionTemplate paymentOptionTemplate = new PaymentOptionTemplate();
 	paymentOptionTemplate.setDueDate(duoDate);
 	paymentOptionTemplate.setInstallmentNumber(installmentNumber);
@@ -63,7 +64,7 @@ public class ConvertTributeServiceModelToService implements Converter<TributeSer
 	return paymentOptionTemplate;
     }
 
-    private TransferTemplate addTransferTemplate(String iban, Integer percentage, Boolean isSecondaryCreditor) {
+    private TransferTemplate addTransferTemplate(String iban, BigDecimal percentage, Boolean isSecondaryCreditor) {
 	TransferTemplate transferTemplate = new TransferTemplate();
 	transferTemplate.setIban(iban);
 	transferTemplate.setPercentage(percentage);

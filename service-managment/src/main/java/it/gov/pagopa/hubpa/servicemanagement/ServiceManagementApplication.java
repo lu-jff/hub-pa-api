@@ -35,7 +35,7 @@ public class ServiceManagementApplication {
     }
 
     private ApiInfo apiInfo() {
-	return new ApiInfo("SPID REST API", "Servizi rest di autenticazione SPID per l'applicazione TariTefa", "0.0.1",
+	return new ApiInfo("Service Management REST API", "Servizi rest di gestione contributo per l'applicazione TariTefa", "0.0.1",
 		null, null, null, null, new ArrayList<>());
 
     }

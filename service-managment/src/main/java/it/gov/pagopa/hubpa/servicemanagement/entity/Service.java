@@ -1,5 +1,6 @@
 package it.gov.pagopa.hubpa.servicemanagement.entity;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,13 +29,13 @@ public class Service {
     @Column(name = "denomination", nullable = false)
     private String denomination;
     @Column(name = "creditor_id", nullable = false)
-    private long creditorId;
+    private Long creditorId;
     @Column(name = "secondary_creditor_id", nullable = false)
-    private long secondaryCreditorId;
+    private Long secondaryCreditorId;
     @Column(name = "percentage", nullable = false)
-    private int percentage;
+    private BigDecimal percentage;
     @Column(name = "total_installments", nullable = false)
-    private int totalInstallments;
+    private Integer totalInstallments;
 
     @OneToMany(targetEntity = PaymentOptionTemplate.class, fetch = FetchType.LAZY, mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PaymentOptionTemplate> paymentOptionTemplate = new ArrayList<>();

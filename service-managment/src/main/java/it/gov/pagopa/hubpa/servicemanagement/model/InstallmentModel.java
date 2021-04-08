@@ -1,5 +1,6 @@
 package it.gov.pagopa.hubpa.servicemanagement.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import lombok.Getter;
@@ -10,6 +11,6 @@ import lombok.Setter;
 public class InstallmentModel {
 
     private LocalDate dueDate;
-    private Integer percentagePrimary;
-    private Integer percentageSecondary;
+    private BigDecimal percentagePrimary;
+    private BigDecimal percentageSecondary;
 }

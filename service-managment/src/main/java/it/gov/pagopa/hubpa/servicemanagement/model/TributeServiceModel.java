@@ -1,5 +1,6 @@
 package it.gov.pagopa.hubpa.servicemanagement.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class TributeServiceModel {
     private String ibanPrimary;
     private String ibanSecondary;
     private String denomination;
-    private Integer percentageSecondary;
+    private BigDecimal percentageSecondary;
     private LocalDate dueDateUnique;
     List<InstallmentModel> installments;
 

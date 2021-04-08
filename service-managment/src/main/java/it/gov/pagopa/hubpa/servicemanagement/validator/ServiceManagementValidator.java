@@ -1,5 +1,6 @@
 package it.gov.pagopa.hubpa.servicemanagement.validator;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -47,9 +48,9 @@ public class ServiceManagementValidator implements Validator {
 	if (ObjectUtils.isEmpty(installmentList) && ObjectUtils.isEmpty(duoDateUnique)) {
 	    errors.reject("installment", "Inserire almeno una rata o soluzione unica");
 	} else {
-	    Integer totalePercentageSecondary = tributeServiceModel.getPercentageSecondary();
+	    BigDecimal totalePercentageSecondary = tributeServiceModel.getPercentageSecondary();
 	    if (!ObjectUtils.isEmpty(duoDateUnique) && duoDateUnique.isBefore(LocalDate.of(2021, 7, 1))
-		    && totalePercentageSecondary > 0) {
+		    && totalePercentageSecondary.doubleValue() > 0) {
 		errors.reject("installment",
 			"La data scadenza della soluzione unica deve essere maggiore del 30/06/2021");
 	    }
@@ -61,45 +62,45 @@ public class ServiceManagementValidator implements Validator {
 
     }
 
-    private void validateInstallments(List<InstallmentModel> installmentList, Integer totalePercentageSecondary,
+    private void validateInstallments(List<InstallmentModel> installmentList, BigDecimal totalePercentageSecondary,
 	    Errors errors) {
 
-	int totalPrimary = 0;
-	int totalSecondary = 0;
+	BigDecimal totalPrimary = BigDecimal.ZERO;
+	BigDecimal totalSecondary = BigDecimal.ZERO;
 	int count = 0;
 	for (InstallmentModel installmentModel : installmentList) {
 	    count++;
 	    LocalDate duoDate = installmentModel.getDueDate();
-	    Integer percentagePrimary = installmentModel.getPercentagePrimary();
-	    Integer percentageSecondary = installmentModel.getPercentageSecondary();
+	    BigDecimal percentagePrimary = installmentModel.getPercentagePrimary();
+	    BigDecimal percentageSecondary = installmentModel.getPercentageSecondary();
 	    if (ObjectUtils.isEmpty(duoDate)) {
 		errors.reject(this.errors, installmentDesc + count + " data scadenza obbligatoria");
-	    } else if (!ObjectUtils.isEmpty(percentageSecondary) && percentageSecondary > 0 && duoDate.isBefore(LocalDate.of(2021, 7, 1))) {
+	    } else if (!ObjectUtils.isEmpty(percentageSecondary) && percentageSecondary.doubleValue() > 0 && duoDate.isBefore(LocalDate.of(2021, 7, 1))) {
 		errors.reject(this.errors,
 			installmentDesc + count + " data scadenza deve essere maggiore del 30/06/2021");
 	    }
 	    if (ObjectUtils.isEmpty(percentagePrimary)) {
 		errors.reject(this.errors, installmentDesc + count + " percentuale TARI obbligatoria");
 	    } else {
-		totalPrimary += percentagePrimary;
+		totalPrimary=totalPrimary.add(percentagePrimary);
 	    }
 	    if (ObjectUtils.isEmpty(percentageSecondary)) {
 		errors.reject(this.errors, installmentDesc + count + " percentuale TEFA obbligatoria");
 	    } else {
-		totalSecondary += percentageSecondary;
+		totalSecondary=totalSecondary.add(percentageSecondary);
 	    }
 	}
 	
 	checkInstallmentsTotals(totalPrimary,totalSecondary, totalePercentageSecondary,errors);
 	
     }
-    private void checkInstallmentsTotals(Integer totalPrimary,Integer totalSecondary,Integer totalePercentageSecondary, Errors errors) {
-	if (totalPrimary != 100) {
+    private void checkInstallmentsTotals(BigDecimal totalPrimary,BigDecimal totalSecondary,BigDecimal totalePercentageSecondary, Errors errors) {
+	if (totalPrimary.doubleValue() != 100) {
 	    errors.reject(this.errors, "La somma delle percentuali della TARI deve essere 100");
 	}
-	if (totalSecondary != 100 && totalePercentageSecondary > 0) {
+	if (totalSecondary.doubleValue() != 100 && totalePercentageSecondary.doubleValue() > 0) {
 	    errors.reject(this.errors, "La somma delle percentuali della TEFA deve essere 100");
-	} else if (totalSecondary != 0 && totalePercentageSecondary == 0) {
+	} else if (totalSecondary.doubleValue() != 0 && totalePercentageSecondary.doubleValue() == 0) {
 	    errors.reject(this.errors, "La percentuale della TEFA deve essere 0");
 	}
     }
