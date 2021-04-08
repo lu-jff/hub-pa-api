@@ -18,7 +18,7 @@ public class EnteCreditoreController {
 
   private Logger logger = LoggerFactory.getLogger(EnteCreditoreController.class);
 
-  @GetMapping(value = "/ente/{codiceFiscaleRefP}")
+  @GetMapping(value = "/ente/refp/{codiceFiscaleRefP}")
   public EnteCreditoreMinimalDto getEnteCreditoreByRefP(@PathVariable("codiceFiscaleRefP") String codiceFiscaleRefP) {
     logger.info("GET Ente Creditore");
     EnteCreditoreEntity ecE = enteCreditoreService.getByRefP(codiceFiscaleRefP);
