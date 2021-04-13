@@ -16,7 +16,8 @@ steps:
     scannerMode: 'Other'
     extraProperties: |
       sonar.projectKey=PTT 
-      sonar.login=a8958e2fd39facfa1434939e6d194dd6f322ef00
+
+- task: SonarQubeAnalysis@4
 
 - task: Maven@3
   inputs:
@@ -28,4 +29,4 @@ steps:
     publishJUnitResults: false
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
-    sonarQubeRunAnalysis: true
+    # sonarQubeRunAnalysis: true
