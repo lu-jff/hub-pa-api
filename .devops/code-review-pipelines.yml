@@ -14,12 +14,12 @@ steps:
   inputs:
     SonarQube: 'pagopa-sonarqube'
     scannerMode: 'Other'
-    extraProperties: 'sonar.projectKey=PTT sonar.login=47d7595a96fb126add4553371579c5e52099305e'
+    extraProperties: 'sonar.projectKey=PTT'
 
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
+    mavenOptions: '-Xmx3072m -Dsonar.login=47d7595a96fb126add4553371579c5e52099305e'
     javaHomeOption: 'JDKVersion'
     jdkVersionOption: '1.8'
     jdkArchitectureOption: 'x64'
