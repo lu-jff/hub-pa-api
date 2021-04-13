@@ -14,7 +14,7 @@ steps:
   inputs:
     SonarQube: 'pagopa-sonarqube'
     scannerMode: 'Other'
-    extraProperties: 'sonar.projectKey=PTT'
+    extraProperties: 'sonar.projectKey=PTT sonar.login=47d7595a96fb126add4553371579c5e52099305e'
 
 - task: Maven@3
   inputs:
