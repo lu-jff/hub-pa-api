@@ -12,7 +12,7 @@ pool:
 steps:
 - task: SonarQubePrepare@4
   inputs:
-    SonarQube: 'pagopa-sonarqube'
+    SonarQube: $(SONARQUBE_CONNECTION)
     scannerMode: 'Other'
     extraProperties: 'sonar.projectKey=PTT sonar.login=a8958e2fd39facfa1434939e6d194dd6f322ef00'
 
