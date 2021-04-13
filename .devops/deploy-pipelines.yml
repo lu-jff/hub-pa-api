@@ -17,3 +17,10 @@ steps:
     publishJUnitResults: false
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
+
+- task: Docker@2
+  workingDirectory: ente-creditore
+  inputs:
+    containerRegistry: 'pagopa-azurecr'
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'
