@@ -15,7 +15,7 @@ steps:
     SonarQube: $(SONARQUBE_CONNECTION)
     scannerMode: 'Other'
     extraProperties: |
-      sonar.projectKey=PTT
+      sonar.projectKey=PTT      
 
 - task: Maven@3
   inputs:
