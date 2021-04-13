@@ -19,8 +19,8 @@ steps:
     goals: 'package'
 
 - task: Docker@2
-  workingDirectory: ente-creditore
   inputs:
     containerRegistry: 'pagopa-azurecr'
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
+    workingDirectory: ente-creditore
