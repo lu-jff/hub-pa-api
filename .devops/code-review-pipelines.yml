@@ -10,6 +10,12 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+- task: SonarQubePrepare@4
+  inputs:
+    SonarQube: 'http://sonarqube.westeurope.azurecontainer.io:9000'
+    scannerMode: 'Other'
+    extraProperties: 'sonar.projectKey=PTT'
+
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
