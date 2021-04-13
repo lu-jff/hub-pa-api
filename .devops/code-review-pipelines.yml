@@ -19,7 +19,10 @@ steps:
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m -Dsonar.login=47d7595a96fb126add4553371579c5e52099305e'
+    mavenOptions: '-Xmx3072m -Dsonar.login=mvn sonar:sonar \
+  -Dsonar.projectKey=PTT \
+  -Dsonar.host.url=http://sonarqube.westeurope.azurecontainer.io:9000 \
+  -Dsonar.login=a8958e2fd39facfa1434939e6d194dd6f322ef00'
     javaHomeOption: 'JDKVersion'
     jdkVersionOption: '1.8'
     jdkArchitectureOption: 'x64'
