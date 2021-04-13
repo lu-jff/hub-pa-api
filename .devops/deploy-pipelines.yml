@@ -22,5 +22,4 @@ steps:
   inputs:
     containerRegistry: 'pagopa-azurecr'
     command: 'buildAndPush'
-    Dockerfile: '**/Dockerfile'
-    workingDirectory: ente-creditore
+    Dockerfile: './ente-creditore/Dockerfile'
