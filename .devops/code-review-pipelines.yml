@@ -12,7 +12,7 @@ pool:
 steps:
 - task: SonarQubePrepare@4
   inputs:
-    SonarQube: 'http://sonarqube.westeurope.azurecontainer.io:9000'
+    SonarQube: 'pagopa-sonarqube'
     scannerMode: 'Other'
     extraProperties: 'sonar.projectKey=PTT'
 
