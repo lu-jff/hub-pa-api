@@ -15,6 +15,8 @@ public class ServiceMock {
 	ss.setPercentage(BigDecimal.valueOf(5));
 	ss.setSecondaryCreditorId(2L);
 	ss.setTotalInstallments(3);
+	ss.setFiscalCodePrimaryCreditor("VBMPGR31H03F993U");
+	ss.setFiscalCodeSecondaryCreditor("FMMFLN90H13E027F");
 
 	// installment unique
 	PaymentOptionTemplate pp = new PaymentOptionTemplate();

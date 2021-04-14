@@ -23,12 +23,16 @@ public class ConvertTributeServiceModelToService implements Converter<TributeSer
 	String ibanSecondary = source.getIbanSecondary();
 	Long creditorId = source.getIdPrimaryCreditor();
 	Long secondaryCreditorId = source.getIdSecondaryCreditor();
+	String fiscalCodePrimaryCreditor = source.getFiscalCodePrimaryCreditor();
+	String fiscalCodeSecondaryCreditor = source.getFiscalCodeSecondaryCreditor();
 	LocalDate duoDateUnique = source.getDueDateUnique();
 	List<InstallmentModel> installments = source.getInstallments();
 	int totalInstallments = installments != null ? installments.size() : 0;
 
 	destination.setCreditorId(creditorId);
 	destination.setSecondaryCreditorId(secondaryCreditorId);
+	destination.setFiscalCodePrimaryCreditor(fiscalCodePrimaryCreditor);
+	destination.setFiscalCodeSecondaryCreditor(fiscalCodeSecondaryCreditor);
 	destination.setDenomination(source.getDenomination());
 	destination.setPercentage(source.getPercentageSecondary());
 	destination.setTotalInstallments(totalInstallments);
