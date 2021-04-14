@@ -12,6 +12,8 @@ import lombok.Setter;
 public class TributeServiceModel {
     private Long idPrimaryCreditor;
     private Long idSecondaryCreditor;
+    private String fiscalCodePrimaryCreditor;
+    private String fiscalCodeSecondaryCreditor;
     private String ibanPrimary;
     private String ibanSecondary;
     private String denomination;

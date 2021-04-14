@@ -32,6 +32,10 @@ public class Service {
     private Long creditorId;
     @Column(name = "secondary_creditor_id", nullable = false)
     private Long secondaryCreditorId;
+    @Column(name = "fiscal_code_primary_creditor", nullable = false)
+    private String fiscalCodePrimaryCreditor;
+    @Column(name = "fiscal_code_Secondary_creditor", nullable = false)
+    private String fiscalCodeSecondaryCreditor;
     @Column(name = "percentage", nullable = false)
     private BigDecimal percentage;
     @Column(name = "total_installments", nullable = false)

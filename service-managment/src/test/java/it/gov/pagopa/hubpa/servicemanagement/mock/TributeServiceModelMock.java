@@ -17,6 +17,8 @@ public class TributeServiceModelMock {
 	tributeServiceModel.setIbanPrimary("IT67P0300203280575369338247");
 	tributeServiceModel.setIbanSecondary("IT76N0300203280879483594963");
 	tributeServiceModel.setIdPrimaryCreditor(1L);
+	tributeServiceModel.setFiscalCodePrimaryCreditor("VBMPGR31H03F993U");
+	tributeServiceModel.setFiscalCodeSecondaryCreditor("FMMFLN90H13E027F");
 	tributeServiceModel.setIdSecondaryCreditor(2L);
 	tributeServiceModel.setPercentageSecondary(BigDecimal.valueOf(5));
 	List<InstallmentModel> listInstallment = new ArrayList<>();
