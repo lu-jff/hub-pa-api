@@ -28,5 +28,6 @@ steps:
 
 - task: AzureWebAppContainer@1
   inputs:
+    azureSubscription: $(STAGING_AZURE_SUBSCRIPTION)
     appName: 'hubpa-d-web-app1'
     containers: 'hubpadarc.azurecr.io/microservices:ente-creditore'
