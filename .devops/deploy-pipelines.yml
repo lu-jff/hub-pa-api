@@ -23,7 +23,7 @@ steps:
     containerRegistry: 'pagopa-azurecr'
     repository: 'microservices'
     command: 'buildAndPush'
-    Dockerfile: './ente-creditore/Dockerfile'
+    Dockerfile: './ente-creditore/Dockerfile.deploy'
     tags: 'ente-creditore' 
 
 - task: AzureWebAppContainer@1
