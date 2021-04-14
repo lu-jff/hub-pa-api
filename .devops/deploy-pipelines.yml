@@ -25,3 +25,8 @@ steps:
     command: 'buildAndPush'
     Dockerfile: './ente-creditore/Dockerfile'
     tags: 'ente-creditore' 
+
+- task: AzureWebAppContainer@1
+  inputs:
+    appName: 'hubpa-d-web-app1'
+    containers: 'hubpadarc.azurecr.io/microservices:ente-creditore'
