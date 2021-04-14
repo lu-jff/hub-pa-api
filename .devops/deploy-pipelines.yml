@@ -21,13 +21,13 @@ steps:
 - task: Docker@2
   inputs:
     containerRegistry: 'pagopa-azurecr'
-    repository: 'microservices'
+    repository: 'creditor-institution'
     command: 'buildAndPush'
     Dockerfile: './ente-creditore/Dockerfile.deploy'
-    tags: 'ente-creditore' 
+    tags: '0.0.1' 
 
-- task: AzureWebAppContainer@1
-  inputs:
-    azureSubscription: $(STAGING_AZURE_SUBSCRIPTION)
-    appName: 'hubpa-d-web-app1'
-    containers: 'hubpadarc.azurecr.io/microservices:ente-creditore'
+# - task: AzureWebAppContainer@1
+#   inputs:
+#     azureSubscription: $(STAGING_AZURE_SUBSCRIPTION)
+#     appName: 'hubpa-d-web-app1'
+#     containers: 'hubpadarc.azurecr.io/microservices:ente-creditore'
