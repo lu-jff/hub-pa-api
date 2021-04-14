@@ -24,3 +24,4 @@ steps:
     repository: 'hubpadarc'
     command: 'buildAndPush'
     Dockerfile: './ente-creditore/Dockerfile'
+    tags: 'ente-creditore' 
