@@ -24,7 +24,7 @@ steps:
     repository: 'creditor-institution'
     command: 'buildAndPush'
     Dockerfile: './ente-creditore/Dockerfile.deploy'
-    tags: '0.0.1' 
+    tags: '0.0.2' 
 
 # - task: AzureWebAppContainer@1
 #   inputs:
