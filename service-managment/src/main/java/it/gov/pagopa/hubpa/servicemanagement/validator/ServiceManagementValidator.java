@@ -34,6 +34,9 @@ public class ServiceManagementValidator implements Validator {
 	ValidationUtils.rejectIfEmptyOrWhitespace(errors, "ibanPrimary", "ibanPrimary_code", "Selezionare un IBAN primario");
 	ValidationUtils.rejectIfEmptyOrWhitespace(errors, "ibanSecondary", "ibanSecondary_code", "Selezionare un IBAN secondario");
 	ValidationUtils.rejectIfEmpty(errors, "percentageSecondary", "percentageSecondary", "Percentuale TEFA obbligatoria");
+	ValidationUtils.rejectIfEmpty(errors, "fiscalCodePrimaryCreditor", "fiscalCodePrimaryCreditor", "Codice fiscale ente primario obbligatorio");
+	ValidationUtils.rejectIfEmpty(errors, "fiscalCodeSecondaryCreditor", "fiscalCodeSecondaryCreditor", "Codice fiscale ente secondario obbligatorio");
+
 	if (errors.hasErrors()) {
 	    return;
 	}
