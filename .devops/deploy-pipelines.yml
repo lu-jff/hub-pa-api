@@ -26,8 +26,8 @@ steps:
     Dockerfile: './ente-creditore/Dockerfile.deploy'
     tags: '0.0.2' 
 
-# - task: AzureWebAppContainer@1
-#   inputs:
-#     azureSubscription: $(STAGING_AZURE_SUBSCRIPTION)
-#     appName: 'hubpa-d-web-app1'
-#     containers: 'hubpadarc.azurecr.io/microservices:ente-creditore'
+- task: AzureWebAppContainer@1
+  inputs:
+    azureSubscription: $(STAGING_AZURE_SUBSCRIPTION)
+    appName: 'hubpa-d-web-app1'
+    containers: 'hubpadarc.azurecr.io/creditor-institution:0.0.2'
