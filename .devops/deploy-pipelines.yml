@@ -1,0 +1,37 @@
+# Only manual triggers
+trigger: none
+pr: none
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    mavenOptions: '-Xmx3072m'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.8'
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: false
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    goals: 'package'
+
+- task: Docker@2
+  inputs:
+    containerRegistry: 'pagopa-azurecr'
+    repository: 'creditor-institution'
+    command: 'buildAndPush'
+    Dockerfile: './ente-creditore/Dockerfile.deploy'
+    tags: '0.0.2' 
+
+- task: AzureRMWebAppDeployment@4
+  displayName: Azure App Service Deploy
+  inputs:
+    appType: webAppContainer
+    ConnectedServiceName: $(STAGING_AZURE_SUBSCRIPTION)
+    WebAppName: 'hubpa-d-web-app1'
+    DockerNamespace: 'hubpadarc.azurecr.io'
+    DockerRepository: 'creditor-institution'
+    DockerImageTag: '0.0.2'

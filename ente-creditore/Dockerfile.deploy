@@ -1,0 +1,14 @@
+FROM openjdk:8-alpine
+ARG JAR_FILE=./target/ente-creditore*.jar
+
+EXPOSE 2222 80
+COPY ${JAR_FILE} /home/application.jar
+
+ENV SSH_PASSWD "root:Docker!"
+RUN apk --no-cache add openssh openrc
+RUN echo "root:Docker!" | chpasswd
+COPY sshd_config /etc/ssh/
+COPY init.sh /home/
+RUN chmod u+x /home/init.sh
+
+ENTRYPOINT ["/home/init.sh"]
