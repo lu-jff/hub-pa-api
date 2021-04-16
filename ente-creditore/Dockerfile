@@ -6,7 +6,7 @@ EXPOSE 8082
 COPY ${JAR_FILE} /home/application.jar
 ENV SSH_PASSWD "root:Docker!"
 RUN apk --no-cache add openssh openrc
-COPY sshd_config /etc/ssh/
+COPY ssh_config /etc/ssh/
 RUN rc-update add sshd
 RUN openrc
 RUN touch /run/openrc/softlevel
