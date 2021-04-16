@@ -30,5 +30,5 @@ steps:
   inputs:
     azureSubscription: $(STAGING_AZURE_SUBSCRIPTION)
     appName: 'hubpa-d-web-app1'
-    imageName: 'hubpadarc.azurecr.io/creditor-institution:0.0.2'
-    configurationStrings: '-linuxFxVersion: hubpadarc.azurecr.io/creditor-institution:0.0.2'
+    containers: 'hubpadarc.azurecr.io/creditor-institution:0.0.2'
+    configurationStrings: '-linuxFxVersion: DOCKER|hubpadarc.azurecr.io/creditor-institution:0.0.2'
