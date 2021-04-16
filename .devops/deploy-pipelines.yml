@@ -31,7 +31,7 @@ steps:
   inputs:
     appType: webAppContainer
     ConnectedServiceName: $(STAGING_AZURE_SUBSCRIPTION)
-    WebAppName: 'hubpa-d-web-app1'
+    WebAppName: 'hubpa-d-creditor-institution'
     DockerNamespace: 'hubpadarc.azurecr.io'
     DockerRepository: 'creditor-institution'
     DockerImageTag: '0.0.2'
