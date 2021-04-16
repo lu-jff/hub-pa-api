@@ -2,6 +2,18 @@ FROM openjdk:8-alpine
 ARG JAR_FILE=./target/ente-creditore*.jar
 
 EXPOSE 2222 80
-
 COPY ${JAR_FILE} /home/application.jar
-ENTRYPOINT ["java", "-Dserver.port=80", "-jar", "/home/application.jar"]
+
+ENV SSH_PASSWD "root:Docker!"
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends dialog \
+  && apt-get update \
+  && apt-get install -y --no-install-recommends openssh-server \
+  && echo "$SSH_PASSWD" | chpasswd 
+
+COPY sshd_config /etc/ssh/
+COPY init.sh /usr/local/bin/
+
+RUN chmod u+x /usr/local/bin/init.sh
+# ENTRYPOINT ["java", "-Dserver.port=80", "-jar", "/home/application.jar"]
+ENTRYPOINT ["init.sh"]
