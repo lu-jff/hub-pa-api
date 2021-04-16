@@ -8,5 +8,8 @@ ENV SSH_PASSWD "root:Docker!"
 RUN apk --no-cache add openssh openrc
 COPY sshd_config /etc/ssh/
 RUN rc-update add sshd
+RUN openrc
+RUN touch /run/openrc/softlevel
+RUN /etc/init.d/sshd start
 
 ENTRYPOINT ["java", "-Dserver.port=8082", "-jar", "/home/application.jar"]
