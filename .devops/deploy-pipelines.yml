@@ -26,9 +26,12 @@ steps:
     Dockerfile: './ente-creditore/Dockerfile.deploy'
     tags: '0.0.2' 
 
-- task: AzureWebAppContainer@1
+- task: AzureRMWebAppDeployment@4
+  displayName: Azure App Service Deploy
   inputs:
-    azureSubscription: $(STAGING_AZURE_SUBSCRIPTION)
-    appName: 'hubpa-d-web-app1'
-    containers: 'hubpadarc.azurecr.io/creditor-institution:0.0.2'
-    configurationStrings: '-linuxFxVersion: DOCKER|hubpadarc.azurecr.io/creditor-institution:0.0.2'
+    appType: webAppContainer
+    ConnectedServiceName: $(STAGING_AZURE_SUBSCRIPTION)
+    WebAppName: 'hubpa-d-web-app1'
+    DockerNamespace: 'hubpadarc.azurecr.io'
+    DockerRepository: 'creditor-institution'
+    DockerImageTag: '0.0.2'
