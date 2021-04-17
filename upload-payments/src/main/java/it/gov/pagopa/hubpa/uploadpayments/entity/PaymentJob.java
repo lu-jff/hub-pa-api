@@ -1,5 +1,5 @@
-package it.gov.pagopa.hubpa.uploadpayments.entity;
 
+package it.gov.pagopa.hubpa.uploadpayments.entity;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -18,9 +18,12 @@ import lombok.Setter;
 @Table(name = "paymentjob")
 public class PaymentJob {
 
+    /*@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;*/
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     @Column(name = "job_id", nullable = false)
     private Long jobId;
     @Column(name = "creditor_id", nullable = false)

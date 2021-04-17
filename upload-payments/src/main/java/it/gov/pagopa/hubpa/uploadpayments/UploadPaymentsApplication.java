@@ -2,6 +2,7 @@ package it.gov.pagopa.hubpa.uploadpayments;
 
 import java.util.ArrayList;
 
+import org.springframework.amqp.core.Queue;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +25,13 @@ public class UploadPaymentsApplication {
 
     public static void main(final String[] args) {
 	SpringApplication.run(UploadPaymentsApplication.class, args);
+    }
+
+    public static final String QUEUE_NAME = System.getenv().get("QUEUE_NAME");
+
+    @Bean
+    Queue queue() {
+      return new Queue(QUEUE_NAME, false);
     }
 
     @Bean
