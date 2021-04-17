@@ -24,8 +24,11 @@ import it.gov.pagopa.hubpa.uploadpayments.config.MappingsConfiguration;
 import it.gov.pagopa.hubpa.uploadpayments.entity.PaymentJob;
 import it.gov.pagopa.hubpa.uploadpayments.mock.PaymentJobMock;
 import it.gov.pagopa.hubpa.uploadpayments.mock.PaymentJobModelMock;
+import it.gov.pagopa.hubpa.uploadpayments.mock.UploadCsvModelMock;
 import it.gov.pagopa.hubpa.uploadpayments.model.BooleanResponseModel;
 import it.gov.pagopa.hubpa.uploadpayments.model.PaymentJobModel;
+import it.gov.pagopa.hubpa.uploadpayments.model.PaymentsModel;
+import it.gov.pagopa.hubpa.uploadpayments.model.UploadCsvModel;
 import it.gov.pagopa.hubpa.uploadpayments.service.PaymentJobService;
 import springfox.documentation.spring.web.plugins.Docket;
 
@@ -50,6 +53,19 @@ class UploadPaymentsControllerTest {
 
 	when(paymentJobService.countByIdsandStatusNot(Mockito.anyList(), Mockito.anyInt())).thenReturn(0l);
 	esito = uploadPaymentsController.isJobStatusChanged(new ArrayList<Long>());
+	assertThat(esito.getResult()).isFalse();
+
+    }
+    @Test
+    void isPaymentJobAvailable() {
+
+	BooleanResponseModel esito = null;
+	when(paymentJobService.countByCreditorIdAndStatusNot(Mockito.anyLong(), Mockito.anyInt())).thenReturn(1l);
+	esito = uploadPaymentsController.isPaymentJobAvailable(1l);
+	assertThat(esito.getResult()).isTrue();
+
+	when(paymentJobService.countByCreditorIdAndStatusNot(Mockito.anyLong(), Mockito.anyInt())).thenReturn(0l);
+	esito = uploadPaymentsController.isPaymentJobAvailable(1l);
 	assertThat(esito.getResult()).isFalse();
 
     }
@@ -91,8 +107,15 @@ class UploadPaymentsControllerTest {
 	PaymentJobModel modelMock = PaymentJobModelMock.getMock();
 	PaymentJobModel paymentJob = modelMapper.map(modelMock, PaymentJobModel.class);
 	PaymentJobModel paymentJobModel = modelMapper.map(serviceMock, PaymentJobModel.class);
+	UploadCsvModel uploadCsvModelMock= UploadCsvModelMock.getMock();
+	PaymentsModel paymentsModel = modelMapper.map(uploadCsvModelMock, PaymentsModel.class);
+	PaymentJob paymentJob2 = modelMapper.map(uploadCsvModelMock, PaymentJob.class);
+	
+	
 	assertThat(paymentJobModel.getFileName()).isEqualTo("testFileCsv20210409.csv");
 	assertThat(paymentJob.getFileName()).isEqualTo("testFileCsv20210409.csv");
+	assertThat(paymentsModel.getDebitors().get(0).getArea()).isEqualTo("Firenze");
+	assertThat(paymentJob2.getFileName()).isEqualTo("fileProva.csv");
 
     }
 
@@ -117,7 +140,6 @@ class UploadPaymentsControllerTest {
     @Test
     void testGetModel() {
 	PaymentJobModel mock = PaymentJobModelMock.getMock();
-	assertThat(mock.getJobId()).isNotNull();
 	assertThat(mock.getCreditorId()).isNotNull();
 	assertThat(mock.getFileName()).isNotNull();
 	assertThat(mock.getInsertDate()).isNotNull();
@@ -130,7 +152,6 @@ class UploadPaymentsControllerTest {
     @Test
     void testGetEntity() {
 	PaymentJob mock = PaymentJobMock.getMock();
-	assertThat(mock.getId()).isNotNull();
 	assertThat(mock.getJobId()).isNotNull();
 	assertThat(mock.getCreditorId()).isNotNull();
 	assertThat(mock.getFileName()).isNotNull();

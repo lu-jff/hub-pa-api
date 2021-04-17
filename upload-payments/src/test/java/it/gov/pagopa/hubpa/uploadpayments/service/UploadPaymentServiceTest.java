@@ -28,7 +28,7 @@ class UploadPaymentServiceTest {
 
     @Mock
     PaymentJobRepository paymentJobRepository;
-
+    
     @Test
     void countByIdsandStatusNot() throws ServletException {
 	List<Long> ids = new ArrayList<>();
@@ -39,7 +39,16 @@ class UploadPaymentServiceTest {
 	assertThat(result).isGreaterThan(1);
 
     }
+    @Test
+    void isPaymentJobAvailable() throws ServletException {
 
+	Long id = 1l;
+
+	when(paymentJobRepository.countByCreditorIdAndStatusNot(Mockito.anyLong(), Mockito.anyInt())).thenReturn(2L);
+	Long result = paymentJobService.countByCreditorIdAndStatusNot(id, 1);
+	assertThat(result).isGreaterThan(1);
+
+    }
     @Test
     void create() throws ServletException {
 	PaymentJob paymentJob = PaymentJobMock.getMock();
@@ -47,6 +56,16 @@ class UploadPaymentServiceTest {
 	when(paymentJobRepository.saveAndFlush(any(PaymentJob.class))).thenReturn(paymentJob);
 	Boolean result = paymentJobService.create(paymentJob);
 	assertThat(result).isTrue();
+
+    }
+    
+    @Test
+    void savePaymentJob() throws ServletException {
+	PaymentJob paymentJob = PaymentJobMock.getMock();
+
+	when(paymentJobRepository.saveAndFlush(any(PaymentJob.class))).thenReturn(paymentJob);
+	Long result = paymentJobService.savePaymentJob(paymentJob);
+	assertThat(result).isEqualTo(1l);
 
     }
 

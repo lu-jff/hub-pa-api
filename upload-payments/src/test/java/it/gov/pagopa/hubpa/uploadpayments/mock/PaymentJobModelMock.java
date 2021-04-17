@@ -9,7 +9,6 @@ public class PaymentJobModelMock {
     public final static PaymentJobModel getMock() {
 	PaymentJobModel mock=new PaymentJobModel();
 	
-	mock.setJobId(-1l);
 	mock.setCreditorId(1l);
 	mock.setFileName("testFileCsv20210409.csv");
 	mock.setInsertDate(LocalDateTime.now());

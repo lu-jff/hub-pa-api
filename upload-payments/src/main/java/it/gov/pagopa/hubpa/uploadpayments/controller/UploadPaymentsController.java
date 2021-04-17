@@ -19,6 +19,8 @@ import it.gov.pagopa.hubpa.uploadpayments.entity.PaymentJob;
 import it.gov.pagopa.hubpa.uploadpayments.enumeration.JobStatusEnum;
 import it.gov.pagopa.hubpa.uploadpayments.model.BooleanResponseModel;
 import it.gov.pagopa.hubpa.uploadpayments.model.PaymentJobModel;
+import it.gov.pagopa.hubpa.uploadpayments.model.PaymentsModel;
+import it.gov.pagopa.hubpa.uploadpayments.model.UploadCsvModel;
 import it.gov.pagopa.hubpa.uploadpayments.service.PaymentJobService;
 
 @RestController()
@@ -37,20 +39,39 @@ public class UploadPaymentsController {
 		paymentJobService.countByIdsandStatusNot(jobIds, JobStatusEnum.IN_ATTESA.getStatus()) > 0 ? Boolean.TRUE
 			: Boolean.FALSE);
     }
-
+    
+    @ApiOperation(value = "Verifica se sono stati caricati dei job non andati in errore", notes = "Servizio REST per verificare se sono stati caricati dei job non andati in errore", response = BooleanResponseModel.class)
+    @GetMapping(value = "isPaymentJobAvailable/{creditorId}")
+    public BooleanResponseModel isPaymentJobAvailable(@PathVariable("creditorId") Long creditorId) {
+	return new BooleanResponseModel(
+		paymentJobService.countByCreditorIdAndStatusNot(creditorId, JobStatusEnum.FALLITO.getStatus()) > 0 ? Boolean.TRUE
+			: Boolean.FALSE);
+    }
+    
     @ApiOperation(value = "Registra un caricamento di file csv", notes = "Servizio REST per registrare un caricamento di file csv", response = BooleanResponseModel.class)
     @PostMapping(value = "createJobRecord")
     public BooleanResponseModel createPaymentJob(
 	    @ApiParam(value = "Modello del job dei pagamenti", required = true) @RequestBody final PaymentJobModel paymentJobModel) {
 	return new BooleanResponseModel(paymentJobService.create(modelMapper.map(paymentJobModel, PaymentJob.class)));
     }
-   
+
     @ApiOperation(value = "Recupera la lista dei file csv caricati", notes = "Servizio REST per recuperare la lista dei file csv caricati", response = List.class)
     @GetMapping(value = "getAll/{creditorId}")
     public List<PaymentJobModel> getAllJob(@PathVariable("creditorId") Long creditorId) {
 	List<PaymentJob> paymentJobList = paymentJobService.getAll(creditorId);
-	return paymentJobList.stream().map(paymentJob -> 
-	modelMapper.map(paymentJob, PaymentJobModel.class))
+	return paymentJobList.stream().map(paymentJob -> modelMapper.map(paymentJob, PaymentJobModel.class))
 		.collect(Collectors.toList());
+    }
+
+    @ApiOperation(value = "Carica sulla coda gli oggetti rappresentati il file csv", notes = "Servizio REST per caricare sulla coda gli oggetti rappresentati il file csv", response = BooleanResponseModel.class)
+    @PostMapping(value = "upload")
+    public BooleanResponseModel uploadCsvModels(
+	    @ApiParam(value = "Modello della righe del csv", required = true) @RequestBody final UploadCsvModel uploadCsvModel) {
+	PaymentJob paymentJob=modelMapper.map(uploadCsvModel, PaymentJob.class);
+	Long jobId=paymentJobService.savePaymentJob(paymentJob);
+	uploadCsvModel.setJobId(jobId);
+	paymentJobService.uploadRows(modelMapper.map(uploadCsvModel,PaymentsModel.class));
+
+	return new BooleanResponseModel(true);
     }
 }
