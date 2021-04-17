@@ -35,3 +35,21 @@ steps:
     DockerNamespace: 'hubpadarc.azurecr.io'
     DockerRepository: 'creditor-institution'
     DockerImageTag: '0.0.2'
+
+- task: Docker@2
+  inputs:
+    containerRegistry: 'pagopa-azurecr'
+    repository: 'job'
+    command: 'buildAndPush'
+    Dockerfile: './upload-payments/Dockerfile.deploy'
+    tags: '0.0.1' 
+
+- task: AzureRMWebAppDeployment@4
+  displayName: Azure App Service Deploy
+  inputs:
+    appType: webAppContainer
+    ConnectedServiceName: $(STAGING_AZURE_SUBSCRIPTION)
+    WebAppName: 'hubpa-d-job'
+    DockerNamespace: 'hubpadarc.azurecr.io'
+    DockerRepository: 'job'
+    DockerImageTag: '0.0.1'
