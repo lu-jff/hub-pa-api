@@ -1,0 +1,288 @@
+swagger: '2.0'
+info:
+  description: Servizi rest di gestione upload pagamenti per l'applicazione TariTefa
+  version: 0.0.1
+  title: Upload Payments REST API
+host: 'localhost:8084'
+basePath: /
+tags:
+  - name: upload-payments-controller
+    description: Upload Payments Controller
+paths:
+  /upload-payments/createJobRecord:
+    post:
+      tags:
+        - upload-payments-controller
+      summary: Registra un caricamento di file csv
+      description: Servizio REST per registrare un caricamento di file csv
+      operationId: createPaymentJobUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: paymentJobModel
+          description: Modello del job dei pagamenti
+          required: true
+          schema:
+            $ref: '#/definitions/PaymentJobModel'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/BooleanResponseModel'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/upload-payments/getAll/{creditorId}':
+    get:
+      tags:
+        - upload-payments-controller
+      summary: Recupera la lista dei file csv caricati
+      description: Servizio REST per recuperare la lista dei file csv caricati
+      operationId: getAllJobUsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: creditorId
+          in: path
+          description: creditorId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/PaymentJobModel'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/upload-payments/isPaymentJobAvailable/{creditorId}':
+    get:
+      tags:
+        - upload-payments-controller
+      summary: Verifica se sono stati caricati dei job non andati in errore
+      description: Servizio REST per verificare se sono stati caricati dei job non andati in errore
+      operationId: isPaymentJobAvailableUsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: creditorId
+          in: path
+          description: creditorId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/BooleanResponseModel'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /upload-payments/statusChanged:
+    get:
+      tags:
+        - upload-payments-controller
+      summary: Indica se lo stato dei job indicati è diverso da In Attesa
+      description: Servizio REST per ottenere l'informazione se lo stato dei job indicati è diverso da In Attesa
+      operationId: isJobStatusChangedUsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: jobIds
+          in: query
+          description: jobIds
+          required: true
+          type: array
+          items:
+            type: integer
+            format: int64
+          collectionFormat: multi
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/BooleanResponseModel'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /upload-payments/upload:
+    post:
+      tags:
+        - upload-payments-controller
+      summary: Carica sulla coda gli oggetti rappresentati il file csv
+      description: Servizio REST per caricare sulla coda gli oggetti rappresentati il file csv
+      operationId: uploadCsvModelsUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: uploadCsvModel
+          description: Modello della righe del csv
+          required: true
+          schema:
+            $ref: '#/definitions/UploadCsvModel'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/BooleanResponseModel'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+definitions:
+  BooleanResponseModel:
+    type: object
+    properties:
+      result:
+        type: boolean
+    title: BooleanResponseModel
+  CsvModel:
+    type: object
+    properties:
+      fileName:
+        type: string
+      rows:
+        type: array
+        items:
+          $ref: '#/definitions/CsvRowModel'
+    title: CsvModel
+  CsvRowModel:
+    type: object
+    properties:
+      address:
+        type: string
+      amount:
+        type: number
+      area:
+        type: string
+      cap:
+        type: string
+      country:
+        type: string
+      email:
+        type: string
+      fiscalCode:
+        type: string
+      idTenant:
+        type: string
+      name:
+        type: string
+      number:
+        type: string
+      phone:
+        type: string
+      province:
+        type: string
+      reason:
+        type: string
+      surname:
+        type: string
+      taxonomy:
+        type: string
+      type:
+        type: integer
+        format: int32
+    title: CsvRowModel
+  InstallmentModel:
+    type: object
+    properties:
+      dueDate:
+        type: string
+        format: date
+      percentagePrimary:
+        type: number
+      percentageSecondary:
+        type: number
+    title: InstallmentModel
+  PaymentJobModel:
+    type: object
+    properties:
+      creditorId:
+        type: integer
+        format: int64
+      elaborationDate:
+        type: string
+        format: date-time
+      fileName:
+        type: string
+      insertDate:
+        type: string
+        format: date-time
+      nrecordAdded:
+        type: integer
+        format: int32
+      nrecordFound:
+        type: integer
+        format: int32
+      status:
+        type: integer
+        format: int32
+    title: PaymentJobModel
+  TributeServiceModel:
+    type: object
+    properties:
+      denomination:
+        type: string
+      dueDateUnique:
+        type: string
+        format: date
+      fiscalCodePrimaryCreditor:
+        type: string
+      fiscalCodeSecondaryCreditor:
+        type: string
+      ibanPrimary:
+        type: string
+      ibanSecondary:
+        type: string
+      idPrimaryCreditor:
+        type: integer
+        format: int64
+      idSecondaryCreditor:
+        type: integer
+        format: int64
+      installments:
+        type: array
+        items:
+          $ref: '#/definitions/InstallmentModel'
+      percentageSecondary:
+        type: number
+    title: TributeServiceModel
+  UploadCsvModel:
+    type: object
+    properties:
+      csv:
+        $ref: '#/definitions/CsvModel'
+      jobId:
+        type: integer
+        format: int64
+      tributeService:
+        $ref: '#/definitions/TributeServiceModel'
+    title: UploadCsvModel
