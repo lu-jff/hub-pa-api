@@ -28,27 +28,29 @@ class UploadPaymentServiceTest {
 
     @Mock
     PaymentJobRepository paymentJobRepository;
-    
+
     @Test
     void countByIdsandStatusNot() throws ServletException {
 	List<Long> ids = new ArrayList<>();
 	ids.add(1l);
 
 	when(paymentJobRepository.countByJobIdInAndStatusNot(Mockito.anyList(), Mockito.anyInt())).thenReturn(2L);
-	Long result = paymentJobService.countByIdsandStatusNot(ids, 1);
+	Long result = paymentJobService.countByIdsAndStatusNot(ids, 1);
 	assertThat(result).isGreaterThan(1);
 
     }
+
     @Test
     void isPaymentJobAvailable() throws ServletException {
 
-	Long id = 1l;
+	String id = "12345678901";
 
-	when(paymentJobRepository.countByCreditorIdAndStatusNot(Mockito.anyLong(), Mockito.anyInt())).thenReturn(2L);
-	Long result = paymentJobService.countByCreditorIdAndStatusNot(id, 1);
+	when(paymentJobRepository.countByFiscalCodeAndStatusNot(Mockito.anyString(), Mockito.anyInt())).thenReturn(2L);
+	Long result = paymentJobService.countByFiscalCodeAndStatusNot(id, 1);
 	assertThat(result).isGreaterThan(1);
 
     }
+
     @Test
     void create() throws ServletException {
 	PaymentJob paymentJob = PaymentJobMock.getMock();
@@ -58,7 +60,7 @@ class UploadPaymentServiceTest {
 	assertThat(result).isTrue();
 
     }
-    
+
     @Test
     void savePaymentJob() throws ServletException {
 	PaymentJob paymentJob = PaymentJobMock.getMock();
@@ -76,9 +78,9 @@ class UploadPaymentServiceTest {
 	paymentJobs.add(serviceMock);
 	paymentJobs.add(serviceMock);
 
-	when(paymentJobRepository.findByCreditorId(any(Long.class))).thenReturn(paymentJobs);
+	when(paymentJobRepository.findByFiscalCode(any(String.class))).thenReturn(paymentJobs);
 
-	List<PaymentJob> result = paymentJobService.getAll(5L);
+	List<PaymentJob> result = paymentJobService.getAll("12345678901");
 	assertThat(result.get(0).getFileName()).isEqualTo("testFileCsv20210409.csv");
     }
 

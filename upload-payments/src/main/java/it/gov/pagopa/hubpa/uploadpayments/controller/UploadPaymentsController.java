@@ -36,15 +36,15 @@ public class UploadPaymentsController {
     @GetMapping(value = "statusChanged")
     public BooleanResponseModel isJobStatusChanged(@RequestParam List<Long> jobIds) {
 	return new BooleanResponseModel(
-		paymentJobService.countByIdsandStatusNot(jobIds, JobStatusEnum.IN_ATTESA.getStatus()) > 0 ? Boolean.TRUE
+		paymentJobService.countByIdsAndStatusNot(jobIds, JobStatusEnum.IN_ATTESA.getStatus()) > 0 ? Boolean.TRUE
 			: Boolean.FALSE);
     }
     
     @ApiOperation(value = "Verifica se sono stati caricati dei job non andati in errore", notes = "Servizio REST per verificare se sono stati caricati dei job non andati in errore", response = BooleanResponseModel.class)
-    @GetMapping(value = "isPaymentJobAvailable/{creditorId}")
-    public BooleanResponseModel isPaymentJobAvailable(@PathVariable("creditorId") Long creditorId) {
+    @GetMapping(value = "isPaymentJobAvailable/{fiscalCode}")
+    public BooleanResponseModel isPaymentJobAvailable(@PathVariable("fiscalCode") String fiscalCode) {
 	return new BooleanResponseModel(
-		paymentJobService.countByCreditorIdAndStatusNot(creditorId, JobStatusEnum.FALLITO.getStatus()) > 0 ? Boolean.TRUE
+		paymentJobService.countByFiscalCodeAndStatusNot(fiscalCode, JobStatusEnum.FALLITO.getStatus()) > 0 ? Boolean.TRUE
 			: Boolean.FALSE);
     }
     
@@ -56,9 +56,9 @@ public class UploadPaymentsController {
     }
 
     @ApiOperation(value = "Recupera la lista dei file csv caricati", notes = "Servizio REST per recuperare la lista dei file csv caricati", response = List.class)
-    @GetMapping(value = "getAll/{creditorId}")
-    public List<PaymentJobModel> getAllJob(@PathVariable("creditorId") Long creditorId) {
-	List<PaymentJob> paymentJobList = paymentJobService.getAll(creditorId);
+    @GetMapping(value = "getAll/{fiscalCode}")
+    public List<PaymentJobModel> getAllJob(@PathVariable("fiscalCode") String fiscalCode) {
+	List<PaymentJob> paymentJobList = paymentJobService.getAll(fiscalCode);
 	return paymentJobList.stream().map(paymentJob -> modelMapper.map(paymentJob, PaymentJobModel.class))
 		.collect(Collectors.toList());
     }

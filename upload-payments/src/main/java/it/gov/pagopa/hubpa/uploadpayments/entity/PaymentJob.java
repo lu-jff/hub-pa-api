@@ -17,17 +17,13 @@ import lombok.Setter;
 @Entity
 @Table(name = "paymentjob")
 public class PaymentJob {
-
-    /*@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;*/
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "job_id", nullable = false)
     private Long jobId;
-    @Column(name = "creditor_id", nullable = false)
-    private Long creditorId;
+    @Column(name = "fiscal_code", nullable = false)
+    private String fiscalCode;
     @Column(name = "file_name", nullable = false)
     private String fileName;
     @Column(name = "insert_date", nullable = false)

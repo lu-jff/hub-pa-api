@@ -11,8 +11,8 @@ import it.gov.pagopa.hubpa.uploadpayments.entity.PaymentJob;
 public interface PaymentJobRepository extends JpaRepository<PaymentJob, Long> {
     long countByJobIdInAndStatusNot(List<Long> jobIds, Integer status);
 
-    long countByCreditorIdAndStatusNot(Long creditorId, Integer status);
+    long countByFiscalCodeAndStatusNot(String fiscalCode, Integer status);
 
-    List<PaymentJob> findByCreditorId(Long creditorId);
+    List<PaymentJob> findByFiscalCode(String fiscalCode);
 
 }

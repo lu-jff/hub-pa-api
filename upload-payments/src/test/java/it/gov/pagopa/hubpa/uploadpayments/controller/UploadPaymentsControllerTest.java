@@ -47,11 +47,11 @@ class UploadPaymentsControllerTest {
     void isJobStatusChanged() {
 
 	BooleanResponseModel esito = null;
-	when(paymentJobService.countByIdsandStatusNot(Mockito.anyList(), Mockito.anyInt())).thenReturn(1l);
+	when(paymentJobService.countByIdsAndStatusNot(Mockito.anyList(), Mockito.anyInt())).thenReturn(1l);
 	esito = uploadPaymentsController.isJobStatusChanged(new ArrayList<Long>());
 	assertThat(esito.getResult()).isTrue();
 
-	when(paymentJobService.countByIdsandStatusNot(Mockito.anyList(), Mockito.anyInt())).thenReturn(0l);
+	when(paymentJobService.countByIdsAndStatusNot(Mockito.anyList(), Mockito.anyInt())).thenReturn(0l);
 	esito = uploadPaymentsController.isJobStatusChanged(new ArrayList<Long>());
 	assertThat(esito.getResult()).isFalse();
 
@@ -60,12 +60,12 @@ class UploadPaymentsControllerTest {
     void isPaymentJobAvailable() {
 
 	BooleanResponseModel esito = null;
-	when(paymentJobService.countByCreditorIdAndStatusNot(Mockito.anyLong(), Mockito.anyInt())).thenReturn(1l);
-	esito = uploadPaymentsController.isPaymentJobAvailable(1l);
+	when(paymentJobService.countByFiscalCodeAndStatusNot(Mockito.anyString(), Mockito.anyInt())).thenReturn(1l);
+	esito = uploadPaymentsController.isPaymentJobAvailable("12345678901");
 	assertThat(esito.getResult()).isTrue();
 
-	when(paymentJobService.countByCreditorIdAndStatusNot(Mockito.anyLong(), Mockito.anyInt())).thenReturn(0l);
-	esito = uploadPaymentsController.isPaymentJobAvailable(1l);
+	when(paymentJobService.countByFiscalCodeAndStatusNot(Mockito.anyString(), Mockito.anyInt())).thenReturn(0l);
+	esito = uploadPaymentsController.isPaymentJobAvailable("12345678901");
 	assertThat(esito.getResult()).isFalse();
 
     }
@@ -79,8 +79,8 @@ class UploadPaymentsControllerTest {
 	List<PaymentJob> listPaymentJob = new ArrayList<>();
 	listPaymentJob.add(paymentJob);
 	listPaymentJob.add(paymentJob);
-	when(paymentJobService.getAll(Mockito.anyLong())).thenReturn(listPaymentJob);
-	List<PaymentJobModel> result = uploadPaymentsController.getAllJob(1l);
+	when(paymentJobService.getAll(Mockito.anyString())).thenReturn(listPaymentJob);
+	List<PaymentJobModel> result = uploadPaymentsController.getAllJob("12345678901");
 	assertThat(result.size()).isEqualTo(2);
     }
 
@@ -140,7 +140,7 @@ class UploadPaymentsControllerTest {
     @Test
     void testGetModel() {
 	PaymentJobModel mock = PaymentJobModelMock.getMock();
-	assertThat(mock.getCreditorId()).isNotNull();
+	assertThat(mock.getFiscalCode()).isNotNull();
 	assertThat(mock.getFileName()).isNotNull();
 	assertThat(mock.getInsertDate()).isNotNull();
 	assertThat(mock.getElaborationDate()).isNotNull();
@@ -153,7 +153,7 @@ class UploadPaymentsControllerTest {
     void testGetEntity() {
 	PaymentJob mock = PaymentJobMock.getMock();
 	assertThat(mock.getJobId()).isNotNull();
-	assertThat(mock.getCreditorId()).isNotNull();
+	assertThat(mock.getFiscalCode()).isNotNull();
 	assertThat(mock.getFileName()).isNotNull();
 	assertThat(mock.getInsertDate()).isNotNull();
 	assertThat(mock.getElaborationDate()).isNotNull();

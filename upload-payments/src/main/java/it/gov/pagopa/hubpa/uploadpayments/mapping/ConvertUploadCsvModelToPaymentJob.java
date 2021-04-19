@@ -15,7 +15,7 @@ public class ConvertUploadCsvModelToPaymentJob implements Converter<UploadCsvMod
 	UploadCsvModel source = context.getSource();
 	PaymentJob destination = new PaymentJob();
 
-	destination.setCreditorId(source.getTributeService().getIdPrimaryCreditor());
+	destination.setFiscalCode(source.getTributeService().getFiscalCodePrimaryCreditor());
 	destination.setFileName(source.getCsv().getFileName());
 	destination.setInsertDate(LocalDateTime.now());
 	destination.setStatus(JobStatusEnum.IN_ATTESA.getStatus());

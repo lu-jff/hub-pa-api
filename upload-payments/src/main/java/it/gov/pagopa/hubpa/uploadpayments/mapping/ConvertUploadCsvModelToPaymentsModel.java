@@ -63,7 +63,6 @@ public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsv
 	String taxonomy = row.getTaxonomy();
 	String reason = row.getReason();
 	LocalDate dueDateUnique = tributeServiceModel.getDueDateUnique();
-	Long creditorId = tributeServiceModel.getIdPrimaryCreditor();
 
 	PaymentPositionModel paymentPositionModel = new PaymentPositionModel();
 	paymentPositionModel.setOrganizationFiscalCode(tributeServiceModel.getFiscalCodePrimaryCreditor());
@@ -97,7 +96,7 @@ public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsv
 	for (InstallmentModel installment : installments) {
 
 	    PaymentOptionsModel paymentOptionsModel = new PaymentOptionsModel();
-	    paymentOptionsModel.setCreditorReferenceId(creditorId);
+	    paymentOptionsModel.setFiscalCode(tributeServiceModel.getFiscalCodePrimaryCreditor());
 	    paymentOptionsModel.setDuoDate(installment.getDueDate());
 	    paymentOptionsModel.setRetentionDate(null);
 	    paymentOptionsModel.setIsConclusive(Boolean.FALSE);
@@ -161,7 +160,7 @@ public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsv
     private PaymentOptionsModel createPaymentPositionUnique(TributeServiceModel tributeServiceModel, CsvRowModel row,
 	    BigDecimal totalAmountPrimary, BigDecimal totalAmountSecondary) {
 	PaymentOptionsModel paymentOptionsModel = new PaymentOptionsModel();
-	paymentOptionsModel.setCreditorReferenceId(tributeServiceModel.getIdPrimaryCreditor());
+	paymentOptionsModel.setFiscalCode(tributeServiceModel.getFiscalCodePrimaryCreditor());
 	paymentOptionsModel.setDuoDate(tributeServiceModel.getDueDateUnique());
 	paymentOptionsModel.setRetentionDate(null);
 	paymentOptionsModel.setIsConclusive(Boolean.TRUE);
