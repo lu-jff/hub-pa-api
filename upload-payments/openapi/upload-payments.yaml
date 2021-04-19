@@ -40,7 +40,7 @@ paths:
           description: Forbidden
         '404':
           description: Not Found
-  '/upload-payments/getAll/{creditorId}':
+  '/upload-payments/getAll/{fiscalCode}':
     get:
       tags:
         - upload-payments-controller
@@ -50,12 +50,11 @@ paths:
       produces:
         - '*/*'
       parameters:
-        - name: creditorId
+        - name: fiscalCode
           in: path
-          description: creditorId
+          description: fiscalCode
           required: true
-          type: integer
-          format: int64
+          type: string
       responses:
         '200':
           description: OK
@@ -69,7 +68,7 @@ paths:
           description: Forbidden
         '404':
           description: Not Found
-  '/upload-payments/isPaymentJobAvailable/{creditorId}':
+  '/upload-payments/isPaymentJobAvailable/{fiscalCode}':
     get:
       tags:
         - upload-payments-controller
@@ -79,12 +78,11 @@ paths:
       produces:
         - '*/*'
       parameters:
-        - name: creditorId
+        - name: fiscalCode
           in: path
-          description: creditorId
+          description: fiscalCode
           required: true
-          type: integer
-          format: int64
+          type: string
       responses:
         '200':
           description: OK
@@ -225,13 +223,12 @@ definitions:
   PaymentJobModel:
     type: object
     properties:
-      creditorId:
-        type: integer
-        format: int64
       elaborationDate:
         type: string
         format: date-time
       fileName:
+        type: string
+      fiscalCode:
         type: string
       insertDate:
         type: string
@@ -262,12 +259,6 @@ definitions:
         type: string
       ibanSecondary:
         type: string
-      idPrimaryCreditor:
-        type: integer
-        format: int64
-      idSecondaryCreditor:
-        type: integer
-        format: int64
       installments:
         type: array
         items:
