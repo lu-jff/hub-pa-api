@@ -21,16 +21,12 @@ public class ConvertTributeServiceModelToService implements Converter<TributeSer
 
 	String ibanPrimary = source.getIbanPrimary();
 	String ibanSecondary = source.getIbanSecondary();
-	Long creditorId = source.getIdPrimaryCreditor();
-	Long secondaryCreditorId = source.getIdSecondaryCreditor();
 	String fiscalCodePrimaryCreditor = source.getFiscalCodePrimaryCreditor();
 	String fiscalCodeSecondaryCreditor = source.getFiscalCodeSecondaryCreditor();
 	LocalDate duoDateUnique = source.getDueDateUnique();
 	List<InstallmentModel> installments = source.getInstallments();
 	int totalInstallments = installments != null ? installments.size() : 0;
 
-	destination.setCreditorId(creditorId);
-	destination.setSecondaryCreditorId(secondaryCreditorId);
 	destination.setFiscalCodePrimaryCreditor(fiscalCodePrimaryCreditor);
 	destination.setFiscalCodeSecondaryCreditor(fiscalCodeSecondaryCreditor);
 	destination.setDenomination(source.getDenomination());
@@ -39,8 +35,9 @@ public class ConvertTributeServiceModelToService implements Converter<TributeSer
 
 	int installmentNumber = 0;
 	if (duoDateUnique != null) {
-	    destination.addPaymentOptionTemplate(addPaymentOptionTemplateUnique(duoDateUnique,
-		    Integer.valueOf(installmentNumber), true, ibanPrimary, ibanSecondary, BigDecimal.valueOf(100), BigDecimal.valueOf(100)));
+	    destination.addPaymentOptionTemplate(
+		    addPaymentOptionTemplateUnique(duoDateUnique, Integer.valueOf(installmentNumber), true, ibanPrimary,
+			    ibanSecondary, BigDecimal.valueOf(100), BigDecimal.valueOf(100)));
 	}
 
 	for (InstallmentModel installment : installments) {
@@ -62,8 +59,7 @@ public class ConvertTributeServiceModelToService implements Converter<TributeSer
 	paymentOptionTemplate.setIsFinal(isFinal);
 
 	paymentOptionTemplate.addTransferTemplate(addTransferTemplate(primaryIban, primaryPercentage, false));
-	paymentOptionTemplate
-		.addTransferTemplate(addTransferTemplate(secondaryIban, secondaryPercentage, true));
+	paymentOptionTemplate.addTransferTemplate(addTransferTemplate(secondaryIban, secondaryPercentage, true));
 
 	return paymentOptionTemplate;
     }

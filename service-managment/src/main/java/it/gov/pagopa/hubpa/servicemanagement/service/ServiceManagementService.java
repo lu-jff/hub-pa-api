@@ -13,13 +13,13 @@ public class ServiceManagementService {
     @Autowired
     ServiceRepository serviceRepository;
 
-    public Boolean isServiceConfigurated(Long creditorId) {
-	long countConfiguration = serviceRepository.countByCreditorId(creditorId);
+    public Boolean isServiceConfigurated(String fiscalCode) {
+	long countConfiguration = serviceRepository.countByFiscalCodePrimaryCreditor(fiscalCode);
 	return countConfiguration > 0;
     }
 
-    public it.gov.pagopa.hubpa.servicemanagement.entity.Service getService(Long id) {
-	List<it.gov.pagopa.hubpa.servicemanagement.entity.Service> services = serviceRepository.findByCreditorId(id);
+    public it.gov.pagopa.hubpa.servicemanagement.entity.Service getService(String fiscalCode) {
+	List<it.gov.pagopa.hubpa.servicemanagement.entity.Service> services = serviceRepository.findByFiscalCodePrimaryCreditor(fiscalCode);
 	it.gov.pagopa.hubpa.servicemanagement.entity.Service service = null;
 
 	if (!services.isEmpty()) {
