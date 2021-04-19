@@ -14,8 +14,6 @@ public class TributeServiceModel implements Serializable {
 
     private static final long serialVersionUID = 7425291399402275357L;
     
-    private Long idPrimaryCreditor;
-    private Long idSecondaryCreditor;
     private String fiscalCodePrimaryCreditor;
     private String fiscalCodeSecondaryCreditor;
     private String ibanPrimary;
@@ -23,6 +21,6 @@ public class TributeServiceModel implements Serializable {
     private String denomination;
     private BigDecimal percentageSecondary;
     private LocalDate dueDateUnique;
-    List<InstallmentModel> installments;
+    private List<InstallmentModel> installments;
 
 }

@@ -24,7 +24,7 @@ public class PaymentJobService {
     @Value("${QUEUE_NAME}")
     private String queueName;
 
-    public Long countByIdsandStatusNot(List<Long> jobIds, Integer status) {
+    public Long countByIdsAndStatusNot(List<Long> jobIds, Integer status) {
 	return paymentJobRepository.countByJobIdInAndStatusNot(jobIds, status);
     }
 
@@ -33,8 +33,8 @@ public class PaymentJobService {
 	return Boolean.TRUE;
     }
 
-    public List<PaymentJob> getAll(Long creditorId) {
-	return paymentJobRepository.findByCreditorId(creditorId);
+    public List<PaymentJob> getAll(String fiscalCode) {
+	return paymentJobRepository.findByFiscalCode(fiscalCode);
     }
 
     public void uploadRows(PaymentsModel paymentsModel) {
@@ -48,8 +48,8 @@ public class PaymentJobService {
 	return paymentJobNew.getJobId();
     }
 
-    public long countByCreditorIdAndStatusNot(Long creditorId, Integer status) {
-	return paymentJobRepository.countByCreditorIdAndStatusNot(creditorId, status);
+    public long countByFiscalCodeAndStatusNot(String fiscalCode, Integer status) {
+	return paymentJobRepository.countByFiscalCodeAndStatusNot(fiscalCode, status);
     }
 
 }

@@ -17,7 +17,7 @@ public class PaymentOptionsModel implements Serializable {
 
     private static final long serialVersionUID = -2235767669718081320L;
     
-    private Long creditorReferenceId;
+    private String fiscalCode;
     private BigDecimal amount;
     private LocalDate duoDate;
     private LocalDate retentionDate;

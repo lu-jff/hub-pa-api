@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PaymentJobModel {
 
-    private Long creditorId;
+    private String fiscalCode;
     private String fileName;
     private LocalDateTime insertDate;
     private LocalDateTime elaborationDate;
