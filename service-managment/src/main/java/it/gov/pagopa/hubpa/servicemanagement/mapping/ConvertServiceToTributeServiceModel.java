@@ -21,17 +21,13 @@ public class ConvertServiceToTributeServiceModel implements Converter<Service, T
 	TributeServiceModel destination = new TributeServiceModel();
 	
 	String denomination = source.getDenomination();
-	    long creditorId = source.getCreditorId();
-	    long secondaryCreditorId = source.getSecondaryCreditorId();
 	    String fiscalCodePrimaryCreditor = source.getFiscalCodePrimaryCreditor();
 	    String fiscalCodeSecondaryCreditor = source.getFiscalCodeSecondaryCreditor();
 	    BigDecimal percentageSecondary = source.getPercentage();
 
 	    destination.setDenomination(denomination);
-	    destination.setIdPrimaryCreditor(creditorId);
 	    destination.setFiscalCodePrimaryCreditor(fiscalCodePrimaryCreditor);
 	    destination.setFiscalCodeSecondaryCreditor(fiscalCodeSecondaryCreditor);
-	    destination.setIdSecondaryCreditor(secondaryCreditorId);
 	    destination.setPercentageSecondary(percentageSecondary);
 
 	    List<PaymentOptionTemplate> paymentOptionTemplateList = source.getPaymentOptionTemplate();

@@ -30,8 +30,8 @@ class ServiceManagementServiceTest {
 
     @Test
     void isServiceConfiguratedTest() throws ServletException {
-	when(serviceRepository.countByCreditorId(any(Long.class))).thenReturn(1L);
-	Boolean result = serviceManagementService.isServiceConfigurated(1L);
+	when(serviceRepository.countByFiscalCodePrimaryCreditor(any(String.class))).thenReturn(1L);
+	Boolean result = serviceManagementService.isServiceConfigurated("12345678901");
 	assertThat(result).isTrue();
 
     }
@@ -42,8 +42,8 @@ class ServiceManagementServiceTest {
 	List<Service> serviceMockList = new ArrayList<>();
 	serviceMockList.add(serviceMock);
 
-	when(serviceRepository.findByCreditorId(any(Long.class))).thenReturn(serviceMockList);
-	Service serviceModel = serviceManagementService.getService(5L);
+	when(serviceRepository.findByFiscalCodePrimaryCreditor(any(String.class))).thenReturn(serviceMockList);
+	Service serviceModel = serviceManagementService.getService("12345678901");
 	assertThat(serviceModel.getDenomination()).isEqualTo("TariTefa2021");
     }
 

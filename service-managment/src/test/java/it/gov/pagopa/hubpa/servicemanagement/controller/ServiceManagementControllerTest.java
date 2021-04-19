@@ -15,7 +15,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import it.gov.pagopa.hubpa.servicemanagement.ServiceManagementApplication;
+import it.gov.pagopa.hubpa.servicemanagement.config.DevCorsConfiguration;
 import it.gov.pagopa.hubpa.servicemanagement.config.MappingsConfiguration;
 import it.gov.pagopa.hubpa.servicemanagement.entity.Service;
 import it.gov.pagopa.hubpa.servicemanagement.mock.ServiceMock;
@@ -24,6 +29,7 @@ import it.gov.pagopa.hubpa.servicemanagement.model.ServiceConfiguratedModel;
 import it.gov.pagopa.hubpa.servicemanagement.model.TributeServiceModel;
 import it.gov.pagopa.hubpa.servicemanagement.service.ServiceManagementService;
 import it.gov.pagopa.hubpa.servicemanagement.validator.ServiceManagementValidator;
+import springfox.documentation.spring.web.plugins.Docket;
 
 @ExtendWith(MockitoExtension.class)
 class ServiceManagementControllerTest {
@@ -45,8 +51,8 @@ class ServiceManagementControllerTest {
 
     @Test
     void isServiceConfiguratedTest() throws ServletException {
-	when(serviceManagementService.isServiceConfigurated(any(Long.class))).thenReturn(Boolean.TRUE);
-	ServiceConfiguratedModel serviceConfiguratedModel = serviceManagementController.isServiceConfigurated(1L);
+	when(serviceManagementService.isServiceConfigurated(any(String.class))).thenReturn(Boolean.TRUE);
+	ServiceConfiguratedModel serviceConfiguratedModel = serviceManagementController.isServiceConfigurated("12345678901");
 	assertThat(serviceConfiguratedModel.getResult()).isTrue();
     }
 
@@ -55,11 +61,15 @@ class ServiceManagementControllerTest {
 
 	Service serviceMock = ServiceMock.getMock();
 	TributeServiceModel modelMock = TributeServiceModelMock.validationOKCase1();
-	when(serviceManagementService.getService(any(Long.class))).thenReturn(serviceMock);
+	when(serviceManagementService.getService(any(String.class))).thenReturn(serviceMock);
 	when(modelMapperMock.map(any(Service.class), any())).thenReturn(modelMock);
 
-	TributeServiceModel tributeServiceModel = serviceManagementController.getService(5L);
+	TributeServiceModel tributeServiceModel = serviceManagementController.getService("12345678901");
+	when(serviceManagementService.getService(any(String.class))).thenReturn(null);
+	TributeServiceModel tributeServiceModel2 = serviceManagementController.getService("12345678901");
 	assertThat(tributeServiceModel.getDenomination()).isEqualTo("TariTefa2021");
+	assertThat(tributeServiceModel2).isNull();
+	
     }
 
     @Test
@@ -137,4 +147,22 @@ class ServiceManagementControllerTest {
 	// get BindingResult that includes any validation errors
 	return binder.getBindingResult();
     }
+    @Test
+    void applciationTest() {
+	ServiceManagementApplication mm = new ServiceManagementApplication();
+	Docket api = mm.api();
+	assertThat(api).isNotNull();
+    }
+
+    @Test
+    void devCorsTest() {
+	DevCorsConfiguration mm = new DevCorsConfiguration();
+	WebMvcConfigurer corsConfigurer = mm.corsConfigurer();
+	CorsRegistry registry = new CorsRegistry();
+	corsConfigurer.addCorsMappings(registry);
+	RestTemplate restTemplate = mm.restTemplate();
+	assertThat(corsConfigurer).isNotNull();
+	assertThat(restTemplate).isNotNull();
+    }
+
 }

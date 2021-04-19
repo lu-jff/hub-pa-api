@@ -10,10 +10,8 @@ import it.gov.pagopa.hubpa.servicemanagement.entity.TransferTemplate;
 public class ServiceMock {
     public final static Service getMock() {
 	Service ss = new Service();
-	ss.setCreditorId(1L);
 	ss.setDenomination("TariTefa2021");
 	ss.setPercentage(BigDecimal.valueOf(5));
-	ss.setSecondaryCreditorId(2L);
 	ss.setTotalInstallments(3);
 	ss.setFiscalCodePrimaryCreditor("VBMPGR31H03F993U");
 	ss.setFiscalCodeSecondaryCreditor("FMMFLN90H13E027F");

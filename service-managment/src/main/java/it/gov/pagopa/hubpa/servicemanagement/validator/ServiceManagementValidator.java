@@ -29,8 +29,6 @@ public class ServiceManagementValidator implements Validator {
 	TributeServiceModel tributeServiceModel = (TributeServiceModel) target;
 
 	ValidationUtils.rejectIfEmptyOrWhitespace(errors, "denomination", "denomination","Denominazione obbligatoria");
-	ValidationUtils.rejectIfEmpty(errors, "idPrimaryCreditor", "idPrimaryCreditor", "Ente primario obbligatorio");
-	ValidationUtils.rejectIfEmpty(errors, "idSecondaryCreditor", "idSecondaryCreditor", "Ente secondario obbligatorio");
 	ValidationUtils.rejectIfEmptyOrWhitespace(errors, "ibanPrimary", "ibanPrimary_code", "Selezionare un IBAN primario");
 	ValidationUtils.rejectIfEmptyOrWhitespace(errors, "ibanSecondary", "ibanSecondary_code", "Selezionare un IBAN secondario");
 	ValidationUtils.rejectIfEmpty(errors, "percentageSecondary", "percentageSecondary", "Percentuale TEFA obbligatoria");

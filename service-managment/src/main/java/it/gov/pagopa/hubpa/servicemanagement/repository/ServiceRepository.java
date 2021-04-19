@@ -9,7 +9,7 @@ import it.gov.pagopa.hubpa.servicemanagement.entity.Service;
 
 @Repository
 public interface ServiceRepository extends JpaRepository<Service, Long> {
-    long countByCreditorId(Long creditorId);
+    long countByFiscalCodePrimaryCreditor(String fiscalCode);
 
-    List<Service> findByCreditorId(long creditorId);
+    List<Service> findByFiscalCodePrimaryCreditor(String fiscalCode);
 }

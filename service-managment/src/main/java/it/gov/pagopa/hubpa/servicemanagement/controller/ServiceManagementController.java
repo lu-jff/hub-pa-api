@@ -41,9 +41,9 @@ public class ServiceManagementController {
     }
 
     @ApiOperation(value = "Indica se è presente un tributo", notes = "Servizio REST per ottenere l'informazione della presenza di un tributo configurato", response = ServiceConfiguratedModel.class)
-    @GetMapping(value = "service/info/{creditorId}")
-    public ServiceConfiguratedModel isServiceConfigurated(@PathVariable("creditorId") Long creditorId) {
-	return new ServiceConfiguratedModel(serviceManagementService.isServiceConfigurated(creditorId));
+    @GetMapping(value = "service/info/{fiscalCode}")
+    public ServiceConfiguratedModel isServiceConfigurated(@PathVariable("fiscalCode") String fiscalCode) {
+	return new ServiceConfiguratedModel(serviceManagementService.isServiceConfigurated(fiscalCode));
     }
 
     @ApiOperation(value = "Salva il tributo", notes = "Servizio REST per creare un tributo", response = ServiceConfiguratedModel.class)
@@ -56,9 +56,9 @@ public class ServiceManagementController {
     }
 
     @ApiOperation(value = "Recupera i dati del tributo", notes = "Servizio REST per recuperare i dati di un tributo", response = TributeServiceModel.class)
-    @GetMapping(value = "service/{creditorId}")
-    public TributeServiceModel getService(@PathVariable("creditorId") Long creditorId) {
-	Service service=serviceManagementService.getService(creditorId);
+    @GetMapping(value = "service/{fiscalCode}")
+    public TributeServiceModel getService(@PathVariable("fiscalCode") String fiscalCode) {
+	Service service=serviceManagementService.getService(fiscalCode);
 	TributeServiceModel tributeServiceModel=null;
 	if(service!=null) {
 	    tributeServiceModel = modelMapper.map(service, TributeServiceModel.class);

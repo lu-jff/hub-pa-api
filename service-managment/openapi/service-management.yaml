@@ -1,15 +1,15 @@
 swagger: '2.0'
 info:
-  description: Servizi rest di autenticazione SPID per l'applicazione TariTefa
+  description: Servizi rest di gestione contributo per l'applicazione TariTefa
   version: 0.0.1
-  title: SPID REST API
+  title: Service Management REST API
 host: 'localhost:8083'
 basePath: /
 tags:
   - name: service-management-controller
     description: Service Management Controller
 paths:
-  /service:
+  /service-management/service:
     post:
       tags:
         - service-management-controller
@@ -22,7 +22,7 @@ paths:
         - '*/*'
       parameters:
         - in: body
-          name: tributeService
+          name: tributeServiceModel
           description: Modello del tributo
           required: true
           schema:
@@ -40,24 +40,21 @@ paths:
           description: Forbidden
         '404':
           description: Not Found
-  '/service/info/{creditorId}':
+  '/service-management/service/info/{fiscalCode}':
     get:
       tags:
         - service-management-controller
       summary: Indica se è presente un tributo
       description: Servizio REST per ottenere l'informazione della presenza di un tributo configurato
       operationId: isServiceConfiguratedUsingGET
-      consumes:
-        - application/json
       produces:
         - '*/*'
       parameters:
-        - name: creditorId
+        - name: fiscalCode
           in: path
-          description: creditorId
+          description: fiscalCode
           required: true
-          type: integer
-          format: int64
+          type: string
       responses:
         '200':
           description: OK
@@ -69,24 +66,21 @@ paths:
           description: Forbidden
         '404':
           description: Not Found
-  '/service/{creditorId}':
+  '/service-management/service/{fiscalCode}':
     get:
       tags:
         - service-management-controller
       summary: Recupera i dati del tributo
       description: Servizio REST per recuperare i dati di un tributo
       operationId: getServiceUsingGET
-      consumes:
-        - application/json
       produces:
         - '*/*'
       parameters:
-        - name: creditorId
+        - name: fiscalCode
           in: path
-          description: creditorId
+          description: fiscalCode
           required: true
-          type: integer
-          format: int64
+          type: string
       responses:
         '200':
           description: OK
@@ -109,11 +103,13 @@ definitions:
         type: number
       percentageSecondary:
         type: number
+    title: InstallmentModel
   ServiceConfiguratedModel:
     type: object
     properties:
       result:
         type: boolean
+    title: ServiceConfiguratedModel
   TributeServiceModel:
     type: object
     properties:
@@ -122,19 +118,18 @@ definitions:
       dueDateUnique:
         type: string
         format: date
+      fiscalCodePrimaryCreditor:
+        type: string
+      fiscalCodeSecondaryCreditor:
+        type: string
       ibanPrimary:
         type: string
       ibanSecondary:
         type: string
-      idPrimaryCreditor:
-        type: integer
-        format: int64
-      idSecondaryCreditor:
-        type: integer
-        format: int64
       installments:
         type: array
         items:
           $ref: '#/definitions/InstallmentModel'
       percentageSecondary:
         type: number
+    title: TributeServiceModel
