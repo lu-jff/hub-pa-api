@@ -9,12 +9,12 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- task: SonarQubePrepare@4
-  inputs:
-    SonarQube: $(SONARQUBE_CONNECTION)
-    scannerMode: 'Other'
-    extraProperties: 'sonar.projectKey=PTT'
+# steps:
+# - task: SonarQubePrepare@4
+#   inputs:
+#     SonarQube: $(SONARQUBE_CONNECTION)
+#     scannerMode: 'Other'
+#     extraProperties: 'sonar.projectKey=PTT'
 
 - task: Maven@3
   inputs:
