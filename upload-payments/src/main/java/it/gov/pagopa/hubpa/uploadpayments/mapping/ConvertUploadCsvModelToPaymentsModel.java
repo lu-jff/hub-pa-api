@@ -22,6 +22,9 @@ import it.gov.pagopa.hubpa.uploadpayments.model.servicemanagement.TributeService
 public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsvModel, PaymentsModel> {
 
     private static final Integer INSERT_STATUS = 1;
+    
+    private static final String TAXONOMY_PRIMARY=System.getenv().get("TAXONOMY_PRIMARY");
+    private static final String TAXONOMY_SECONDARY=System.getenv().get("TAXONOMY_SECONDARY");
 
     @Override
     public PaymentsModel convert(MappingContext<UploadCsvModel, PaymentsModel> context) {
@@ -60,7 +63,6 @@ public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsv
 	    CsvRowModel row) {
 
 	BigDecimal amount = row.getAmount();
-	String taxonomy = row.getTaxonomy();
 	String reason = row.getReason();
 	LocalDate dueDateUnique = tributeServiceModel.getDueDateUnique();
 
@@ -71,6 +73,7 @@ public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsv
 	paymentPositionModel.setStatus(INSERT_STATUS);
 	paymentPositionModel.setDescription(null);
 	paymentPositionModel.setJobId(jobId);
+	paymentPositionModel.setAmount(row.getAmount());
 
 	List<InstallmentModel> installments = tributeServiceModel.getInstallments();
 
@@ -101,6 +104,8 @@ public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsv
 	    paymentOptionsModel.setRetentionDate(null);
 	    paymentOptionsModel.setIsConclusive(Boolean.FALSE);
 	    paymentOptionsModel.setMetadata(null);
+	    
+	    
 
 	    BigDecimal percentagePrimary = installment.getPercentagePrimary();
 	    BigDecimal percentageSecondary = installment.getPercentageSecondary();
@@ -120,7 +125,7 @@ public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsv
 		transfersModel.setIban(tributeServiceModel.getIbanPrimary());
 		transfersModel.setOrganizationFiscalCode(tributeServiceModel.getFiscalCodePrimaryCreditor());
 		transfersModel.setReason(reason);
-		transfersModel.setTaxonomy(taxonomy);
+		transfersModel.setTaxonomy(TAXONOMY_PRIMARY);
 
 		paymentOptionsModel.getTransfers().add(transfersModel);
 
@@ -142,7 +147,7 @@ public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsv
 		transfersModel.setIban(tributeServiceModel.getIbanSecondary());
 		transfersModel.setOrganizationFiscalCode(tributeServiceModel.getFiscalCodeSecondaryCreditor());
 		transfersModel.setReason(reason);
-		transfersModel.setTaxonomy(taxonomy);
+		transfersModel.setTaxonomy(TAXONOMY_SECONDARY);
 
 		paymentOptionsModel.getTransfers().add(transfersModel);
 
@@ -171,7 +176,7 @@ public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsv
 	transfersModel.setIban(tributeServiceModel.getIbanPrimary());
 	transfersModel.setOrganizationFiscalCode(tributeServiceModel.getFiscalCodePrimaryCreditor());
 	transfersModel.setReason(row.getReason());
-	transfersModel.setTaxonomy(row.getTaxonomy());
+	transfersModel.setTaxonomy(TAXONOMY_PRIMARY);
 
 	paymentOptionsModel.getTransfers().add(transfersModel);
 
@@ -181,7 +186,7 @@ public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsv
 	    transfersModel.setIban(tributeServiceModel.getIbanSecondary());
 	    transfersModel.setOrganizationFiscalCode(tributeServiceModel.getFiscalCodeSecondaryCreditor());
 	    transfersModel.setReason(row.getReason());
-	    transfersModel.setTaxonomy(row.getTaxonomy());
+	    transfersModel.setTaxonomy(TAXONOMY_SECONDARY);
 
 	    paymentOptionsModel.getTransfers().add(transfersModel);
 	}

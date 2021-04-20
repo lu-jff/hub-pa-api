@@ -1,6 +1,7 @@
 package it.gov.pagopa.hubpa.uploadpayments.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class PaymentPositionModel implements Serializable {
     private Integer status;
     private String description;
     private Long jobId;
+    private BigDecimal amount;
     
     private List<PaymentOptionsModel> paymentOptions=new ArrayList<>();
 }
