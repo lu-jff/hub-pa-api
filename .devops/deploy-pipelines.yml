@@ -18,10 +18,11 @@ steps:
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
 
+# Build and deploy CREDITOR microservice docker
 - task: Docker@2
   inputs:
     containerRegistry: 'pagopa-azurecr'
-    repository: 'creditor-institution'
+    repository: 'creditor'
     command: 'buildAndPush'
     Dockerfile: './ente-creditore/Dockerfile.deploy'
     tags: '0.0.2' 
@@ -31,11 +32,12 @@ steps:
   inputs:
     appType: webAppContainer
     ConnectedServiceName: $(STAGING_AZURE_SUBSCRIPTION)
-    WebAppName: 'hubpa-d-creditor-institution'
+    WebAppName: 'hubpa-d-creditor-ms'
     DockerNamespace: 'hubpadarc.azurecr.io'
-    DockerRepository: 'creditor-institution'
+    DockerRepository: 'creditor'
     DockerImageTag: '0.0.2'
 
+# Build and deploy JOB microservice docker
 - task: Docker@2
   inputs:
     containerRegistry: 'pagopa-azurecr'
@@ -49,7 +51,27 @@ steps:
   inputs:
     appType: webAppContainer
     ConnectedServiceName: $(STAGING_AZURE_SUBSCRIPTION)
-    WebAppName: 'hubpa-d-job'
+    WebAppName: 'hubpa-d-job-ms'
     DockerNamespace: 'hubpadarc.azurecr.io'
     DockerRepository: 'job'
     DockerImageTag: '0.0.1'
+
+# Build and deploy SERVICE microservice docker
+- task: Docker@2
+  inputs:
+    containerRegistry: 'pagopa-azurecr'
+    repository: 'service'
+    command: 'buildAndPush'
+    Dockerfile: './service-management/Dockerfile.deploy'
+    tags: '0.0.1' 
+
+- task: AzureRMWebAppDeployment@4
+  displayName: Azure App Service Deploy
+  inputs:
+    appType: webAppContainer
+    ConnectedServiceName: $(STAGING_AZURE_SUBSCRIPTION)
+    WebAppName: 'hubpa-d-service-ms'
+    DockerNamespace: 'hubpadarc.azurecr.io'
+    DockerRepository: 'service'
+    DockerImageTag: '0.0.1'
+
