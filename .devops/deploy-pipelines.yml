@@ -62,7 +62,7 @@ steps:
     containerRegistry: 'pagopa-azurecr'
     repository: 'service'
     command: 'buildAndPush'
-    Dockerfile: './service-management/Dockerfile.deploy'
+    Dockerfile: './service-managment/Dockerfile.deploy'
     tags: '0.0.1' 
 
 - task: AzureRMWebAppDeployment@4
