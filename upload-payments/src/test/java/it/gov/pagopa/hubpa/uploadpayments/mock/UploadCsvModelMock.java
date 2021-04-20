@@ -44,7 +44,6 @@ public class UploadCsvModelMock {
 	mock.setIdTenant("abcd");
 	mock.setAmount(new BigDecimal(265));
 	mock.setReason("Pagamento tari/tefa");
-	mock.setTaxonomy("01/2252565/14");
 	mockList.add(mock);
 
 	mock = new CsvRowModel();
@@ -62,7 +61,6 @@ public class UploadCsvModelMock {
 	mock.setIdTenant("trty");
 	mock.setAmount(new BigDecimal(489));
 	mock.setReason("Pagamento tari/tefa milano");
-	mock.setTaxonomy("01/585858/14");
 	mockList.add(mock);
 
 	return mockList;

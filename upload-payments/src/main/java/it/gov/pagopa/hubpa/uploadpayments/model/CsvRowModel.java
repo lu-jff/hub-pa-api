@@ -28,8 +28,5 @@ public class CsvRowModel implements Serializable {
     private String idTenant;
     private BigDecimal amount;
     private String reason;
-    private String taxonomy;
-    
-    
   
 }
