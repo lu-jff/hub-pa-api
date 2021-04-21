@@ -24,7 +24,6 @@
 	</properties>
 
 	<modules>
-		<module>microservice</module>
 		<module>ente-creditore</module>
 		<module>service-managment</module>
 		<module>upload-payments</module>
