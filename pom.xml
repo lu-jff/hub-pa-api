@@ -24,6 +24,7 @@
 	</properties>
 
 	<modules>
+		<module>queue-worker</module>
 		<module>ente-creditore</module>
 		<module>service-managment</module>
 		<module>upload-payments</module>
