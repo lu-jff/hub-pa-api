@@ -95,7 +95,7 @@ class UploadPaymentsControllerTest {
 	listPaymentJob.add(PaymentJobMock.getMock());
 	when(paymentJobService.create(any(PaymentJob.class))).thenReturn(Boolean.TRUE);
 
-	BooleanResponseModel result = uploadPaymentsController.createPaymentJob(paymentJobModel);
+	BooleanResponseModel result = uploadPaymentsController.createJobRecord(paymentJobModel);
 	assertThat(result.getResult()).isTrue();
     }
 

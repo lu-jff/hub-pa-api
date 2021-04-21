@@ -1,11 +1,14 @@
 package it.gov.pagopa.hubpa.uploadpayments.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +21,7 @@ import io.swagger.annotations.ApiParam;
 import it.gov.pagopa.hubpa.uploadpayments.entity.PaymentJob;
 import it.gov.pagopa.hubpa.uploadpayments.enumeration.JobStatusEnum;
 import it.gov.pagopa.hubpa.uploadpayments.model.BooleanResponseModel;
+import it.gov.pagopa.hubpa.uploadpayments.model.PaymentJobMinimalModel;
 import it.gov.pagopa.hubpa.uploadpayments.model.PaymentJobModel;
 import it.gov.pagopa.hubpa.uploadpayments.model.PaymentsModel;
 import it.gov.pagopa.hubpa.uploadpayments.model.UploadCsvModel;
@@ -39,18 +43,19 @@ public class UploadPaymentsController {
 		paymentJobService.countByIdsAndStatusNot(jobIds, JobStatusEnum.IN_ATTESA.getStatus()) > 0 ? Boolean.TRUE
 			: Boolean.FALSE);
     }
-    
+
     @ApiOperation(value = "Verifica se sono stati caricati dei job non andati in errore", notes = "Servizio REST per verificare se sono stati caricati dei job non andati in errore", response = BooleanResponseModel.class)
     @GetMapping(value = "isPaymentJobAvailable/{fiscalCode}")
     public BooleanResponseModel isPaymentJobAvailable(@PathVariable("fiscalCode") String fiscalCode) {
 	return new BooleanResponseModel(
-		paymentJobService.countByFiscalCodeAndStatusNot(fiscalCode, JobStatusEnum.FALLITO.getStatus()) > 0 ? Boolean.TRUE
+		paymentJobService.countByFiscalCodeAndStatusNot(fiscalCode, JobStatusEnum.FALLITO.getStatus()) > 0
+			? Boolean.TRUE
 			: Boolean.FALSE);
     }
-    
+
     @ApiOperation(value = "Registra un caricamento di file csv", notes = "Servizio REST per registrare un caricamento di file csv", response = BooleanResponseModel.class)
     @PostMapping(value = "createJobRecord")
-    public BooleanResponseModel createPaymentJob(
+    public BooleanResponseModel createJobRecord(
 	    @ApiParam(value = "Modello del job dei pagamenti", required = true) @RequestBody final PaymentJobModel paymentJobModel) {
 	return new BooleanResponseModel(paymentJobService.create(modelMapper.map(paymentJobModel, PaymentJob.class)));
     }
@@ -67,11 +72,28 @@ public class UploadPaymentsController {
     @PostMapping(value = "upload")
     public BooleanResponseModel uploadCsvModels(
 	    @ApiParam(value = "Modello della righe del csv", required = true) @RequestBody final UploadCsvModel uploadCsvModel) {
-	PaymentJob paymentJob=modelMapper.map(uploadCsvModel, PaymentJob.class);
-	Long jobId=paymentJobService.savePaymentJob(paymentJob);
+	PaymentJob paymentJob = modelMapper.map(uploadCsvModel, PaymentJob.class);
+	Long jobId = paymentJobService.savePaymentJob(paymentJob);
 	uploadCsvModel.setJobId(jobId);
-	paymentJobService.uploadRows(modelMapper.map(uploadCsvModel,PaymentsModel.class));
+	paymentJobService.uploadRows(modelMapper.map(uploadCsvModel, PaymentsModel.class));
 
 	return new BooleanResponseModel(true);
+    }
+
+    @ApiOperation(value = "Aggiorna un caricamento di file csv", notes = "Servizio REST per aggiornare un caricamento di file csv", response = BooleanResponseModel.class)
+    @PatchMapping(value = "update/{jobId}")
+    public BooleanResponseModel updatePaymentJob(@PathVariable("jobId") Long jobId,
+	    @ApiParam(value = "Modello del job dei pagamenti", required = true) @RequestBody final PaymentJobMinimalModel paymentJobModel) {
+	BooleanResponseModel resp=new BooleanResponseModel(Boolean.FALSE);
+	Optional<PaymentJob> opt = paymentJobService.getJob(jobId);
+	if (opt.isPresent()) {
+	    PaymentJob paymentJob = opt.get();
+	    paymentJob.setStatus(paymentJobModel.getStatus());
+	    paymentJob.setNRecordAdded(paymentJobModel.getNRecordAdded());
+	    paymentJob.setNRecordFound(paymentJobModel.getNRecordFound());
+	    paymentJob.setElaborationDate(LocalDateTime.now());
+	    resp=new BooleanResponseModel(paymentJobService.create(paymentJob));
+	}
+	return resp;
     }
 }

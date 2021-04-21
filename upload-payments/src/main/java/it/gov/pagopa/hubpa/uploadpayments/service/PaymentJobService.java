@@ -2,6 +2,7 @@
 package it.gov.pagopa.hubpa.uploadpayments.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,10 @@ public class PaymentJobService {
 
     public long countByFiscalCodeAndStatusNot(String fiscalCode, Integer status) {
 	return paymentJobRepository.countByFiscalCodeAndStatusNot(fiscalCode, status);
+    }
+    
+    public Optional<PaymentJob> getJob(Long jobId) {
+	return paymentJobRepository.findById(jobId);
     }
 
 }
