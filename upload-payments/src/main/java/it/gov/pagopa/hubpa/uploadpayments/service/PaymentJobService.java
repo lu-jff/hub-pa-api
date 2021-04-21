@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
 import it.gov.pagopa.hubpa.uploadpayments.entity.PaymentJob;
@@ -19,10 +20,16 @@ public class PaymentJobService {
     private PaymentJobRepository paymentJobRepository;
 
     @Autowired
+    private JmsTemplate jmsTemplate;
+    
+    @Autowired
     private RabbitTemplate rabbitTemplate;
     
     @Value("${QUEUE_NAME}")
     private String queueName;
+    
+    @Value("${environment}")
+    private String env;
 
     public Long countByIdsAndStatusNot(List<Long> jobIds, Integer status) {
 	return paymentJobRepository.countByJobIdInAndStatusNot(jobIds, status);
@@ -39,7 +46,11 @@ public class PaymentJobService {
 
     public void uploadRows(PaymentsModel paymentsModel) {
 	if (!paymentsModel.getDebitors().isEmpty()) {
-	    rabbitTemplate.convertAndSend(queueName, paymentsModel);
+	    if(env.equals("loc")) {
+		rabbitTemplate.convertAndSend(queueName, paymentsModel);
+	    }else {
+		jmsTemplate.convertAndSend(queueName, paymentsModel);
+	    }
 	}
     }
 

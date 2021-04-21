@@ -59,12 +59,16 @@ services:
       - postgres
       - rabbitmq
     environment:
+      - ENV=loc
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/updpay
       - SPRING_DATASOURCE_USERNAME=postgres-user-test
       - SPRING_DATASOURCE_PASSWORD=postgres-pwd-test
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - SPRING_CORS_ORIGINS=http://localhost:8083,http://upload-payments:8084
-      - QUEUE_NAME=queue-name
+      - QUEUE_NAME=job_queue
+      - JMS_AZURA_CONNECTION_STRING=sb://hubpa-d-namespace-sbus.servicebus.windows.net/;SharedAccessKeyName=job-ms-write;SharedAccessKey=0PW3ajuscmJdaqAw3DOUgy7Ix4O+FyMVkYgQ09UB2k8=;EntityPath=job_queue
+      - JMS_AZURA_IDLE_TIMEOUT=1800000
+      - JMS_AZURA_PRICING=standard
   
   auth-spid:
     build:
