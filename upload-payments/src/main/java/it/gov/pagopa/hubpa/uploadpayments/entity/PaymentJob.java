@@ -34,6 +34,8 @@ public class PaymentJob {
     private Integer nRecordFound;
     @Column(name = "n_record_added", nullable = true)
     private Integer nRecordAdded;
+    @Column(name = "n_record_warning", nullable = true)
+    private Integer nRecordWarning;
     @Column(name = "status", nullable = true)
     private Integer status;
 }

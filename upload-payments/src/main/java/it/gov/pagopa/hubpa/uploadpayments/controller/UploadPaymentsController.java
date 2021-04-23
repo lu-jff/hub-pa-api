@@ -35,6 +35,8 @@ public class UploadPaymentsController {
 
     @Autowired
     private ModelMapper modelMapper;
+    
+    
 
     @ApiOperation(value = "Indica se lo stato dei job indicati è diverso da In Attesa", notes = "Servizio REST per ottenere l'informazione se lo stato dei job indicati è diverso da In Attesa", response = BooleanResponseModel.class)
     @GetMapping(value = "statusChanged")
@@ -75,7 +77,7 @@ public class UploadPaymentsController {
 	PaymentJob paymentJob = modelMapper.map(uploadCsvModel, PaymentJob.class);
 	Long jobId = paymentJobService.savePaymentJob(paymentJob);
 	uploadCsvModel.setJobId(jobId);
-	paymentJobService.uploadRows(modelMapper.map(uploadCsvModel, PaymentsModel.class));
+	paymentJobService.uploadRows(uploadCsvModel);
 
 	return new BooleanResponseModel(true);
     }
@@ -91,6 +93,7 @@ public class UploadPaymentsController {
 	    paymentJob.setStatus(paymentJobModel.getStatus());
 	    paymentJob.setNRecordAdded(paymentJobModel.getNRecordAdded());
 	    paymentJob.setNRecordFound(paymentJobModel.getNRecordFound());
+	    paymentJob.setNRecordWarning(paymentJobModel.getNRecordWarning());
 	    paymentJob.setElaborationDate(LocalDateTime.now());
 	    resp=new BooleanResponseModel(paymentJobService.create(paymentJob));
 	}

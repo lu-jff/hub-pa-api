@@ -11,11 +11,13 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PaymentJobModel {
 
+    private String jobId;
     private String fiscalCode;
     private String fileName;
     private LocalDateTime insertDate;
     private LocalDateTime elaborationDate;
     private Integer nRecordFound;
     private Integer nRecordAdded;
+    private Integer nRecorWarning;
     private Integer status;
 }

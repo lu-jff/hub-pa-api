@@ -14,14 +14,12 @@ public class ConvertUploadCsvModelToPaymentJob implements Converter<UploadCsvMod
     public PaymentJob convert(MappingContext<UploadCsvModel, PaymentJob> context) {
 	UploadCsvModel source = context.getSource();
 	PaymentJob destination = new PaymentJob();
-
-	destination.setFiscalCode(source.getTributeService().getFiscalCodePrimaryCreditor());
+	destination.setFiscalCode(source.getFiscalCodeCreditor());
 	destination.setFileName(source.getCsv().getFileName());
 	destination.setInsertDate(LocalDateTime.now());
 	destination.setStatus(JobStatusEnum.IN_ATTESA.getStatus());
-	
+
 	return destination;
     }
 
-   
 }

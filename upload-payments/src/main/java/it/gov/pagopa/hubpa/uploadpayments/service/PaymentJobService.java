@@ -11,7 +11,7 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
 import it.gov.pagopa.hubpa.uploadpayments.entity.PaymentJob;
-import it.gov.pagopa.hubpa.uploadpayments.model.PaymentsModel;
+import it.gov.pagopa.hubpa.uploadpayments.model.UploadCsvModel;
 import it.gov.pagopa.hubpa.uploadpayments.repository.PaymentJobRepository;
 
 @Service
@@ -45,13 +45,12 @@ public class PaymentJobService {
 	return paymentJobRepository.findByFiscalCode(fiscalCode);
     }
 
-    public void uploadRows(PaymentsModel paymentsModel) {
-	if (!paymentsModel.getDebitors().isEmpty()) {
-	    if(env.equals("loc")) {
-		rabbitTemplate.convertAndSend(queueName, paymentsModel);
-	    }else {
-		jmsTemplate.convertAndSend(queueName, paymentsModel);
-	    }
+
+    public void uploadRows(UploadCsvModel uploadCsvModel) {
+	if (env.equals("loc")) {
+	    rabbitTemplate.convertAndSend(queueName, uploadCsvModel);
+	} else {
+	    jmsTemplate.convertAndSend(queueName, uploadCsvModel);
 	}
     }
 
