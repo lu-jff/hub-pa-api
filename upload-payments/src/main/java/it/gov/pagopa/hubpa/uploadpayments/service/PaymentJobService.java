@@ -4,7 +4,6 @@ package it.gov.pagopa.hubpa.uploadpayments.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
@@ -22,9 +21,6 @@ public class PaymentJobService {
 
     @Autowired
     private JmsTemplate jmsTemplate;
-    
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
     
     @Value("${QUEUE_NAME}")
     private String queueName;
@@ -47,11 +43,7 @@ public class PaymentJobService {
 
 
     public void uploadRows(UploadCsvModel uploadCsvModel) {
-	if (env.equals("loc")) {
-	    rabbitTemplate.convertAndSend(queueName, uploadCsvModel);
-	} else {
-	    jmsTemplate.convertAndSend(queueName, uploadCsvModel);
-	}
+	jmsTemplate.convertAndSend(queueName, uploadCsvModel);
     }
 
     public Long savePaymentJob(PaymentJob paymentJob) {
