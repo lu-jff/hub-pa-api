@@ -28,6 +28,7 @@
 		<module>ente-creditore</module>
 		<module>service-managment</module>
 		<module>upload-payments</module>
+		<module>payments</module>
 	</modules>
 
 
