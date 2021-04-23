@@ -75,3 +75,18 @@ steps:
     DockerRepository: 'service'
     DockerImageTag: '0.0.1'
 
+# Build and deploy Queue Worker microservice docker
+- task: Docker@2
+  inputs:
+    containerRegistry: 'pagopa-azurecr'
+    repository: 'queue-worker'
+    command: 'buildAndPush'
+    Dockerfile: './service-managment/Dockerfile.deploy'
+    tags: '0.0.1' 
+
+- task: AzureFunctionAppContainer@1
+  displayName: Azure Function App Deploy
+  inputs:
+    ConnectedServiceName: $(STAGING_AZURE_SUBSCRIPTION)
+    appName: 'hubpa-d-worker'
+    imageName: 'hubpadarc.azurecr.io/queue-worker:0.0.1'
