@@ -114,8 +114,7 @@ class UploadPaymentsControllerTest {
 	
 	assertThat(paymentJobModel.getFileName()).isEqualTo("testFileCsv20210409.csv");
 	assertThat(paymentJob.getFileName()).isEqualTo("testFileCsv20210409.csv");
-	assertThat(paymentsModel.getDebitors().get(0).getArea()).isEqualTo("Firenze");
-	assertThat(paymentJob2.getFileName()).isEqualTo("fileProva.csv");
+
 
     }
 

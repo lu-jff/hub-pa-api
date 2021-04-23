@@ -11,5 +11,6 @@ public class PaymentJobMinimalModel {
 
     private Integer nRecordFound;
     private Integer nRecordAdded;
+    private Integer nRecordWarning;
     private Integer status;
 }

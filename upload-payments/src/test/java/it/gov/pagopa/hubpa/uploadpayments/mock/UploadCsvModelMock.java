@@ -11,7 +11,7 @@ import it.gov.pagopa.hubpa.uploadpayments.model.UploadCsvModel;
 public class UploadCsvModelMock {
     public final static UploadCsvModel getMock() {
 	UploadCsvModel mock = new UploadCsvModel();
-	mock.setTributeService(TributeServiceModelMock.validationOKCase1());
+	mock.setFiscalCodeCreditor("12345678901");
 	mock.setJobId(1l);
 	mock.setCsv(createCsvModelMock());
 
