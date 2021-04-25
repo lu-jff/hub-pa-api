@@ -13,10 +13,10 @@ public class Function {
      */
     @FunctionName("Function")
     public void run(
-            @ServiceBusQueueTrigger(name = "sbus", queueName = "job_queue", connection = "AzureWebJobsServiceBus") String message,
+            @ServiceBusQueueTrigger(name = "sbus", dataType = "binary", queueName = "job_queue", connection = "AzureWebJobsServiceBus") CsvModel message,
             final ExecutionContext context) {
         context.getLogger().info("Java Service Bus Queue trigger function executed.");
-        context.getLogger().info(message);
+        context.getLogger().info(message.toString());
         // Add logic
     }
 }
