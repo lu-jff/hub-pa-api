@@ -21,42 +21,41 @@ public class PaymentJobService {
 
     @Autowired
     private JmsTemplate jmsTemplate;
-    
+
     @Value("${QUEUE_NAME}")
     private String queueName;
-    
-    @Value("${environment}")
+
+    @Value("${ENV}")
     private String env;
 
     public Long countByIdsAndStatusNot(List<Long> jobIds, Integer status) {
-	return paymentJobRepository.countByJobIdInAndStatusNot(jobIds, status);
+        return paymentJobRepository.countByJobIdInAndStatusNot(jobIds, status);
     }
 
     public Boolean create(PaymentJob paymentJob) {
-	paymentJobRepository.saveAndFlush(paymentJob);
-	return Boolean.TRUE;
+        paymentJobRepository.saveAndFlush(paymentJob);
+        return Boolean.TRUE;
     }
 
     public List<PaymentJob> getAll(String fiscalCode) {
-	return paymentJobRepository.findByFiscalCode(fiscalCode);
+        return paymentJobRepository.findByFiscalCode(fiscalCode);
     }
 
-
     public void uploadRows(UploadCsvModel uploadCsvModel) {
-	jmsTemplate.convertAndSend(queueName, uploadCsvModel);
+        jmsTemplate.convertAndSend(queueName, uploadCsvModel);
     }
 
     public Long savePaymentJob(PaymentJob paymentJob) {
-	PaymentJob paymentJobNew = paymentJobRepository.saveAndFlush(paymentJob);
-	return paymentJobNew.getJobId();
+        PaymentJob paymentJobNew = paymentJobRepository.saveAndFlush(paymentJob);
+        return paymentJobNew.getJobId();
     }
 
     public long countByFiscalCodeAndStatusNot(String fiscalCode, Integer status) {
-	return paymentJobRepository.countByFiscalCodeAndStatusNot(fiscalCode, status);
+        return paymentJobRepository.countByFiscalCodeAndStatusNot(fiscalCode, status);
     }
-    
+
     public Optional<PaymentJob> getJob(Long jobId) {
-	return paymentJobRepository.findById(jobId);
+        return paymentJobRepository.findById(jobId);
     }
 
 }
