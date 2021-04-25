@@ -51,9 +51,10 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - SPRING_CORS_ORIGINS=http://localhost:8083,http://upload-payments:8084
       - QUEUE_NAME=job_queue
-      - JMS_AZURA_CONNECTION_STRING=
-      - JMS_AZURA_IDLE_TIMEOUT=1800000
-      - JMS_AZURA_PRICING=standard
+      - JMS_SERVICE_BUS_CONNECTION_STRING=connection-string
+      - JMS_SERVICE_BUS_IDLE_TIMEOUT=1800000
+      - JMS_SERVICE_BUS_PRICING=standard
+      - ENV=dev
   
   auth-spid:
     build:
