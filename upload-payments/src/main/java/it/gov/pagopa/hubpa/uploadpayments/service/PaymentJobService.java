@@ -6,12 +6,17 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
 import it.gov.pagopa.hubpa.uploadpayments.entity.PaymentJob;
 import it.gov.pagopa.hubpa.uploadpayments.model.UploadCsvModel;
 import it.gov.pagopa.hubpa.uploadpayments.repository.PaymentJobRepository;
+import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
+import org.springframework.jms.support.converter.MessageConverter;
+import org.springframework.jms.support.converter.MessageType;
 
 @Service
 public class PaymentJobService {
@@ -20,13 +25,25 @@ public class PaymentJobService {
     private PaymentJobRepository paymentJobRepository;
 
     @Autowired
-    private JmsTemplate jmsTemplate;
+    private ApplicationContext context;
 
     @Value("${QUEUE_NAME}")
     private String queueName;
 
     @Value("${ENV}")
     private String env;
+
+    // Send JSON messages
+    @Bean
+    MessageConverter jacksonJmsMessageConverter() {
+        MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
+        converter.setTargetType(MessageType.TEXT);
+        converter.setTypeIdPropertyName("_type");
+        return converter;
+    }
+
+    // @Autowired
+    // private JmsTemplate jmsTemplate;
 
     public Long countByIdsAndStatusNot(List<Long> jobIds, Integer status) {
         return paymentJobRepository.countByJobIdInAndStatusNot(jobIds, status);
@@ -42,6 +59,7 @@ public class PaymentJobService {
     }
 
     public void uploadRows(UploadCsvModel uploadCsvModel) {
+        JmsTemplate jmsTemplate = context.getBean(JmsTemplate.class);
         jmsTemplate.convertAndSend(queueName, uploadCsvModel);
     }
 
