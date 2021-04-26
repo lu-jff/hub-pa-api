@@ -14,9 +14,6 @@
 	<name>ente-creditore</name>
 	<description>Microservice to get informations about public entities registered in pagopa</description>
 	
-	<properties>
-		<java.version>1.8</java.version>
-	</properties>
 	
 	<dependencies>
 
