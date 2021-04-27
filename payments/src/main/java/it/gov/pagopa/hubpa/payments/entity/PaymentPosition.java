@@ -36,9 +36,9 @@ public class PaymentPosition {
     private String organizationFiscalCode;
     @Column(name = "company_name", nullable = true)
     private String companyName;
-    @Column(name = "office_name", nullable = false)
+    @Column(name = "office_name", nullable = true)
     private String officeName;
-    @Column(name = "status", nullable = true)
+    @Column(name = "status", nullable = false)
     private Integer status;
     @Column(name = "description", nullable = true)
     private String description;
