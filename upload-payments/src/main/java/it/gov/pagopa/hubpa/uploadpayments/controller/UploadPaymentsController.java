@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +22,6 @@ import it.gov.pagopa.hubpa.uploadpayments.enumeration.JobStatusEnum;
 import it.gov.pagopa.hubpa.uploadpayments.model.BooleanResponseModel;
 import it.gov.pagopa.hubpa.uploadpayments.model.PaymentJobMinimalModel;
 import it.gov.pagopa.hubpa.uploadpayments.model.PaymentJobModel;
-import it.gov.pagopa.hubpa.uploadpayments.model.PaymentsModel;
 import it.gov.pagopa.hubpa.uploadpayments.model.UploadCsvModel;
 import it.gov.pagopa.hubpa.uploadpayments.service.PaymentJobService;
 
@@ -83,7 +81,7 @@ public class UploadPaymentsController {
     }
 
     @ApiOperation(value = "Aggiorna un caricamento di file csv", notes = "Servizio REST per aggiornare un caricamento di file csv", response = BooleanResponseModel.class)
-    @PatchMapping(value = "update/{jobId}")
+    @PostMapping(value = "update/{jobId}")
     public BooleanResponseModel updatePaymentJob(@PathVariable("jobId") Long jobId,
 	    @ApiParam(value = "Modello del job dei pagamenti", required = true) @RequestBody final PaymentJobMinimalModel paymentJobModel) {
 	BooleanResponseModel resp=new BooleanResponseModel(Boolean.FALSE);
