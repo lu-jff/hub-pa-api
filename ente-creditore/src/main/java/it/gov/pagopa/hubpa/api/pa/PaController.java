@@ -9,8 +9,16 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @RestController
 public class PaController {
@@ -23,6 +31,7 @@ public class PaController {
 
   private Logger logger = LoggerFactory.getLogger(PaController.class);
 
+  @ApiOperation(value = "Recupera la lista delle PA", notes = "Recupera la lista delle PA", response = List.class)
   @GetMapping(value = "/ente/pa")
   public List<PaDescriptionDto> getAllEcForTefa() {
     logger.info("GET PROVINCE E CITTA METROPOLITANE");
@@ -37,10 +46,11 @@ public class PaController {
 
   }
 
+  @ApiOperation(value = "Crea una PA", notes = "Crea una PA", response = PaDto.class)
   @PostMapping(value = "/ente/pa")
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
-  public PaDto createIbanPost(@RequestBody PaDto paDto) {
+  public PaDto createIbanPost(@ApiParam(value = "Modello della PA", required = true)  @RequestBody PaDto paDto) {
     PaEntity paCreated = paService.create(modelMapper.map(paDto, PaEntity.class));
 
     return modelMapper.map(paCreated, PaDto.class);
