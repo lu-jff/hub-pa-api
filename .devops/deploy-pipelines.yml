@@ -44,7 +44,7 @@ steps:
     repository: 'job'
     command: 'buildAndPush'
     Dockerfile: './upload-payments/Dockerfile.deploy'
-    tags: '0.0.1' 
+    tags: '0.0.2' 
 
 - task: AzureRMWebAppDeployment@4
   displayName: Azure App Service Deploy
@@ -54,7 +54,7 @@ steps:
     WebAppName: 'hubpa-d-job-ms'
     DockerNamespace: 'hubpadarc.azurecr.io'
     DockerRepository: 'job'
-    DockerImageTag: '0.0.1'
+    DockerImageTag: '0.0.2'
 
 # Build and deploy SERVICE microservice docker
 - task: Docker@2
