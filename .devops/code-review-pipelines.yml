@@ -33,6 +33,6 @@ steps:
       sonarQubeRunAnalysis: true
 
   - task: SonarCloudPublish@1
-    displayName: 'Publish results on build summary'
+    displayName: 'Publish SonarCloud results on build summary'
     inputs:
       pollingTimeoutSec: '300'
