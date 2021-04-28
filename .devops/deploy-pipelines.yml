@@ -97,7 +97,7 @@ steps:
 
 # Build and deploy QUEUE-WORKER microservice docker
 - task: Docker@2
-  displayName: Payments Docker BuildAndPush
+  displayName: Queue-Worker Docker BuildAndPush
   inputs:
     containerRegistry: 'pagopa-azurecr'
     repository: 'qworker'
@@ -106,7 +106,7 @@ steps:
     tags: '0.0.1' 
 
 - task: AzureRMWebAppDeployment@4
-  displayName: Payments Deploy
+  displayName: Queue-Worker Deploy
   inputs:
     appType: webAppContainer
     ConnectedServiceName: $(STAGING_AZURE_SUBSCRIPTION)
