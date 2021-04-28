@@ -4,26 +4,35 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/java
 
 trigger:
-- main
+  - main
 
 pool:
   vmImage: ubuntu-latest
 
 steps:
-# - task: SonarQubePrepare@4
-#   inputs:
-#     SonarQube: $(SONARQUBE_CONNECTION)
-#     scannerMode: 'Other'
-#     extraProperties: 'sonar.projectKey=PTT'
+  - task: SonarCloudPrepare@1
+    displayName: 'Prepare SonarCloud analysis configuration'
+    inputs:
+      SonarCloud: '$(SONARCLOUD-SERVICE-CONN)'
+      organization: '$(SONARCLOUD-ORG)'
+      scannerMode: Other
+      extraProperties: |
+        sonar.projectKey=$(SONARCLOUD-PROJECT-KEY)
+        sonar.projectName=$(SONARCLOUD-PROJECT-NAME)
 
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '11'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: false
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
-    sonarQubeRunAnalysis: false
+  - task: Maven@3
+    inputs:
+      mavenPomFile: 'pom.xml'
+      mavenOptions: '-Xmx3072m'
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: '11'
+      jdkArchitectureOption: 'x64'
+      publishJUnitResults: false
+      testResultsFiles: '**/surefire-reports/TEST-*.xml'
+      goals: 'package'
+      sonarQubeRunAnalysis: true
+
+  - task: SonarCloudPublish@1
+    displayName: 'Publish results on build summary'
+    inputs:
+      pollingTimeoutSec: '300'
