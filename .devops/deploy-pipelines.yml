@@ -25,7 +25,7 @@ steps:
     repository: 'creditor'
     command: 'buildAndPush'
     Dockerfile: './ente-creditore/Dockerfile.deploy'
-    tags: '0.0.2' 
+    tags: '0.0.3' 
 
 - task: AzureRMWebAppDeployment@4
   displayName: Azure App Service Deploy
@@ -35,7 +35,7 @@ steps:
     WebAppName: 'hubpa-d-creditor-ms'
     DockerNamespace: 'hubpadarc.azurecr.io'
     DockerRepository: 'creditor'
-    DockerImageTag: '0.0.2'
+    DockerImageTag: '0.0.3'
 
 # Build and deploy JOB microservice docker
 - task: Docker@2
