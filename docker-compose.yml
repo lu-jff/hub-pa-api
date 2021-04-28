@@ -53,6 +53,9 @@ services:
     ports:
       - "8086:8086"
     container_name: queue-worker
+    depends_on:
+      - payments
+      - upload-payments
 
   payments:
     env_file: "./payments/.env"

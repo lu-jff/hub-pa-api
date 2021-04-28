@@ -75,3 +75,24 @@ steps:
     DockerRepository: 'service'
     DockerImageTag: '0.0.1'
 
+# Build and deploy PAYMENTS microservice docker
+- task: Docker@2
+  displayName: Payments Docker BuildAndPush
+  inputs:
+    containerRegistry: 'pagopa-azurecr'
+    repository: 'payments'
+    command: 'buildAndPush'
+    Dockerfile: './payments/Dockerfile.deploy'
+    tags: '0.0.1' 
+
+- task: AzureRMWebAppDeployment@4
+  displayName: Payments Deploy
+  inputs:
+    appType: webAppContainer
+    ConnectedServiceName: $(STAGING_AZURE_SUBSCRIPTION)
+    WebAppName: 'hubpa-d-service-ms'
+    DockerNamespace: 'hubpadarc.azurecr.io'
+    DockerRepository: 'service'
+    DockerImageTag: '0.0.1'
+
+
