@@ -90,9 +90,30 @@ steps:
   inputs:
     appType: webAppContainer
     ConnectedServiceName: $(STAGING_AZURE_SUBSCRIPTION)
-    WebAppName: 'hubpa-d-service-ms'
+    WebAppName: 'hubpa-d-payments-ms'
     DockerNamespace: 'hubpadarc.azurecr.io'
-    DockerRepository: 'service'
+    DockerRepository: 'payments'
     DockerImageTag: '0.0.1'
+
+# Build and deploy QUEUE-WORKER microservice docker
+- task: Docker@2
+  displayName: Payments Docker BuildAndPush
+  inputs:
+    containerRegistry: 'pagopa-azurecr'
+    repository: 'qworker'
+    command: 'buildAndPush'
+    Dockerfile: './queue-worker/Dockerfile.deploy'
+    tags: '0.0.1' 
+
+- task: AzureRMWebAppDeployment@4
+  displayName: Payments Deploy
+  inputs:
+    appType: webAppContainer
+    ConnectedServiceName: $(STAGING_AZURE_SUBSCRIPTION)
+    WebAppName: 'hubpa-d-queue-worker'
+    DockerNamespace: 'hubpadarc.azurecr.io'
+    DockerRepository: 'qworker'
+    DockerImageTag: '0.0.1'
+
 
 
