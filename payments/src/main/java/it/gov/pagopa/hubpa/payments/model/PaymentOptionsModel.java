@@ -23,6 +23,7 @@ public class PaymentOptionsModel implements Serializable {
     private LocalDate retentionDate;
     private Boolean isConclusive;
     private String metadata;
+    private Integer status;
     
     private List<TransfersModel> transfers=new ArrayList<>();
 }

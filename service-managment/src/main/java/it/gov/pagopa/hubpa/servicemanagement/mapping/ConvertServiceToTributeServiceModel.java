@@ -37,13 +37,14 @@ public class ConvertServiceToTributeServiceModel implements Converter<Service, T
 			(paymentOptionTemplate2, paymentOptionTemplate1) -> paymentOptionTemplate2
 				.getInstallmentNumber().compareTo(paymentOptionTemplate2.getInstallmentNumber()));
 		for (PaymentOptionTemplate paymentOptionTemplate : paymentOptionTemplateList) {
+		    this.setIbans(paymentOptionTemplate, destination, installments);
 		    if (Boolean.TRUE.equals(paymentOptionTemplate.getIsFinal())) {
 			destination.setDueDateUnique(paymentOptionTemplate.getDueDate());
 		    } else {
 			InstallmentModel installmentModel = new InstallmentModel();
 			installmentModel.setDueDate(paymentOptionTemplate.getDueDate());
 
-			this.addInstallment(paymentOptionTemplate, installmentModel, destination, installments);
+			this.addInstallment(paymentOptionTemplate, installmentModel, installments);
 		    }
 		}
 	    }
@@ -54,23 +55,32 @@ public class ConvertServiceToTributeServiceModel implements Converter<Service, T
 	return destination;
     }
     private void addInstallment(PaymentOptionTemplate paymentOptionTemplate, InstallmentModel installmentModel,
-	    TributeServiceModel tributeServiceModel, List<InstallmentModel> installments) {
+	    List<InstallmentModel> installments) {
 	List<TransferTemplate> transferTemplateList = paymentOptionTemplate.getTransferTemplate();
 	if (!transferTemplateList.isEmpty()) {
 	    for (TransferTemplate transferTemplate : transferTemplateList) {
 		BigDecimal percentage = transferTemplate.getPercentage();
-		String iban = transferTemplate.getIban();
 		if (Boolean.TRUE.equals(transferTemplate.getIsSecondaryCreditor())) {
 		    installmentModel.setPercentageSecondary(percentage);
-		    tributeServiceModel.setIbanSecondary(iban);
 		} else {
 		    installmentModel.setPercentagePrimary(percentage);
-		    tributeServiceModel.setIbanPrimary(iban);
 		}
 	    }
 	}
 	installments.add(installmentModel);
     }
-
+    private void setIbans(PaymentOptionTemplate paymentOptionTemplate, TributeServiceModel tributeServiceModel, List<InstallmentModel> installments) {
+	List<TransferTemplate> transferTemplateList = paymentOptionTemplate.getTransferTemplate();
+	if (!transferTemplateList.isEmpty()) {
+	    for (TransferTemplate transferTemplate : transferTemplateList) {
+		String iban = transferTemplate.getIban();
+		if (Boolean.TRUE.equals(transferTemplate.getIsSecondaryCreditor())) {
+		    tributeServiceModel.setIbanSecondary(iban);
+		} else {
+		    tributeServiceModel.setIbanPrimary(iban);
+		}
+	    }
+	}
+    }
 
 }

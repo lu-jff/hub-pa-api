@@ -61,6 +61,7 @@ public class DebitorMock {
 	mock.setNotificationCode("02252556125612");
 	mock.setPaymentDate(null);
 	mock.setRetentionDate(null);
+	mock.setStatus(1);
 
 	mock.addTransfers(createTransfersMock1a());
 	mock.addTransfers(createTransfersMock1b());
@@ -79,6 +80,7 @@ public class DebitorMock {
 	mock.setNotificationCode("02252556125612");
 	mock.setPaymentDate(null);
 	mock.setRetentionDate(null);
+	mock.setStatus(1);
 
 	mock.addTransfers(createTransfersMock2a());
 
@@ -96,6 +98,7 @@ public class DebitorMock {
 	mock.setNotificationCode("02252556125612");
 	mock.setPaymentDate(null);
 	mock.setRetentionDate(null);
+	mock.setStatus(1);
 
 	mock.addTransfers(createTransfersMock3a());
 	mock.addTransfers(createTransfersMock3b());

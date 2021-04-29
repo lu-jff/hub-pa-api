@@ -3,15 +3,13 @@ package it.gov.pagopa.hubpa.payments.enumeration;
 import lombok.Getter;
 
 @Getter
-public enum PaymentStatusEnum {
-    BOZZA(1),
-    PUBBLICATO(2),
-    PAGATO(3),
-    PAGATO_PARZIALE(4);
+public enum PaymentOptionStatusEnum {
+    PAGATO(1),
+    NON_PAGATO(2);
     
     private final Integer status;
     
-    PaymentStatusEnum(Integer status) {
+    PaymentOptionStatusEnum(Integer status) {
         this.status = status;
     }
 }

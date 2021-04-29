@@ -36,7 +36,7 @@ public class PaymentOptions {
     private String fiscalCode;
     @Column(name = "amount", nullable = false)
     private BigDecimal amount;
-    @Column(name = "duo_dDate", nullable = false)
+    @Column(name = "duo_date", nullable = false)
     private LocalDate duoDate;
     @Column(name = "retention_date", nullable = true)
     private LocalDate retentionDate;
@@ -48,6 +48,8 @@ public class PaymentOptions {
     private LocalDate paymentDate;
     @Column(name = "notification_code", nullable = false)
     private String notificationCode;
+    @Column(name = "status", nullable = false)
+    private Integer status;
 
     
 

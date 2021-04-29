@@ -9,6 +9,8 @@ import java.util.List;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 
+import it.gov.pagopa.hubpa.payments.enumeration.PaymentOptionStatusEnum;
+import it.gov.pagopa.hubpa.payments.enumeration.PaymentStatusEnum;
 import it.gov.pagopa.hubpa.payments.model.DebitorModel;
 import it.gov.pagopa.hubpa.payments.model.PaymentOptionsModel;
 import it.gov.pagopa.hubpa.payments.model.PaymentPositionModel;
@@ -21,8 +23,6 @@ import it.gov.pagopa.hubpa.payments.model.tribute.TributeServiceModel;
 
 public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsvModel, PaymentsModel> {
 
-    private static final Integer INSERT_STATUS = 1;
-    
     private static final String TAXONOMY_PRIMARY=System.getenv().get("TAXONOMY_PRIMARY");
     private static final String TAXONOMY_SECONDARY=System.getenv().get("TAXONOMY_SECONDARY");
     
@@ -71,8 +71,8 @@ public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsv
 	paymentPositionModel.setOrganizationFiscalCode(tributeServiceModel.getFiscalCodePrimaryCreditor());
 	paymentPositionModel.setCompanyName(null);
 	paymentPositionModel.setOfficeName(null);
-	paymentPositionModel.setStatus(INSERT_STATUS);
-	paymentPositionModel.setDescription(null);
+	paymentPositionModel.setStatus(PaymentStatusEnum.BOZZA.getStatus());
+	paymentPositionModel.setDescription(tributeServiceModel.getDenomination());
 	paymentPositionModel.setJobId(jobId);
 	paymentPositionModel.setAmount(row.getAmount());
 
@@ -105,7 +105,7 @@ public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsv
 	    paymentOptionsModel.setRetentionDate(null);
 	    paymentOptionsModel.setIsConclusive(Boolean.FALSE);
 	    paymentOptionsModel.setMetadata(null);
-	    
+	    paymentOptionsModel.setStatus(PaymentOptionStatusEnum.NON_PAGATO.getStatus());
 	    
 
 	    BigDecimal percentagePrimary = installment.getPercentagePrimary();
@@ -171,6 +171,7 @@ public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsv
 	paymentOptionsModel.setRetentionDate(null);
 	paymentOptionsModel.setIsConclusive(Boolean.TRUE);
 	paymentOptionsModel.setMetadata(null);
+	paymentOptionsModel.setStatus(PaymentOptionStatusEnum.NON_PAGATO.getStatus());
 
 	TransfersModel transfersModel = new TransfersModel();
 	transfersModel.setPartialAmount(totalAmountPrimary);
