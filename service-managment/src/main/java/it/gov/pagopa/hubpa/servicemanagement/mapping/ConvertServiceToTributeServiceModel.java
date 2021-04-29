@@ -37,7 +37,7 @@ public class ConvertServiceToTributeServiceModel implements Converter<Service, T
 			(paymentOptionTemplate2, paymentOptionTemplate1) -> paymentOptionTemplate2
 				.getInstallmentNumber().compareTo(paymentOptionTemplate2.getInstallmentNumber()));
 		for (PaymentOptionTemplate paymentOptionTemplate : paymentOptionTemplateList) {
-		    this.setIbans(paymentOptionTemplate, destination, installments);
+		    this.setIbans(paymentOptionTemplate, destination);
 		    if (Boolean.TRUE.equals(paymentOptionTemplate.getIsFinal())) {
 			destination.setDueDateUnique(paymentOptionTemplate.getDueDate());
 		    } else {
@@ -69,7 +69,7 @@ public class ConvertServiceToTributeServiceModel implements Converter<Service, T
 	}
 	installments.add(installmentModel);
     }
-    private void setIbans(PaymentOptionTemplate paymentOptionTemplate, TributeServiceModel tributeServiceModel, List<InstallmentModel> installments) {
+    private void setIbans(PaymentOptionTemplate paymentOptionTemplate, TributeServiceModel tributeServiceModel) {
 	List<TransferTemplate> transferTemplateList = paymentOptionTemplate.getTransferTemplate();
 	if (!transferTemplateList.isEmpty()) {
 	    for (TransferTemplate transferTemplate : transferTemplateList) {

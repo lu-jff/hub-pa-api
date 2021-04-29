@@ -57,13 +57,16 @@ public class ValidationException extends IllegalArgumentException {
      * @see pagopa.gov.it.toolkit.iuvGenerator.validation.IuvCodeValidationImpl
      */
     private static <T> String generateErrorMessage(Set<ConstraintViolation<T>> validationInputResults) {
-        String errorMsg = ErrorMessages.VALIDATION_ERROR;
+	StringBuilder errorMsg = new StringBuilder();
+	errorMsg.append(ErrorMessages.VALIDATION_ERROR);
+	
 
         for (ConstraintViolation<T> validationError : validationInputResults) {
             String validationErrorMsg = validationError.getPropertyPath() + "[" + validationError.getMessage() + "]; ";
-            errorMsg = errorMsg + validationErrorMsg;
+            errorMsg.append(errorMsg);
+            errorMsg.append(validationErrorMsg);
         }
 
-        return errorMsg;
+        return errorMsg.toString();
     }
 }

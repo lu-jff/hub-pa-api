@@ -5,6 +5,11 @@ package it.gov.pagopa.hubpa.payments.iuvgenerator.common;
  */
 public class ErrorMessages {
 
+    private ErrorMessages() {
+	throw new IllegalStateException("Utility class");
+
+    }
+    
     public static final String UNEXPECTED_GENERATED_VALUE_ERROR = "Unexpected generated value: ";
     public static final String VALIDATION_ALGORITHM_NOT_IMPLEMENTED_ERROR = "Algorithm not implemented for AuxDigit: ";
     public static final String VALIDATION_AMOUNT_MIN = "The value must be grater than zero";
