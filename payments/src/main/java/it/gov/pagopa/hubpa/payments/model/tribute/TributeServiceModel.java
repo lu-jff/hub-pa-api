@@ -21,6 +21,6 @@ public class TributeServiceModel implements Serializable{
     private String denomination;
     private BigDecimal percentageSecondary;
     private LocalDate dueDateUnique;
-    List<InstallmentModel> installments;
+    private List<InstallmentModel> installments;
 
 }

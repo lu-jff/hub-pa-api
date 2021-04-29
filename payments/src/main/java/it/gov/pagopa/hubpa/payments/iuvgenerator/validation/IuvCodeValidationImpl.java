@@ -57,10 +57,9 @@ public class IuvCodeValidationImpl implements IuvCodeValidation {
      * @see IuvCodeGenerator
      */
     private void checkAuxDigit3(IuvCodeGenerator iuvCodeGenerator) {
-        if (iuvCodeGenerator.getAuxDigit() == 3) {
-            if (Optional.ofNullable(iuvCodeGenerator.getSegregationCode()).orElse(0) == 0) {
+        if (iuvCodeGenerator.getAuxDigit() == 3 && Optional.ofNullable(iuvCodeGenerator.getSegregationCode()).orElse(0) == 0) {
                 throw new ValidationException(ErrorMessages.VALIDATION_SEGREGATION_CODE_ERROR);
             }
-        }
+        
     }
 }

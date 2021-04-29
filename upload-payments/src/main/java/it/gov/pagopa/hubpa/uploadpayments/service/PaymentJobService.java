@@ -42,9 +42,6 @@ public class PaymentJobService {
         return converter;
     }
 
-    // @Autowired
-    // private JmsTemplate jmsTemplate;
-
     public Long countByIdsAndStatusNot(List<Long> jobIds, Integer status) {
         return paymentJobRepository.countByJobIdInAndStatusNot(jobIds, status);
     }

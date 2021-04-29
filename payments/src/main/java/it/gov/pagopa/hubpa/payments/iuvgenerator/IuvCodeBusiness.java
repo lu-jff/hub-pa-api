@@ -9,6 +9,11 @@ import it.gov.pagopa.hubpa.payments.service.IuvCodeGenerator;
  */
 public class IuvCodeBusiness {
 
+    private IuvCodeBusiness() {
+	throw new IllegalStateException("Utility class");
+
+    }
+
     /**
      * Generates the <code>iuv</code>
      * 
