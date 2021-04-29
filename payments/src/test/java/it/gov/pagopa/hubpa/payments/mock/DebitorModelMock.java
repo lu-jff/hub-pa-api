@@ -75,6 +75,7 @@ public class DebitorModelMock {
 	mock.setIsConclusive(Boolean.TRUE);
 	mock.setMetadata(null);
 	mock.setRetentionDate(null);
+	mock.setStatus(1);
 
 	mock.getTransfers().add(createTransfersMock1a());
 	mock.getTransfers().add(createTransfersMock1b());
@@ -91,6 +92,7 @@ public class DebitorModelMock {
 	mock.setIsConclusive(Boolean.FALSE);
 	mock.setMetadata(null);
 	mock.setRetentionDate(null);
+	mock.setStatus(1);
 
 	mock.getTransfers().add(createTransfersMock2a());
 
@@ -106,6 +108,7 @@ public class DebitorModelMock {
 	mock.setIsConclusive(Boolean.FALSE);
 	mock.setMetadata(null);
 	mock.setRetentionDate(null);
+	mock.setStatus(1);
 
 	mock.getTransfers().add(createTransfersMock3a());
 	mock.getTransfers().add(createTransfersMock3b());

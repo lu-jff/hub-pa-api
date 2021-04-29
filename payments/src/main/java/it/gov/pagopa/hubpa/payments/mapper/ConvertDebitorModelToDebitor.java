@@ -75,6 +75,7 @@ public class ConvertDebitorModelToDebitor implements Converter<DebitorModel, Deb
 	paymentOptions.setIsConclusive(paymentOptionsModel.getIsConclusive());
 	paymentOptions.setMetadata(paymentOptionsModel.getMetadata());
 	paymentOptions.setRetentionDate(paymentOptionsModel.getRetentionDate());
+	paymentOptions.setStatus(paymentOptionsModel.getStatus());
 
 	List<TransfersModel> transfers = paymentOptionsModel.getTransfers();
 	if (transfers != null) {

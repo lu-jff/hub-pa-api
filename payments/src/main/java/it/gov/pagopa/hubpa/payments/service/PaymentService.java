@@ -2,10 +2,15 @@
 package it.gov.pagopa.hubpa.payments.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import it.gov.pagopa.hubpa.payments.entity.Debitor;
@@ -14,10 +19,16 @@ import it.gov.pagopa.hubpa.payments.entity.PaymentOptions;
 import it.gov.pagopa.hubpa.payments.entity.PaymentPosition;
 import it.gov.pagopa.hubpa.payments.enumeration.JobStatusEnum;
 import it.gov.pagopa.hubpa.payments.iuvgenerator.IuvCodeBusiness;
+import it.gov.pagopa.hubpa.payments.model.FilterModel;
 import it.gov.pagopa.hubpa.payments.model.PaymentJobMinimalModel;
 import it.gov.pagopa.hubpa.payments.repository.DebitorRepository;
 import it.gov.pagopa.hubpa.payments.repository.IncrementalIuvNumberRepository;
 import it.gov.pagopa.hubpa.payments.repository.PaymentPositionRepository;
+import it.gov.pagopa.hubpa.payments.repository.specification.PaymentPositionWithDateFrom;
+import it.gov.pagopa.hubpa.payments.repository.specification.PaymentPositionWithDateTo;
+import it.gov.pagopa.hubpa.payments.repository.specification.PaymentPositionWithFiscalCode;
+import it.gov.pagopa.hubpa.payments.repository.specification.PaymentPositionWithStatus;
+import it.gov.pagopa.hubpa.payments.repository.specification.PaymentPositionWithTextSearch;
 
 @Service
 public class PaymentService {
@@ -152,6 +163,40 @@ public class PaymentService {
 	newDebitor.setType(debitor.getType());
 
 	return newDebitor;
+    }
+
+    public Page<PaymentPosition> getPaymentsByFilters(String fiscalCode, FilterModel filters, Pageable pageable) {
+	if(filters==null) {
+	    filters=new FilterModel();
+	}
+	LocalDateTime dateFromTime=null;
+	LocalDateTime dateToTime=null;
+	LocalDate dateFrom=filters.getDateFrom();
+	LocalDate dateTo=filters.getDateTo();
+	if(dateFrom!=null) {
+	    dateFromTime=dateFrom.atStartOfDay();
+	}
+	if(dateTo!=null) {
+	    dateToTime=dateTo.atTime(23, 59, 59, 999999999);
+	}
+	Specification<PaymentPosition> spec = Specification.where(new PaymentPositionWithDateFrom(dateFromTime))
+                .and(new PaymentPositionWithDateTo(dateToTime))
+                .and(new PaymentPositionWithFiscalCode(fiscalCode))
+                .and(new PaymentPositionWithStatus(filters.getStatus()))
+                .and(new PaymentPositionWithTextSearch(filters.getTextSearch()));
+	return paymentPositionRepository.findAll(spec, pageable);
+    }
+
+    public PaymentPosition getPaymentByPaymentPositionId(Long id) {
+	Optional<PaymentPosition> res = paymentPositionRepository.findById(id);
+	PaymentPosition paymentPos=null;
+	if(res.isPresent()){
+	    paymentPos=res.get();
+	}
+	return paymentPos;
+    }
+    public List<PaymentPosition> getPaymentsByJobId(Long jobId){
+	return paymentPositionRepository.findAllByJobId(jobId);
     }
 
 }

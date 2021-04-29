@@ -86,12 +86,8 @@ class PaymentsControllerTest {
 	assertThat(debitor.getPaymentPosition().get(0).getPaymentOptions().get(0).getIsConclusive()).isTrue();
 	
 	
-	PaymentsModel paymentsModel = modelMapper.map(uploadCsvModelMock, PaymentsModel.class);
-	
-	
-	
+	PaymentsModel paymentsModel = modelMapper.map(uploadCsvModelMock, PaymentsModel.class);	
 	assertThat(paymentsModel.getDebitors().get(0).getArea()).isEqualTo("Firenze");
-	
 	
     }
 

@@ -20,7 +20,7 @@ public class DevCorsConfiguration {
 	    @Override
 	    public void addCorsMappings(CorsRegistry registry) {
 		String origins = System.getenv().get("SPRING_CORS_ORIGINS");
-		registry.addMapping("/service-management/**").allowedOrigins(origins);
+		registry.addMapping("/payments/**").allowedOrigins(origins);
 	    }
 	};
     }
