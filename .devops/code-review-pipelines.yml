@@ -32,6 +32,9 @@ steps:
       extraProperties: |
         sonar.projectKey=$(SONARCLOUD_PROJECT_KEY)
         sonar.projectName=$(SONARCLOUD_PROJECT_NAME)
+        sonar.coverage.jacoco.xmlReportPaths='**/surefire-reports/TEST-*.xml'
+        sonar.junit.reportPaths='**/surefire-reports/TEST-*.xml'
+
 
   - task: Maven@3
     inputs:
