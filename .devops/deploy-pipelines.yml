@@ -5,73 +5,84 @@ pr: none
 pool:
   vmImage: ubuntu-latest
 
+variables:
+  MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
+  MAVEN_OPTS: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
+
 steps:
+  - task: Cache@2
+    inputs:
+      key: 'maven | "$(Agent.OS)" | pom.xml'
+      restoreKeys: |
+        maven | "$(Agent.OS)"
+        maven
+      path: $(MAVEN_CACHE_FOLDER)
+    displayName: Cache Maven local repo
 
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.8'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: false
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
+  - task: Maven@3
+    inputs:
+      mavenPomFile: 'pom.xml'
+      mavenOptions: '-Xmx3072m $(MAVEN_OPTS)'
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: '11'
+      jdkArchitectureOption: 'x64'
+      publishJUnitResults: false
+      testResultsFiles: '**/surefire-reports/TEST-*.xml'
+      goals: 'package'
 
-# Build and deploy CREDITOR microservice docker
-- task: Docker@2
-  inputs:
-    containerRegistry: 'pagopa-azurecr'
-    repository: 'creditor'
-    command: 'buildAndPush'
-    Dockerfile: './ente-creditore/Dockerfile.deploy'
-    tags: '0.0.2' 
+  # Build and deploy CREDITOR microservice docker
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'pagopa-azurecr'
+      repository: 'creditor'
+      command: 'buildAndPush'
+      Dockerfile: './ente-creditore/Dockerfile.deploy'
+      tags: '0.0.2'
 
-- task: AzureRMWebAppDeployment@4
-  displayName: Azure App Service Deploy
-  inputs:
-    appType: webAppContainer
-    ConnectedServiceName: $(STAGING_AZURE_SUBSCRIPTION)
-    WebAppName: 'hubpa-d-creditor-ms'
-    DockerNamespace: 'hubpadarc.azurecr.io'
-    DockerRepository: 'creditor'
-    DockerImageTag: '0.0.2'
+  - task: AzureRMWebAppDeployment@4
+    displayName: Azure App Service Deploy
+    inputs:
+      appType: webAppContainer
+      ConnectedServiceName: $(STAGING_AZURE_SUBSCRIPTION)
+      WebAppName: 'hubpa-d-creditor-ms'
+      DockerNamespace: 'hubpadarc.azurecr.io'
+      DockerRepository: 'creditor'
+      DockerImageTag: '0.0.2'
 
-# Build and deploy JOB microservice docker
-- task: Docker@2
-  inputs:
-    containerRegistry: 'pagopa-azurecr'
-    repository: 'job'
-    command: 'buildAndPush'
-    Dockerfile: './upload-payments/Dockerfile.deploy'
-    tags: '0.0.1' 
+  # Build and deploy JOB microservice docker
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'pagopa-azurecr'
+      repository: 'job'
+      command: 'buildAndPush'
+      Dockerfile: './upload-payments/Dockerfile.deploy'
+      tags: '0.0.1'
 
-- task: AzureRMWebAppDeployment@4
-  displayName: Azure App Service Deploy
-  inputs:
-    appType: webAppContainer
-    ConnectedServiceName: $(STAGING_AZURE_SUBSCRIPTION)
-    WebAppName: 'hubpa-d-job-ms'
-    DockerNamespace: 'hubpadarc.azurecr.io'
-    DockerRepository: 'job'
-    DockerImageTag: '0.0.1'
+  - task: AzureRMWebAppDeployment@4
+    displayName: Azure App Service Deploy
+    inputs:
+      appType: webAppContainer
+      ConnectedServiceName: $(STAGING_AZURE_SUBSCRIPTION)
+      WebAppName: 'hubpa-d-job-ms'
+      DockerNamespace: 'hubpadarc.azurecr.io'
+      DockerRepository: 'job'
+      DockerImageTag: '0.0.1'
 
-# Build and deploy SERVICE microservice docker
-- task: Docker@2
-  inputs:
-    containerRegistry: 'pagopa-azurecr'
-    repository: 'service'
-    command: 'buildAndPush'
-    Dockerfile: './service-managment/Dockerfile.deploy'
-    tags: '0.0.1' 
+  # Build and deploy SERVICE microservice docker
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'pagopa-azurecr'
+      repository: 'service'
+      command: 'buildAndPush'
+      Dockerfile: './service-managment/Dockerfile.deploy'
+      tags: '0.0.1'
 
-- task: AzureRMWebAppDeployment@4
-  displayName: Azure App Service Deploy
-  inputs:
-    appType: webAppContainer
-    ConnectedServiceName: $(STAGING_AZURE_SUBSCRIPTION)
-    WebAppName: 'hubpa-d-service-ms'
-    DockerNamespace: 'hubpadarc.azurecr.io'
-    DockerRepository: 'service'
-    DockerImageTag: '0.0.1'
-
+  - task: AzureRMWebAppDeployment@4
+    displayName: Azure App Service Deploy
+    inputs:
+      appType: webAppContainer
+      ConnectedServiceName: $(STAGING_AZURE_SUBSCRIPTION)
+      WebAppName: 'hubpa-d-service-ms'
+      DockerNamespace: 'hubpadarc.azurecr.io'
+      DockerRepository: 'service'
+      DockerImageTag: '0.0.1'
