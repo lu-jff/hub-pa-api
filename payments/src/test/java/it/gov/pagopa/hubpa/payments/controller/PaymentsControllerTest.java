@@ -136,7 +136,7 @@ class PaymentsControllerTest {
 	List<PaymentPosition> listPay=new ArrayList<>();
 	PaymentPosition paymentPosition = DebitorMock.createPaymentPositionMock();
 	listPay.add(paymentPosition);
-	Page<PaymentPosition> pp= new PageImpl(listPay);
+	Page<PaymentPosition> pp= new PageImpl<>(listPay);
 
 	when(paymentService.getPaymentsByFilters(Mockito.anyString(),Mockito.any(),Mockito.any())).thenReturn(pp);
 	when(modelMapperMock.map(any(PaymentPosition.class), any())).thenReturn(paymentMinimalModel);
