@@ -124,7 +124,6 @@ public class PaymentsController {
 	List<CsvPositionModel> csvPositions = content.stream()
 		.map(csvPositionModel -> modelMapper.map(csvPositionModel, CsvPositionModel.class))
 		.collect(Collectors.toList());
-
 	// write all users to csv file
 	writer.write(csvPositions);
 
