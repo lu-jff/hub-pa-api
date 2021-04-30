@@ -1,8 +1,15 @@
 package it.gov.pagopa.hubpa.payments.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,10 +18,16 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
 import it.gov.pagopa.hubpa.payments.PaymentsApplication;
 import it.gov.pagopa.hubpa.payments.config.DevCorsConfiguration;
@@ -22,12 +35,15 @@ import it.gov.pagopa.hubpa.payments.config.MappingsConfiguration;
 import it.gov.pagopa.hubpa.payments.entity.Debitor;
 import it.gov.pagopa.hubpa.payments.entity.PaymentPosition;
 import it.gov.pagopa.hubpa.payments.entity.Transfers;
+import it.gov.pagopa.hubpa.payments.mock.CsvPositionModelMock;
 import it.gov.pagopa.hubpa.payments.mock.DebitorMock;
 import it.gov.pagopa.hubpa.payments.mock.DebitorModelMock;
 import it.gov.pagopa.hubpa.payments.mock.FilterModelMock;
 import it.gov.pagopa.hubpa.payments.mock.FindModelMock;
 import it.gov.pagopa.hubpa.payments.mock.FindResponseModelMock;
 import it.gov.pagopa.hubpa.payments.mock.PaymentJobMinimalModelMock;
+import it.gov.pagopa.hubpa.payments.mock.PaymentMinimalModelMock;
+import it.gov.pagopa.hubpa.payments.mock.PaymentPositionDetailModelMock;
 import it.gov.pagopa.hubpa.payments.mock.PaymentsModelMock;
 import it.gov.pagopa.hubpa.payments.mock.TributeServiceModelMock;
 import it.gov.pagopa.hubpa.payments.mock.UploadCsvModelMock;
@@ -54,6 +70,8 @@ class PaymentsControllerTest {
 
     @Mock
     private ModelMapper modelMapperMock;
+    
+    
 
     @Mock
     private PaymentService paymentService;
@@ -101,8 +119,6 @@ class PaymentsControllerTest {
 	PaymentsModel paymentsModel = modelMapper.map(uploadCsvModelMock, PaymentsModel.class);	
 	assertThat(paymentsModel.getDebitors().get(0).getArea()).isEqualTo("Firenze");
 	
-	/*PaymentPosition paymentPosition=modelMapper.map(paymentMinimalModel,PaymentPosition.class);
-	assertThat(paymentPosition.getDebitor().getSurname()).isEqualTo("ROSSI");*/
 	PaymentMinimalModel paymentMinimalModel=modelMapper.map(paymentPosition,PaymentMinimalModel.class);
 	assertThat(paymentMinimalModel.getSurname()).isEqualTo("Rossi");
 	
@@ -111,6 +127,44 @@ class PaymentsControllerTest {
 	CsvPositionModel csvPositionModel=modelMapper.map(paymentPosition,CsvPositionModel.class);
 	assertThat(csvPositionModel.getFiscalCode()).isEqualTo("MRDPLL54H17D542L");
 	
+    }
+    
+    @Test
+    void getPayments() {
+	FindModel findModelMock=FindModelMock.getMock();
+	PaymentMinimalModel paymentMinimalModel=PaymentMinimalModelMock.getMock();
+	List<PaymentPosition> listPay=new ArrayList<>();
+	PaymentPosition paymentPosition = DebitorMock.createPaymentPositionMock();
+	listPay.add(paymentPosition);
+	Page<PaymentPosition> pp= new PageImpl(listPay);
+
+	when(paymentService.getPaymentsByFilters(Mockito.anyString(),Mockito.any(),Mockito.any())).thenReturn(pp);
+	when(modelMapperMock.map(any(PaymentPosition.class), any())).thenReturn(paymentMinimalModel);
+	
+	FindResponseModel aa = paymentsController.getPayments(findModelMock);
+	assertThat(aa.getPayments()).isNotNull();
+    }
+    @Test
+    void getPaymentsByPaymentPositionId() {
+	PaymentPosition paymentPosition=DebitorMock.createPaymentPositionMock();
+	PaymentPositionDetailModel paymentPositionDetailModel=PaymentPositionDetailModelMock.getMock();
+	when(paymentService.getPaymentByPaymentPositionId(Mockito.anyLong())).thenReturn(paymentPosition);
+	when(modelMapperMock.map(any(PaymentPosition.class), any())).thenReturn(paymentPositionDetailModel);
+	PaymentPositionDetailModel pay = paymentsController.getPaymentsByPaymentPositionId(1l);
+	assertThat(pay.getFiscalCode()).isNotNull();
+    }
+    @Test
+    void exportCsv() throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException, IOException {
+	HttpServletResponse httpServletResponse = new MockHttpServletResponse();
+	List<PaymentPosition> paymentPositionList=new ArrayList<>();
+	paymentPositionList.add(DebitorMock.createPaymentPositionMock());
+	CsvPositionModel csvPositionModel=CsvPositionModelMock.getMock();
+	when(paymentService.getPaymentsByJobId(Mockito.anyLong())).thenReturn(paymentPositionList);
+	when(modelMapperMock.map(any(PaymentPosition.class), any())).thenReturn(csvPositionModel);
+	
+	
+	paymentsController.exportCsv(1l,httpServletResponse);
+	assertThatNoException();
     }
 
     @Test
@@ -132,7 +186,7 @@ class PaymentsControllerTest {
     }
 
     @Test
-    void getDTO() {
+    void getDTO1() {
 	Transfers transfer = DebitorMock.createTransfersMock1a();
 	assertThat(transfer.getIban()).isNotNull();
 	assertThat(transfer.getId()).isNull();
@@ -160,6 +214,29 @@ class PaymentsControllerTest {
 	assertThat(findResponseModel.getTotalPages()).isNotNull();
 	assertThat(findResponseModel.getPayments()).isNotNull();
 	
+    }
+    @Test
+    void getDTO2() {
+		
+	CsvPositionModel csvPositionModel=CsvPositionModelMock.getMock();
+	assertThat(csvPositionModel.getName()).isNotNull();
+	assertThat(csvPositionModel.getAddress()).isNotNull();
+	assertThat(csvPositionModel.getAmount()).isNotNull();
+	assertThat(csvPositionModel.getArea()).isNotNull();
+	assertThat(csvPositionModel.getCap()).isNotNull();
+	assertThat(csvPositionModel.getCountry()).isNotNull();
+	assertThat(csvPositionModel.getEmail()).isNotNull();
+	assertThat(csvPositionModel.getFiscalCode()).isNotNull();
+	assertThat(csvPositionModel.getIdTenant()).isNotNull();
+	assertThat(csvPositionModel.getInformation()).isNotNull();
+	assertThat(csvPositionModel.getName()).isNotNull();
+	assertThat(csvPositionModel.getNumber()).isNotNull();
+	assertThat(csvPositionModel.getPhone()).isNotNull();
+	assertThat(csvPositionModel.getProvince()).isNotNull();
+	assertThat(csvPositionModel.getSurname()).isNotNull();
+	assertThat(csvPositionModel.getType()).isNotNull();
+	
+
     }
 
 }
