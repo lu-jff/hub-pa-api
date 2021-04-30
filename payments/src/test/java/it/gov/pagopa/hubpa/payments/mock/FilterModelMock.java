@@ -8,11 +8,14 @@ public class FilterModelMock {
     public final static FilterModel getMock() {
 	FilterModel mock = new FilterModel();
 
-	mock.setTextSearch("MRC");
+	mock.setTextSearch("123");
 	mock.setStatus(1);
 	mock.setDateTo(LocalDate.now());
 	mock.setDateFrom(LocalDate.now());
 
 	return mock;
+    }
+    public final static FilterModel getMock2() {
+	return null;
     }
 }
