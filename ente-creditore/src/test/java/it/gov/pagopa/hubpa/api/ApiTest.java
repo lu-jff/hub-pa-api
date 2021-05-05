@@ -129,7 +129,7 @@ class ApiTest {
 		ecDto.setCodiceGs1Gln("x");
 		ecDto.setCognomeRp("De Santis");
 		ecDto.setNomeRp("Paolo");
-		ecDto.setCodiceFiscaleRp("DNSPAA68L01A252P");
+		ecDto.setCodiceFiscaleRp("DNSPAA68L01A252M");
 		ecDto.setMailRp("paolo.desanti@istruzione.it");
 		ecDto.setTelefonoRp("0658492389");
 		ecDto.setCellulareRp("3403608985");
