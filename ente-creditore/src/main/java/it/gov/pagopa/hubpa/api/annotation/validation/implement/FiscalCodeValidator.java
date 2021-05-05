@@ -35,7 +35,7 @@ public class FiscalCodeValidator  implements ConstraintValidator<FiscalCode, Str
         String cf = value.toUpperCase();
  
         int i = 0, s = 0, c = 0,t=0;
- 
+
         for (i = 1; i <= 13; i += 2) {
             c = cf.charAt(i);
             if (c >= '0' && c <= '9') {
