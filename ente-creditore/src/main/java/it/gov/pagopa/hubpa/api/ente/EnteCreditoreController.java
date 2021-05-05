@@ -1,5 +1,7 @@
 package it.gov.pagopa.hubpa.api.ente;
 
+import javax.validation.Valid;
+
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +41,7 @@ public class EnteCreditoreController {
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
   @ApiOperation(value = "Crea un Ente Creditore", notes = "Crea un Ente Creditore", response = EnteCreditoreDto.class)
-  public EnteCreditoreDto createEcPost(@ApiParam(value = "Modello dell'Ente Creditore", required = true) @RequestBody EnteCreditoreDto ecDto) {
+  public EnteCreditoreDto createEcPost(@ApiParam(value = "Modello dell'Ente Creditore", required = true) @Valid @RequestBody EnteCreditoreDto ecDto) {
     EnteCreditoreEntity ecCreated = enteCreditoreService.create(modelMapper.map(ecDto, EnteCreditoreEntity.class));
 
     return modelMapper.map(ecCreated, EnteCreditoreDto.class);

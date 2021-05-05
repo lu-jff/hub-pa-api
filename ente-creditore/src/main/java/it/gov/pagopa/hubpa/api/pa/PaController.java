@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +52,7 @@ public class PaController {
   @PostMapping(value = "/ente/pa")
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
-  public PaDto createIbanPost(@ApiParam(value = "Modello della PA", required = true)  @RequestBody PaDto paDto) {
+  public PaDto createIbanPost(@ApiParam(value = "Modello della PA", required = true) @Valid  @RequestBody PaDto paDto) {
     PaEntity paCreated = paService.create(modelMapper.map(paDto, PaEntity.class));
 
     return modelMapper.map(paCreated, PaDto.class);

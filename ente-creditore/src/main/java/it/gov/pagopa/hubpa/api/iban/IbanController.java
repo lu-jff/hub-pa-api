@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +50,7 @@ public class IbanController {
   @PostMapping(value = "/ente/iban")
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
-  public IbanDto createIbanPost(@ApiParam(value = "Modello dell'IBAN", required = true) @RequestBody IbanDto ibanDto) {
+  public IbanDto createIbanPost(@ApiParam(value = "Modello dell'IBAN", required = true) @Valid @RequestBody IbanDto ibanDto) {
     IbanEntity ibanCreated = ibanService.create(modelMapper.map(ibanDto, IbanEntity.class));
 
     return modelMapper.map(ibanCreated, IbanDto.class);
