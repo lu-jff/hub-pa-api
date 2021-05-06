@@ -11,13 +11,6 @@
 	<description>API for PagoPA HUB</description>
 	<packaging>pom</packaging>
 
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.4.3</version>
-	</parent>
-
-
 	<properties>
 		<java.version>11</java.version>
 		<spring.version>4.3.0.RELEASE</spring.version>
