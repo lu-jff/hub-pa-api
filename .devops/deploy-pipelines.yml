@@ -1,5 +1,5 @@
 parameters:
-  - name: 'RELEASE_SEMVER'
+  - name: semver
     displayName: 'When packing a release, define the version bump to apply'
     type: string
     values:
@@ -14,7 +14,7 @@ parameters:
     values:
       - dev
       - prod
-  - name: 'MS_NAME'
+  - name: ms_name
     displayName: 'Microservice to deploy'
     type: string
       - ente-creditore
@@ -24,7 +24,7 @@ parameters:
       - service-management
       - upload-payments
     default: ente-creditore
-  - name: 'STACK'
+  - name: stack
     displayName: 'Stack of the microservice'
     default: java
     type: string
