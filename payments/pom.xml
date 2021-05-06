@@ -5,12 +5,14 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>it.gov.pagopa.hubpa</groupId>
-		<artifactId>hub-pa-api</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.4.5</version>
+		<relativePath/>
 	</parent>
 
 	<artifactId>payments</artifactId>
+	<version>0.0.1</version>
 	<name>payments</name>
 	<description>Upload Payments</description>
 
