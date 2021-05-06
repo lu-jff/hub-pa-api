@@ -7,8 +7,15 @@ parameters:
       - minor
       - patch
     default: minor
+  - name: environment
+    displayName: Target Environment
+    type: string
+    default: dev
+    values:
+      - dev
+      - prod
   - name: 'MS_NAME'
-    displayName: 'Choose the microservice to deploy'
+    displayName: 'Microservice to deploy'
     type: string
       - ente-creditore
       - hub-spid-login-ms
@@ -16,8 +23,10 @@ parameters:
       - queue-worker
       - service-management
       - upload-payments
+    default: ente-creditore
   - name: 'STACK'
-    displayName: 'Choose the stack of the microservice'
+    displayName: 'Stack of the microservice'
+    default: java
     type: string
       - java
       - node
