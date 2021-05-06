@@ -1,3 +1,27 @@
+parameters:
+  - name: 'RELEASE_SEMVER'
+    displayName: 'When packing a release, define the version bump to apply'
+    type: string
+    values:
+      - major
+      - minor
+      - patch
+    default: minor
+  - name: 'MS_NAME'
+    displayName: 'Choose the microservice to deploy'
+    type: string
+      - ente-creditore
+      - hub-spid-login-ms
+      - payments
+      - queue-worker
+      - service-management
+      - upload-payments
+  - name: 'STACK'
+    displayName: 'Choose the stack of the microservice'
+    type: string
+      - java
+      - node
+
 # Only manual triggers
 trigger: none
 pr: none
