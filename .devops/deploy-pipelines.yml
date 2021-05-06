@@ -17,17 +17,19 @@ parameters:
   - name: MS_NAME
     displayName: 'Microservice to deploy'
     type: string
-      - 'ente-creditore'
-      - 'hub-spid-login-ms'
+    values:
+      - ente-creditore
+      - hub-spid-login-ms
       - payments
-      - 'queue-worker'
-      - 'service-management'
-      - 'upload-payments'
-    default: 'ente-creditore'
+      - queue-worker
+      - service-management
+      - upload-payments
+    default: ente-creditore
   - name: STACK
     displayName: 'Stack of the microservice'
     default: java
     type: string
+    values:
       - java
       - node
 
