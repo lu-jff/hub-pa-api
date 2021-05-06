@@ -62,26 +62,21 @@ services:
     ports:
       - "8085:8085"
     container_name: payments
- 
-
-  
-  auth-spid:
+    
+  hub-spid-login-ms:
     build:
-      context: ./auth-spid
+      context: ./hub-spid-login-ms
       dockerfile: ./Dockerfile
-    environment:
-      - NODE_ENV=dev
-      - REDIS_URL=redis://redis
-      - NODE_TLS_REJECT_UNAUTHORIZED=0
+    env_file: "./hub-spid-login-ms/.env"
     expose:
-      - "3000"
+      - "8080"
     ports:
-      - "3000:3000"
-    image: node:10.14.2-alpine
+      - "3000:8080"
     working_dir: /usr/src/app
-    command: ["yarn", "dev"]
+    command: ["node", "dist/server.js"]
     depends_on:
       - spid-testenv2
+      - redis
     
 
   spid-testenv2:
@@ -89,13 +84,15 @@ services:
     ports:
       - "8088:8088"
     volumes:
-      - "./auth-spid/conf-testenv/config.yaml:/app/conf/config.yaml"
-      - "./auth-spid/conf-testenv/users.json:/app/conf/users.json"
+      - "./hub-spid-login-ms/conf-testenv:/app/conf"
+      - "./hub-spid-login-ms/certs:/app/certs:ro"
+
     depends_on:
       - redis
 
   
   redis:
+    container_name: redis
     image: wodby/redis:3.2-2.1.5
     environment:
       REDIS_TIMEOUT: 300
@@ -128,4 +125,4 @@ services:
   #   ports:
   #     - "5672:5672"
   #     - "15672:15672"
-      
+    
