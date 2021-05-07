@@ -78,7 +78,7 @@ steps:
     displayName: Azure App Service Deploy
     inputs:
       appType: webAppContainer
-      ConnectedServiceName: $(STAGING_AZURE_SUBSCRIPTION)
+      ConnectedServiceName: $(DEV_AZURE_SUBSCRIPTION)
       WebAppName: 'hubpa-d-creditor-ms'
       DockerNamespace: 'hubpadarc.azurecr.io'
       DockerRepository: 'creditor'
@@ -97,7 +97,7 @@ steps:
     displayName: Azure App Service Deploy
     inputs:
       appType: webAppContainer
-      ConnectedServiceName: $(STAGING_AZURE_SUBSCRIPTION)
+      ConnectedServiceName: $(DEV_AZURE_SUBSCRIPTION)
       WebAppName: 'hubpa-d-job-ms'
       DockerNamespace: 'hubpadarc.azurecr.io'
       DockerRepository: 'job'
@@ -116,7 +116,7 @@ steps:
     displayName: Azure App Service Deploy
     inputs:
       appType: webAppContainer
-      ConnectedServiceName: $(STAGING_AZURE_SUBSCRIPTION)
+      ConnectedServiceName: $(DEV_AZURE_SUBSCRIPTION)
       WebAppName: 'hubpa-d-service-ms'
       DockerNamespace: 'hubpadarc.azurecr.io'
       DockerRepository: 'service'
