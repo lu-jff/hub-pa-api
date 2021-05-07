@@ -32,12 +32,11 @@ parameters:
     values:
       - java
       - node
-
 variables:
-  ${{ if eq(parameters['environment'], 'dev') }}:
+  ${{ if eq(parameters['ENV'], 'dev') }}:
     AZURE_SUBSCRIPTION: $(DEV_AZURE_SUBSCRIPTION)
     CONTAINER_REGISTRY: $(DEV_CONTAINER_REGISTRY)
-  ${{ if eq(parameters['environment'], 'prod') }}:
+  ${{ if eq(parameters['ENV'], 'prod') }}:
     AZURE_SUBSCRIPTION: $(PROD_AZURE_SUBSCRIPTION)
     CONTAINER_REGISTRY: $(PROD_CONTAINER_REGISTRY)
   MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
@@ -50,7 +49,6 @@ pr: none
 pool:
   vmImage: ubuntu-latest
   
-
 steps:
   - task: Cache@2
     inputs:
