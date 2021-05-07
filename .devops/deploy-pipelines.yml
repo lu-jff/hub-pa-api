@@ -68,7 +68,7 @@ steps:
   # Build and deploy CREDITOR microservice docker
   - task: Docker@2
     inputs:
-      containerRegistry: 'pagopa-azurecr'
+      containerRegistry: $(DEV_CONTAINER_REGISTRY)
       repository: 'creditor'
       command: 'buildAndPush'
       Dockerfile: './ente-creditore/Dockerfile.deploy'
@@ -87,7 +87,7 @@ steps:
   # Build and deploy JOB microservice docker
   - task: Docker@2
     inputs:
-      containerRegistry: 'pagopa-azurecr'
+      containerRegistry: $(DEV_CONTAINER_REGISTRY)
       repository: 'job'
       command: 'buildAndPush'
       Dockerfile: './upload-payments/Dockerfile.deploy'
@@ -106,7 +106,7 @@ steps:
   # Build and deploy SERVICE microservice docker
   - task: Docker@2
     inputs:
-      containerRegistry: 'pagopa-azurecr'
+      containerRegistry: $(DEV_CONTAINER_REGISTRY)
       repository: 'service'
       command: 'buildAndPush'
       Dockerfile: './service-managment/Dockerfile.deploy'
