@@ -33,16 +33,23 @@ parameters:
       - java
       - node
 
+variables:
+  ${{ if eq(parameters['environment'], 'dev') }}:
+    AZURE_SUBSCRIPTION: $(DEV_AZURE_SUBSCRIPTION)
+    CONTAINER_REGISTRY: $(DEV_CONTAINER_REGISTRY)
+  ${{ if eq(parameters['environment'], 'prod') }}:
+    AZURE_SUBSCRIPTION: $(PROD_AZURE_SUBSCRIPTION)
+    CONTAINER_REGISTRY: $(PROD_CONTAINER_REGISTRY)
+  MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
+  MAVEN_OPTS: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
+
 # Only manual triggers
 trigger: none
 pr: none
 
 pool:
   vmImage: ubuntu-latest
-
-variables:
-  MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
-  MAVEN_OPTS: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
+  
 
 steps:
   - task: Cache@2
@@ -68,7 +75,7 @@ steps:
   # Build and deploy CREDITOR microservice docker
   - task: Docker@2
     inputs:
-      containerRegistry: $(DEV_CONTAINER_REGISTRY)
+      containerRegistry: $(CONTAINER_REGISTRY)
       repository: 'creditor'
       command: 'buildAndPush'
       Dockerfile: './ente-creditore/Dockerfile.deploy'
@@ -78,7 +85,7 @@ steps:
     displayName: Azure App Service Deploy
     inputs:
       appType: webAppContainer
-      ConnectedServiceName: $(DEV_AZURE_SUBSCRIPTION)
+      ConnectedServiceName: $(AZURE_SUBSCRIPTION)
       WebAppName: 'hubpa-d-creditor-ms'
       DockerNamespace: 'hubpadarc.azurecr.io'
       DockerRepository: 'creditor'
@@ -87,7 +94,7 @@ steps:
   # Build and deploy JOB microservice docker
   - task: Docker@2
     inputs:
-      containerRegistry: $(DEV_CONTAINER_REGISTRY)
+      containerRegistry: $(CONTAINER_REGISTRY)
       repository: 'job'
       command: 'buildAndPush'
       Dockerfile: './upload-payments/Dockerfile.deploy'
@@ -97,7 +104,7 @@ steps:
     displayName: Azure App Service Deploy
     inputs:
       appType: webAppContainer
-      ConnectedServiceName: $(DEV_AZURE_SUBSCRIPTION)
+      ConnectedServiceName: $(AZURE_SUBSCRIPTION)
       WebAppName: 'hubpa-d-job-ms'
       DockerNamespace: 'hubpadarc.azurecr.io'
       DockerRepository: 'job'
@@ -106,7 +113,7 @@ steps:
   # Build and deploy SERVICE microservice docker
   - task: Docker@2
     inputs:
-      containerRegistry: $(DEV_CONTAINER_REGISTRY)
+      containerRegistry: $(CONTAINER_REGISTRY)
       repository: 'service'
       command: 'buildAndPush'
       Dockerfile: './service-managment/Dockerfile.deploy'
@@ -116,7 +123,7 @@ steps:
     displayName: Azure App Service Deploy
     inputs:
       appType: webAppContainer
-      ConnectedServiceName: $(DEV_AZURE_SUBSCRIPTION)
+      ConnectedServiceName: $(AZURE_SUBSCRIPTION)
       WebAppName: 'hubpa-d-service-ms'
       DockerNamespace: 'hubpadarc.azurecr.io'
       DockerRepository: 'service'
