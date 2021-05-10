@@ -76,7 +76,7 @@ stages:
               subproject: '${{ parameters.MS_NAME }}'
               semver: '${{ parameters.SEMVER }}'
       - job: readVersion
-        setps:
+        steps:
           - task: Bash@3
             inputs:
               targetType: 'inline'
