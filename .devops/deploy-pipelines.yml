@@ -87,7 +87,7 @@ stages:
               failOnStderr: true
           - script: |
               HEAD_SHA=$(git rev-parse HEAD)
-              TITLE="Release ${{ nextversion }}"
+              TITLE="Release $(nextversion)"
               TAG="${{ parameters.MS_NAME }}/$NEXT_VERSION"
               echo "##vso[task.setvariable variable=title]$TITLE"
               echo "##vso[task.setvariable variable=sha]$HEAD_SHA"
