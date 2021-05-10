@@ -102,26 +102,26 @@ stages:
 
           - script: |
               git checkout ${{variables['Build.SourceBranchName']}}
-
+## git push origin ${{variables['Build.SourceBranchName']}}
+              # git push --tags
+#
           - script: |
               git add ${{ parameters.MS_NAME }}/pom.xml 
               git commit -m "Bump version [skip ci]"
-              git push origin ${{variables['Build.SourceBranchName']}}
-              git push --tags
-            env:
-              SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+              
+
 
           # create new releae
-          # - task: GitHubRelease@0
-          #   inputs:
-          #     gitHubConnection: $(GITHUB_CONNECTION)
-          #     repositoryName: $(Build.Repository.Name)
-          #     action: create
-          #     target: $(sha)
-          #     tagSource: manual
-          #     tag: $(tag)
-          #     title: $(title)
-          #     addChangelog: true
+          - task: GitHubRelease@0
+            inputs:
+              gitHubConnection: $(GITHUB_CONNECTION)
+              repositoryName: $(Build.Repository.Name)
+              action: create
+              target: $(sha)
+              tagSource: manual
+              tag: $(tag)
+              title: $(title)
+              addChangelog: true
               
 
   # - task: Cache@2
