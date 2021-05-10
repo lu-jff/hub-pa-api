@@ -99,11 +99,11 @@ stages:
           # - script: |
           #     git checkout ${{ parameters.release_branch }}
 
-          # - script: |
-          #     git checkout ${{variables['Build.SourceBranch']}}
+          - script: |
+              git checkout ${{variables['Build.SourceBranchName']}}
 
           - script: |
-              git add ${{ parameters.MS_NAME }}/pom.xml && git commit -m "Bump version" && git push origin  ${{variables['Build.SourceBranch']}} && git push --tags
+              git add ${{ parameters.MS_NAME }}/pom.xml && git commit -m "Bump version" && git push origin  ${{variables['Build.SourceBranchName']}} && git push --tags
 
           # create new releae
           # - task: GitHubRelease@0
