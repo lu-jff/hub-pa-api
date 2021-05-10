@@ -13,4 +13,6 @@ parameters:
 steps:
 - checkout: self
   displayName: 'Checkout'
+  clean: true
+  persistCredentials: true
 
