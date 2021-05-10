@@ -63,14 +63,11 @@ stages:
     #   eq(variables['Build.SourceBranch'], 'refs/heads/main')
     pool:
       vmImage: 'ubuntu-latest'
-    jobs:
-      - job: checkout
-        steps:
+
+    steps:
           - checkout: self
             clean: true
             persistCredentials: true
-      - job: versioning
-        steps:
           - script: |
               git config --global user.name "$(GIT_USERNAME)"
               git config --global user.email "$(GIT_EMAIL)"
