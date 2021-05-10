@@ -69,14 +69,12 @@ stages:
     pool:
       vmImage: 'ubuntu-latest'
     jobs:
-      - job: newVersion
+      - job: versioning
         steps:
           - template: azure-templates/maven-versioning.yml 
             parameters:
               subproject: '${{ parameters.MS_NAME }}'
               semver: '${{ parameters.SEMVER }}'
-      - job: readVersion
-        steps:
           - task: Bash@3
             inputs:
               targetType: 'inline'
