@@ -108,6 +108,8 @@ stages:
               git commit -m "Bump version [skip ci]"
               git push origin ${{variables['Build.SourceBranchName']}}
               git push --tags
+            env:
+              SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
           # create new releae
           # - task: GitHubRelease@0
