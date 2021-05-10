@@ -1,0 +1,24 @@
+# Upgrades the versions numbers as reported on pom files
+
+parameters:
+  # Versioning parameters
+  - name: 'semver'
+    type: string
+    values:
+    - major
+    - minor
+    - patch
+  - name: 'subproject'
+    type: string
+
+steps:
+  - workingDirectory: $(parameters.subproject)
+  - ${{ if eq(parameters.semver, 'patch') }}:
+    # - script : |
+    #   mvn build-helper:parse-version versions:set -DnewVersion=${parsedVersion.nextMajorVersion}.${parsedVersion.minorVersion}.${parsedVersion.minorVersion}
+    # 
+    - task: Maven@3
+      inputs:
+        mavenPomFile: 'pom.xml'
+        goals: ['build-helper:parse-version', 'versions:set']
+        options: '-DnewVersion=${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.nextIncrementalVersion}'
