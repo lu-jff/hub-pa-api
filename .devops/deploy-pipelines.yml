@@ -41,6 +41,10 @@ variables:
     CONTAINER_REGISTRY: $(PROD_CONTAINER_REGISTRY)
   MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
   MAVEN_OPTS: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
+  title: ''
+  sha: ''
+  tag: ''
+
 
 # Only manual triggers
 trigger: none
@@ -49,8 +53,6 @@ pr: none
 pool:
   vmImage: ubuntu-latest
 
-
-  
 stages:
   
   # Checkout the monorepo
