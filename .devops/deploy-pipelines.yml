@@ -75,7 +75,7 @@ stages:
             parameters:
               release_branch: 'main'
               subproject: $(parameters.MS_NAME)
-              semver: '${{ parameters.RELEASE_SEMVER }}'
+              semver: '${{ parameters.SEMVER }}'
               
 
   # - task: Cache@2
