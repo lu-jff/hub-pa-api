@@ -79,6 +79,7 @@ stages:
               subproject: '${{ parameters.MS_NAME }}'
               semver: '${{ parameters.SEMVER }}'
           - task: Bash@3
+            workingDirectory: '${{ parameters.MS_NAME }}'
             inputs:
               targetType: 'inline'
               script: |
