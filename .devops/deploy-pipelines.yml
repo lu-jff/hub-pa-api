@@ -96,6 +96,10 @@ stages:
           - script: |
               git config --global user.email $(GIT_EMAIL) && git config --global user.name $(GIT_USERNAME)
 
+          - script: |
+              git config --global --add url."git@github.com:".insteadOf "https://github.com/"
+
+
           # - script: |
           #     git checkout ${{ parameters.release_branch }}
 
@@ -103,7 +107,7 @@ stages:
               git checkout ${{variables['Build.SourceBranchName']}}
 
           - script: |
-              git add ${{ parameters.MS_NAME }}/pom.xml && git commit -m "Bump version" && git push origin  ${{variables['Build.SourceBranchName']}} && git push --tags
+              git add ${{ parameters.MS_NAME }}/pom.xml && git commit -m "Bump version [skip ci]" && git push origin ${{variables['Build.SourceBranchName']}} && git push --tags
 
           # create new releae
           # - task: GitHubRelease@0
