@@ -94,7 +94,7 @@ stages:
               echo "##vso[task.setvariable variable=tag]$TAG"
           # push new version
           - script: |
-              git add ${{ parameters.MS_NAME }}/pom.xml && git push origin  ${{variables['Build.SourceBranch']}} && git push --tags
+              git add ${{ parameters.MS_NAME }}/pom.xml && git commit -m "Bump version" && git push origin  ${{variables['Build.SourceBranch']}} && git push --tags
 
           # create new releae
           # - task: GitHubRelease@0
