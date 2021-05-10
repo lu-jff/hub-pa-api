@@ -1,4 +1,4 @@
-# Upgrades the versions numbers as reported on pom files
+# Upgrades the version numbers as reported in pom files
 
 parameters:
   # Versioning parameters
@@ -13,9 +13,6 @@ parameters:
 
 steps:
   - ${{ if eq(parameters.semver, 'patch') }}:
-    # - script : |
-    #   mvn build-helper:parse-version versions:set -DnewVersion=${parsedVersion.nextMajorVersion}.${parsedVersion.minorVersion}.${parsedVersion.minorVersion}
-    # 
     - task: Maven@3
       inputs:
         mavenPomFile: "${{parameters.subproject}}/pom.xml"
