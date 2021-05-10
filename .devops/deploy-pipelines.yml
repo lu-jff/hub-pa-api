@@ -93,7 +93,8 @@ stages:
               echo "##vso[task.setvariable variable=sha]$HEAD_SHA"
               echo "##vso[task.setvariable variable=tag]$TAG"
           - script: |
-              git config --global user.email "$(GIT_EMAIL)" && git config --global user.name "$(GIT_USERNAME)""
+              git config --global user.email "$(GIT_EMAIL)"
+              git config --global user.name "$(GIT_USERNAME)"
 
           # - script: |
           #     git checkout ${{ parameters.release_branch }}
