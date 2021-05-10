@@ -87,11 +87,26 @@ stages:
               failOnStderr: true
           - script: |
               HEAD_SHA=$(git rev-parse HEAD)
-              TITLE="Release $(nextversion)"
+              TITLE="Release ${{ parameters.MS_NAME }}/$(nextversion)"
               TAG="${{ parameters.MS_NAME }}/$NEXT_VERSION"
               echo "##vso[task.setvariable variable=title]$TITLE"
               echo "##vso[task.setvariable variable=sha]$HEAD_SHA"
               echo "##vso[task.setvariable variable=tag]$TAG"
+          # push new version
+          - script: |
+              git add ${{ parameters.MS_NAME }}/pom.xml && git push origin main && git push --tags
+
+          # create new releae
+          - task: GitHubRelease@0
+            inputs:
+              gitHubConnection: ${{ parameters.gitHubConnection }}
+              repositoryName: $(Build.Repository.Name)
+              action: create
+              target: $(sha)
+              tagSource: manual
+              tag: $(tag)
+              title: $(title)
+              addChangelog: true
               
 
   # - task: Cache@2
