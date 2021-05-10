@@ -75,8 +75,8 @@ stages:
       - job: versioning
         steps:
           - script: |
-              git config --global user.email "$(GIT_EMAIL)"
               git config --global user.name "$(GIT_USERNAME)"
+              git config --global user.email "$(GIT_EMAIL)"
               
           - template: azure-templates/maven-versioning.yml 
             parameters:
