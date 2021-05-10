@@ -55,15 +55,7 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
-  
-  # Checkout the monorepo
-  - stage: Checkout
-    jobs:
-      - job: checkout
-        steps:
-          - checkout: self
-            clean: true
-            persistCredentials: true
+      
 
   # Create a release
   - stage: Release
@@ -72,6 +64,11 @@ stages:
     pool:
       vmImage: 'ubuntu-latest'
     jobs:
+      - job: checkout
+        steps:
+          - checkout: self
+            clean: true
+            persistCredentials: true
       - job: versioning
         steps:
           - script: |
@@ -102,26 +99,25 @@ stages:
 
           - script: |
               git checkout ${{variables['Build.SourceBranchName']}}
-## git push origin ${{variables['Build.SourceBranchName']}}
-              # git push --tags
-#
+
           - script: |
               git add ${{ parameters.MS_NAME }}/pom.xml 
               git commit -m "Bump version [skip ci]"
-              
+              git push origin ${{variables['Build.SourceBranchName']}}
+              git push --tags
 
 
           # create new releae
-          - task: GitHubRelease@0
-            inputs:
-              gitHubConnection: $(GITHUB_CONNECTION)
-              repositoryName: $(Build.Repository.Name)
-              action: create
-              target: $(sha)
-              tagSource: manual
-              tag: $(tag)
-              title: $(title)
-              addChangelog: true
+          # - task: GitHubRelease@0
+          #   inputs:
+          #     gitHubConnection: $(GITHUB_CONNECTION)
+          #     repositoryName: $(Build.Repository.Name)
+          #     action: create
+          #     target: $(sha)
+          #     tagSource: manual
+          #     tag: $(tag)
+          #     title: $(title)
+          #     addChangelog: true
               
 
   # - task: Cache@2
