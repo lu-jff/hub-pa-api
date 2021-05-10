@@ -73,7 +73,7 @@ stages:
         steps:
           - template: azure-templates/maven-versioning.yml 
             parameters:
-              subproject: $(parameters.MS_NAME)
+              subproject: '${{ parameters.MS_NAME }}'
               semver: '${{ parameters.SEMVER }}'
               
 
