@@ -157,14 +157,14 @@ stages:
           - task: Maven@3
             displayName: Package
             inputs:
-            mavenPomFile: '${{ parameters.MS_NAME }}/pom.xml'
-            mavenOptions: '-Xmx3072m $(MAVEN_OPTS)'
-            javaHomeOption: 'JDKVersion'
-            jdkVersionOption: '1.11'
-            jdkArchitectureOption: 'x64'
-            publishJUnitResults: false
-            testResultsFiles: '**/surefire-reports/TEST-*.xml'
-            goals: 'package'
+              mavenPomFile: '${{ parameters.MS_NAME }}/pom.xml'
+              mavenOptions: '-Xmx3072m $(MAVEN_OPTS)'
+              javaHomeOption: 'JDKVersion'
+              jdkVersionOption: '1.11'
+              jdkArchitectureOption: 'x64'
+              publishJUnitResults: false
+              testResultsFiles: '**/surefire-reports/TEST-*.xml'
+              goals: 'package'
 
           - task: Docker@2
             displayName: Build and Push Image
