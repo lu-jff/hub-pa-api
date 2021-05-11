@@ -178,12 +178,12 @@ stages:
           - task: AzureRMWebAppDeployment@4
             displayName: Deploy Microservice
             inputs:
-            appType: webAppContainer
-            ConnectedServiceName: $(AZURE_SUBSCRIPTION)
-            WebAppName: '${{variables.PREFIX}}-${{ parameters.MS_NAME }}-ms'
-            DockerNamespace: 'hubpadarc.azurecr.io'
-            DockerRepository: '${{ parameters.REPOSITORY }}'
-            DockerImageTag: '$(pomversion.next)'
+              appType: webAppContainer
+              ConnectedServiceName: $(AZURE_SUBSCRIPTION)
+              WebAppName: '${{variables.PREFIX}}-${{ parameters.MS_NAME }}-ms'
+              DockerNamespace: 'hubpadarc.azurecr.io'
+              DockerRepository: '${{ parameters.REPOSITORY }}'
+              DockerImageTag: '$(pomversion.next)'
 
   # # Build and deploy JOB microservice docker
   # - task: Docker@2
