@@ -142,7 +142,7 @@ stages:
     # condition:
     #   eq(variables['Build.SourceBranch'], 'refs/heads/main')
     condition:
-      not(failed('release_service')
+      not(failed('release_service'))
     pool:
       vmImage: 'ubuntu-latest'
     jobs:
