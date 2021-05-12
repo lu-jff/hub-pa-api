@@ -12,7 +12,7 @@
 	</parent>
 
 	<artifactId>ente-creditore</artifactId>
-	<version>0.0.6</version>
+	<version>0.0.7</version>
 	<name>ente-creditore</name>
 	<description>Microservice to get informations about public entities registered in pagopa</description>
 
