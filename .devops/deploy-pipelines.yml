@@ -181,7 +181,7 @@ stages:
           - task: Bash@3
             condition:
               eq('${{ parameters.STACK }}', 'node')
-            name: pomversion
+            name: pkgversion
             inputs:
               targetType: 'inline'
               workingDirectory: '${{ parameters.MS_NAME }}'
@@ -262,7 +262,7 @@ stages:
               repository: '${{ parameters.REPOSITORY }}'
               command: 'buildAndPush'
               Dockerfile: './${{ parameters.MS_NAME }}/Dockerfile'
-              tags: '$(pomversion.next)'
+              tags: '$(pkgversion.next)'
 
           - task: AzureRMWebAppDeployment@4
             displayName: Deploy Microservice
