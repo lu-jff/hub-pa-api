@@ -35,7 +35,7 @@ parameters:
       - queue-worker
       - service
       - payments
-    default: ente-creditore
+    default: creditor
   - name: STACK
     displayName: 'Stack of the microservice'
     default: java
