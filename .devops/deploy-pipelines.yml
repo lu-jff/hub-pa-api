@@ -239,7 +239,7 @@ stages:
               workingDirectory: '${{ parameters.MS_NAME }}'
               targetType: 'inline'
               script: |
-                yarn build
+                yarn predeploy
 
           - task: Docker@2
             condition:
