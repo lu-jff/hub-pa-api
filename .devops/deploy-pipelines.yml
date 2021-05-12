@@ -73,6 +73,8 @@ stages:
   - stage: release_service
     # condition:
     #   eq(variables['Build.SourceBranch'], 'refs/heads/main')
+    condition:
+      ne('${{ parameters.REPOSITORY }}', 'auth')
     pool:
       vmImage: 'ubuntu-latest'
     jobs:
