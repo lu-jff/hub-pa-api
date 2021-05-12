@@ -44,6 +44,7 @@ parameters:
       - java
       - node
 variables:
+  NODE_VERSION: "10.14.2"
   ${{ if eq(parameters['ENV'], 'dev') }}:
     AZURE_SUBSCRIPTION: $(DEV_AZURE_SUBSCRIPTION)
     CONTAINER_REGISTRY: $(DEV_CONTAINER_REGISTRY)
@@ -185,15 +186,33 @@ stages:
               publishJUnitResults: false
               testResultsFiles: '**/surefire-reports/TEST-*.xml'
               goals: 'package'
+
+          - task: UseNode@1
+            condition:
+              eq('${{ parameters.STACK }}', 'node')
+            inputs:
+              version: $(NODE_VERSION)
+              displayName: 'Set up Node.js'
           
           - task: Bash@3
             condition:
               eq('${{ parameters.STACK }}', 'node')
-            displayName: Build Auth
+            displayName: Install Node Packages
+            workingDirectory: '${{ parameters.MS_NAME }}'
             inputs:
               targetType: 'inline'
               script: |
-                ls -al
+                yarn install --frozen-lockfile --no-progress --non-interactive --network-concurrency 1
+          
+          - task: Bash@3
+            condition:
+              eq('${{ parameters.STACK }}', 'node')
+            displayName: Build
+            workingDirectory: '${{ parameters.MS_NAME }}'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn build
 
           - task: Docker@2
             displayName: Build and Push Image
