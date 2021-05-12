@@ -265,6 +265,8 @@ stages:
               tags: '$(pkgversion.next)'
 
           - task: AzureRMWebAppDeployment@4
+            condition:
+              eq('${{ parameters.STACK }}', 'java')
             displayName: Deploy Microservice
             inputs:
               appType: webAppContainer
@@ -273,6 +275,18 @@ stages:
               DockerNamespace: 'hubpadarc.azurecr.io'
               DockerRepository: '${{ parameters.REPOSITORY }}'
               DockerImageTag: '$(pomversion.next)'
+          
+          - task: AzureRMWebAppDeployment@4
+            condition:
+              eq('${{ parameters.STACK }}', 'node')
+            displayName: Deploy Microservice
+            inputs:
+              appType: webAppContainer
+              ConnectedServiceName: $(AZURE_SUBSCRIPTION)
+              WebAppName: '${{variables.PREFIX}}-${{ parameters.REPOSITORY }}-ms'
+              DockerNamespace: 'hubpadarc.azurecr.io'
+              DockerRepository: '${{ parameters.REPOSITORY }}'
+              DockerImageTag: '$(pkgversion.next)'
 
   # # Build and deploy JOB microservice docker
   # - task: Docker@2
