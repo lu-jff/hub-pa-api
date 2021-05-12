@@ -198,8 +198,8 @@ stages:
             condition:
               eq('${{ parameters.STACK }}', 'node')
             displayName: Install Node Packages
-            workingDirectory: '${{ parameters.MS_NAME }}'
             inputs:
+              workingDirectory: '${{ parameters.MS_NAME }}'
               targetType: 'inline'
               script: |
                 yarn install --frozen-lockfile --no-progress --non-interactive --network-concurrency 1
@@ -208,8 +208,8 @@ stages:
             condition:
               eq('${{ parameters.STACK }}', 'node')
             displayName: Build
-            workingDirectory: '${{ parameters.MS_NAME }}'
             inputs:
+              workingDirectory: '${{ parameters.MS_NAME }}'
               targetType: 'inline'
               script: |
                 yarn build
