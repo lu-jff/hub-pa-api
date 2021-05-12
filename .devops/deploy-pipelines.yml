@@ -70,7 +70,7 @@ stages:
       
 
   # Create a release
-  - stage: Release Service
+  - stage: release_service
     # condition:
     #   eq(variables['Build.SourceBranch'], 'refs/heads/main')
     pool:
@@ -136,7 +136,7 @@ stages:
               addChangelog: true
   
   # Create a release
-  - stage: Deploy
+  - stage: deploy
     # condition:
     #   eq(variables['Build.SourceBranch'], 'refs/heads/main')
     pool:
