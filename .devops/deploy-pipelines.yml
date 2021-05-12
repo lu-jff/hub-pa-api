@@ -151,6 +151,11 @@ stages:
       
       - job: deploy
         steps:
+          - checkout: self
+            clean: true
+            persistCredentials: true
+            submodules: true
+
           - task: Cache@2
             condition:
               eq('${{ parameters.STACK }}', 'java')
