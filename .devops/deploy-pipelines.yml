@@ -150,6 +150,8 @@ stages:
       - job: deploy
         steps:
           - task: Cache@2
+            condition:
+              ne('${{ parameters.REPOSITORY }}', 'auth')
             inputs:
               key: 'maven | "$(Agent.OS)" | pom.xml'
               restoreKeys: |
@@ -159,6 +161,8 @@ stages:
             displayName: Cache Maven local repo
           
           - task: Bash@3
+            condition:
+              ne('${{ parameters.REPOSITORY }}', 'auth')
             name: pomversion
             inputs:
               targetType: 'inline'
