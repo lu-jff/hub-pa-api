@@ -84,6 +84,7 @@ stages:
           - checkout: self
             clean: true
             persistCredentials: true
+
             
           - script: |
               git config --global user.name "$(GIT_USERNAME)"
@@ -189,6 +190,7 @@ stages:
             condition:
               eq('${{ parameters.STACK }}', 'node')
             displayName: Build Auth
+            targetType: inline
             inputs:
               script: |
                 ls -al
