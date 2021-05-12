@@ -197,6 +197,16 @@ stages:
           - task: Bash@3
             condition:
               eq('${{ parameters.STACK }}', 'node')
+            displayName: ls
+            inputs:
+              workingDirectory: '${{ parameters.MS_NAME }}'
+              targetType: 'inline'
+              script: |
+                ls
+          
+          - task: Bash@3
+            condition:
+              eq('${{ parameters.STACK }}', 'node')
             displayName: Install Node Packages
             inputs:
               workingDirectory: '${{ parameters.MS_NAME }}'
