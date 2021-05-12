@@ -215,12 +215,26 @@ stages:
                 yarn build
 
           - task: Docker@2
+            condition:
+              eq('${{ parameters.STACK }}', 'java')
             displayName: Build and Push Image
             inputs:
               containerRegistry: $(CONTAINER_REGISTRY)
               repository: '${{ parameters.REPOSITORY }}'
               command: 'buildAndPush'
               Dockerfile: './${{ parameters.MS_NAME }}/Dockerfile.deploy'
+              tags: '$(pomversion.next)'
+          
+          # to be removed: rename dockerfile
+          - task: Docker@2
+            condition:
+              eq('${{ parameters.STACK }}', 'node')
+            displayName: Build and Push Image
+            inputs:
+              containerRegistry: $(CONTAINER_REGISTRY)
+              repository: '${{ parameters.REPOSITORY }}'
+              command: 'buildAndPush'
+              Dockerfile: './${{ parameters.MS_NAME }}/Dockerfile'
               tags: '$(pomversion.next)'
 
           - task: AzureRMWebAppDeployment@4
