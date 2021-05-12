@@ -70,14 +70,14 @@ stages:
       
 
   # Create a release
-  - stage: Release
+  - stage: Release Service
     # condition:
     #   eq(variables['Build.SourceBranch'], 'refs/heads/main')
     pool:
       vmImage: 'ubuntu-latest'
     jobs:
       
-      - job: release
+      - job: release_service
         steps:
           - checkout: self
             clean: true
@@ -164,7 +164,9 @@ stages:
               failOnStderr: true
 
           - task: Maven@3
-            displayName: Package
+            condition:
+              ne('${{ parameters.REPOSITORY }}', 'auth')
+            displayName: Build Service
             inputs:
               mavenPomFile: '${{ parameters.MS_NAME }}/pom.xml'
               mavenOptions: '-Xmx3072m $(MAVEN_OPTS)'
@@ -174,6 +176,14 @@ stages:
               publishJUnitResults: false
               testResultsFiles: '**/surefire-reports/TEST-*.xml'
               goals: 'package'
+          
+          - task: Bash@3
+            condition:
+              eq('${{ parameters.REPOSITORY }}', 'auth')
+            displayName: Build Auth
+            inputs:
+              script: |
+                echo "Hello World"
 
           - task: Docker@2
             displayName: Build and Push Image
