@@ -190,7 +190,7 @@ stages:
             condition:
               eq('${{ parameters.STACK }}', 'node')
             displayName: Build Auth
-            targetType: inline
+            targetType: 'inline'
             inputs:
               script: |
                 ls -al
