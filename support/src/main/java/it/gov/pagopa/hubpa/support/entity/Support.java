@@ -1,6 +1,7 @@
 package it.gov.pagopa.hubpa.support.entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,7 +31,7 @@ public class Support {
     @Column(name = "province", nullable = true)
     private String province;
     @Column(name = "certified_mail", nullable = true)
-    private String certifiedmail;
+    private String certifiedMail;
     @Column(name = "telephone_municipality", nullable = true)
     private String telephoneMunicipality;
     @Column(name = "full_name", nullable = true)
@@ -43,12 +44,12 @@ public class Support {
     private String typeContact;
     @Column(name = "platform_call", nullable = true)
     private String platformCall;
-    @Column(name = "mail_sent_date", nullable = false)
+    @Column(name = "date_request", nullable = false)
     private LocalDate dateRequest;
-    @Column(name = "mail_sent_date", nullable = false)
+    @Column(name = "time_request", nullable = false)
     private String timeRequest;
 
     @Column(name = "mail_sent_date", nullable = false)
-    private Integer mailSentDate;
+    private LocalDateTime mailSentDate;
 
 }

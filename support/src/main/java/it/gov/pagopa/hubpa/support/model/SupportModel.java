@@ -13,7 +13,7 @@ public class SupportModel {
     private String municipality;
     private String region;
     private String province;
-    private String certifiedmail;
+    private String certifiedMail;
     private String telephoneMunicipality;
     private String fullName;
     private String email;

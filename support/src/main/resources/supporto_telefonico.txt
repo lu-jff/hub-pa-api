@@ -1,0 +1,9 @@
+Gentile #nomeCognome#<br>
+<br>
+abbiamo ricevuto la sua richiesta di contatto telefonico per il giorno #dataRichiesta# nella fascia oraria #fasciaOraria#.<br>
+A breve le confermeremo l'appuntamento.<br>
+<br>
+Grazie<br>
+Cordiali saluti<br>
+<br>
+Assistenza Tari/Tefa<br>
