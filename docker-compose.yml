@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.8'
 
 services:
 
@@ -74,14 +74,16 @@ services:
       - hubpa-net
     
   hub-spid-login-ms:
+    container_name: hub-spid-login-ms
+    image: 'hub-spid-login-ms:latest'
     build:
       context: ./hub-spid-login-ms
       dockerfile: ./Dockerfile
     env_file: "./hub-spid-login-ms/.env"
-    expose:
-      - "8080"
+    # expose:
+    #   - "9090"
     ports:
-      - "3000:8080"
+      - "9090:8080"
     depends_on:
       - redis
     networks:
@@ -93,11 +95,10 @@ services:
     ports:
       - "8088:8088"
     volumes:
-      # - "./hub-spid-login-ms/conf-testenv:/app/conf"
+      - "./hub-spid-login-ms/conf-testenv:/app/conf"
       - "./hub-spid-login-ms/certs:/app/certs:ro"
-    depends_on:
-      - redis
-      -  hub-spid-login-ms
+    depends_on: 
+      - hub-spid-login-ms
     networks:
       - hubpa-net
 
@@ -142,7 +143,7 @@ services:
   #   image: rabbitmq:3-management
   #   ports:
   #     - "5672:5672"
-  #     - "15672:15672"ù
+  #     - "15672:15672"
 networks:
   hubpa-net:
     driver: bridge
