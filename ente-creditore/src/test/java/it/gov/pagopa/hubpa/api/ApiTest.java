@@ -9,6 +9,8 @@ import it.gov.pagopa.hubpa.api.iban.IbanService;
 import it.gov.pagopa.hubpa.api.pa.PaDto;
 import it.gov.pagopa.hubpa.api.pa.PaEntity;
 import it.gov.pagopa.hubpa.api.pa.PaService;
+import it.gov.pagopa.hubpa.api.privacy.PrivacyEntity;
+import it.gov.pagopa.hubpa.api.privacy.PrivacyService;
 import it.gov.pagopa.hubpa.api.ente.EnteCreditoreService;
 import it.gov.pagopa.hubpa.api.ente.EnteCreditoreDto;
 import it.gov.pagopa.hubpa.api.ente.EnteCreditoreEntity;
@@ -31,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Test;
 
@@ -49,6 +52,9 @@ class ApiTest {
 
 	@MockBean
 	private PaService paService;
+	
+	@MockBean
+	private PrivacyService privacyService;
 
 	private JsonMapper jsonMapper = new JsonMapper();
 	private ModelMapper modelMapper = new ModelMapper();
@@ -117,7 +123,38 @@ class ApiTest {
 		this.mockMvc.perform(post("/ente/pa").content(myJson).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful());
 	}
-
+	@Test
+	public void shouldGetPrivacy() throws Exception {
+		this.mockMvc.perform(get("/privacy/refp/tttt")).andExpect(status().isOk());
+		when(privacyService.countByRefP(any(String.class))).thenReturn(1l);
+		this.mockMvc.perform(get("/privacy/refp/tttt")).andExpect(status().isOk());
+		
+	}
+	
+	@Test
+	public void shouldNotGetPrivacy() throws Exception {
+		this.mockMvc.perform(get("/privacy/refpp/tttt")).andExpect(status().is(404));
+	}
+	@Test
+	public void shouldPostPrivacy() throws Exception {
+		PaDto goodPa = buildPaOK();
+		// Mock service response
+		when(privacyService.create(any(PrivacyEntity.class))).thenReturn(buildPrivacyOK());
+		String myJson = jsonMapper.writeValueAsString(goodPa);
+		
+		this.mockMvc.perform(post("/privacy/MRCFPFPFP").content(myJson).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().is2xxSuccessful());
+	}
+	@Test
+	public void shouldNotPostPrivacy() throws Exception {
+		PaDto goodPa = buildPaOK();
+		// Mock service response
+		when(privacyService.create(any(PrivacyEntity.class))).thenReturn(null);
+		String myJson = jsonMapper.writeValueAsString(goodPa);
+		
+		this.mockMvc.perform(post("/privacy/MRCFPFPFP").content(myJson).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().is2xxSuccessful());
+	}
 	private EnteCreditoreDto buildEnteCreditoreOK() throws ParseException {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		EnteCreditoreDto ecDto = new EnteCreditoreDto();
@@ -191,6 +228,17 @@ class ApiTest {
 		paDto.setSitoIstituzionale("www.provincia.matera.it");
 
 		return paDto;
+
+	}
+
+	private PrivacyEntity buildPrivacyOK() throws ParseException {
+	    PrivacyEntity privacy = new PrivacyEntity();
+
+	    privacy.setCodiceFiscaleRefP("MFKDFKD");
+	    privacy.setId(1l);
+	    privacy.setDataAccettazione(LocalDateTime.now());
+
+	    return privacy;
 
 	}
 
