@@ -141,9 +141,8 @@ stages:
   # Create a release
   - stage: deploy
     condition:
-      eq(variables['Build.SourceBranch'], 'refs/heads/main')
-    condition:
-      not(failed('release_service'))
+      and(eq(variables['Build.SourceBranch'], 'refs/heads/main'),
+      not(failed('release_service')))
     pool:
       vmImage: 'ubuntu-latest'
     jobs:
