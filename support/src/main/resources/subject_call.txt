@@ -1,1 +1,1 @@
-Tari/Tefa - Richiesta di supporto su #piattaforma# per il giorno #dataRichiesta# alle ore #fasciaOraria#
+Tari/Tefa - Richiesta di supporto in call conference su piattaforma #piattaforma# per il giorno #dataRichiesta# alle ore #fasciaOraria#
