@@ -177,4 +177,7 @@ public class EnteCreditoreEntity {
     // dataStatoAssociazione 2018-07-19
     @Column(name = "dataStatoAssociazione")
     private Date dataStatoAssociazione;
+
+    @Column(name = "allowed")
+    private Boolean allowed;
 }
