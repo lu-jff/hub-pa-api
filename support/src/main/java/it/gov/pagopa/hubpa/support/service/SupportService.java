@@ -7,10 +7,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.stream.Collectors;
 
 @Service
 public class SupportService {
@@ -37,13 +38,18 @@ public class SupportService {
     }
 
     private String getFileFromResourceAsStream(String fileName) throws IOException {
-        String result;
+        String result = "";
         ClassLoader classLoader = getClass().getClassLoader();
-        try (InputStream inputStream = classLoader.getResourceAsStream(fileName)) {
-            if (inputStream == null) {
-                throw new IllegalArgumentException("file not found! " + fileName);
-            } else {
-                result = new BufferedReader(new InputStreamReader(inputStream)).lines().collect(Collectors.joining("\n"));
+        InputStream inputStream = classLoader.getResourceAsStream(fileName);
+        if (inputStream == null) {
+            throw new IllegalArgumentException("file not found! " + fileName);
+        } else {
+            DataInputStream reader = new DataInputStream(inputStream);
+            int nBytesToRead = reader.available();
+            if (nBytesToRead > 0) {
+                byte[] bytes = new byte[nBytesToRead];
+                reader.read(bytes);
+                result = new String(bytes);
             }
         }
         return result;
@@ -71,6 +77,7 @@ public class SupportService {
 
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
