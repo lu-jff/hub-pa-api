@@ -73,15 +73,6 @@ services:
     networks:
       - hubpa-net
     
-  support:
-    env_file: "./support/.env"
-    image: 'support:latest'
-    build:
-      context: ./support
-    ports:
-      - "8086:8086"
-    container_name: support
-    
   hub-spid-login-ms:
     container_name: hub-spid-login-ms
     image: 'hub-spid-login-ms:latest'

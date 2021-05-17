@@ -22,7 +22,6 @@
 		<module>service-managment</module>
 		<module>upload-payments</module>
 		<module>payments</module>
-		<module>support</module>
 	</modules>
 
 
