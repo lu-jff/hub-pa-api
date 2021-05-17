@@ -1,14 +1,10 @@
 package it.gov.pagopa.hubpa.support.controller;
 
-import it.gov.pagopa.hubpa.support.SupportApplication;
-import it.gov.pagopa.hubpa.support.config.DevCorsConfiguration;
-import it.gov.pagopa.hubpa.support.config.MappingsConfiguration;
-import it.gov.pagopa.hubpa.support.entity.Support;
-import it.gov.pagopa.hubpa.support.mock.SupportMock;
-import it.gov.pagopa.hubpa.support.mock.SupportModelMock;
-import it.gov.pagopa.hubpa.support.model.BooleanResponseModel;
-import it.gov.pagopa.hubpa.support.model.SupportModel;
-import it.gov.pagopa.hubpa.support.service.SupportService;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,18 +14,20 @@ import org.modelmapper.ModelMapper;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import it.gov.pagopa.hubpa.support.SupportApplication;
+import it.gov.pagopa.hubpa.support.config.DevCorsConfiguration;
+import it.gov.pagopa.hubpa.support.config.MappingsConfiguration;
+import it.gov.pagopa.hubpa.support.entity.Support;
+import it.gov.pagopa.hubpa.support.mock.SupportMock;
+import it.gov.pagopa.hubpa.support.mock.SupportModelMock;
+import it.gov.pagopa.hubpa.support.model.BooleanResponseModel;
+import it.gov.pagopa.hubpa.support.model.SupportModel;
+import it.gov.pagopa.hubpa.support.service.SupportService;
 import springfox.documentation.spring.web.plugins.Docket;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
 @ExtendWith(MockitoExtension.class)
-public class SupportControllerTest {
+class SupportControllerTest {
     @InjectMocks
     SupportController supportController;
 
@@ -40,7 +38,7 @@ public class SupportControllerTest {
     private ModelMapper modelMapperMock;
 
     @Test
-    public void saveServiceTest(){
+    void saveServiceTest(){
         SupportModel supportModel = SupportModelMock.getMock();
         Support support = SupportMock.getMock();
         when(supportService.save(any(Support.class))).thenReturn(Boolean.TRUE);
@@ -74,7 +72,7 @@ public class SupportControllerTest {
     }
 
     @Test
-    public void getSupport() {
+    void getSupport() {
         SupportModel support = SupportModelMock.getMock();
 
         assertThat(support.getFiscalCodeRp()).isNotNull();
