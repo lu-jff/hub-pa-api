@@ -3,6 +3,7 @@ version: '3.8'
 services:
 
   ente-creditore:
+    env_file: "./ente-creditore/.env"
     image: 'ente-creditore:latest'
     build:
       context: ./ente-creditore
@@ -11,11 +12,6 @@ services:
     container_name: ente-creditore
     depends_on:
       - postgres
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/entec
-      - SPRING_DATASOURCE_USERNAME=postgres-user-test
-      - SPRING_DATASOURCE_PASSWORD=postgres-pwd-test
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     networks:
       - hubpa-net
   
