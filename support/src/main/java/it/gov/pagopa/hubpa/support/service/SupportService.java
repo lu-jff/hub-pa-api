@@ -26,6 +26,9 @@ public class SupportService {
 
     @Value("${mail.support.to}")
     private String mailSupportTo;
+    
+    private static final String PLACEHOLDER_DATA_RICHIESTA="#dataRichiesta#";
+    private static final String PLACEHOLDER_FASCIAORARIA="#fasciaOraria#";
 
     @Transactional
     public Boolean save(Support support) {
@@ -77,16 +80,17 @@ public class SupportService {
 
     private String replaceBodyPlaceholderReservation(Support req, String textBody, int type) {
         String body = textBody;
+        
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         if (1 == type) {
             body = body.replace("#nomeCognome#", req.getFullName());
-            body = body.replace("#dataRichiesta#", req.getDateRequest().format(dateTimeFormatter));
-            body = body.replace("#fasciaOraria#", req.getTimeRequest());
+            body = body.replace(PLACEHOLDER_DATA_RICHIESTA, req.getDateRequest().format(dateTimeFormatter));
+            body = body.replace(PLACEHOLDER_FASCIAORARIA, req.getTimeRequest());
 
         } else if (2 == type) {
             body = body.replace("#nomeCognome#", req.getFullName());
-            body = body.replace("#dataRichiesta#", req.getDateRequest().format(dateTimeFormatter));
-            body = body.replace("#fasciaOraria#", req.getTimeRequest());
+            body = body.replace(PLACEHOLDER_DATA_RICHIESTA, req.getDateRequest().format(dateTimeFormatter));
+            body = body.replace(PLACEHOLDER_FASCIAORARIA, req.getTimeRequest());
             body = body.replace("#piattaforma#",
                     req.getPlatformCall().equalsIgnoreCase("GOOGLE") ? "GOOGLE MEET" : req.getPlatformCall());
 
@@ -110,12 +114,12 @@ public class SupportService {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         if (1 == type) {
-            body = body.replace("#dataRichiesta#", req.getDateRequest().format(dateTimeFormatter));
-            body = body.replace("#fasciaOraria#", req.getTimeRequest());
+            body = body.replace(PLACEHOLDER_DATA_RICHIESTA, req.getDateRequest().format(dateTimeFormatter));
+            body = body.replace(PLACEHOLDER_FASCIAORARIA, req.getTimeRequest());
 
         } else if (2 == type) {
-            body = body.replace("#dataRichiesta#", req.getDateRequest().format(dateTimeFormatter));
-            body = body.replace("#fasciaOraria#", req.getTimeRequest());
+            body = body.replace(PLACEHOLDER_DATA_RICHIESTA, req.getDateRequest().format(dateTimeFormatter));
+            body = body.replace(PLACEHOLDER_FASCIAORARIA, req.getTimeRequest());
             body = body.replace("#piattaforma#",
                     req.getPlatformCall().equalsIgnoreCase("GOOGLE") ? "GOOGLE MEET" : req.getPlatformCall());
 

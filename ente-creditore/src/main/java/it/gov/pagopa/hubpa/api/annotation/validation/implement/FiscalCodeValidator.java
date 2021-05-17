@@ -11,7 +11,7 @@ public class FiscalCodeValidator  implements ConstraintValidator<FiscalCode, Str
 
 	 private java.util.regex.Pattern pattern;
 	 private String regex = "^[A-Za-z]{6}[0-9]{2}[A-Za-z][0-9]{2}[A-Za-z][0-9]{3}[A-Za-z]$";
-	 private int dispari[] = { 1, 0, 5, 7, 9, 13, 15, 17, 19, 21, 2, 4, 18, 20,
+	 private int[] dispari = { 1, 0, 5, 7, 9, 13, 15, 17, 19, 21, 2, 4, 18, 20,
 	            11, 3, 6, 8, 12, 14, 16, 10, 22, 25, 24, 23 };
 	
 	@Override
@@ -34,7 +34,10 @@ public class FiscalCodeValidator  implements ConstraintValidator<FiscalCode, Str
  
         String cf = value.toUpperCase();
  
-        int i = 0, s = 0, c = 0,t=0;
+        int i = 0;
+        int s = 0;
+        int c = 0;
+        int t = 0;
 
         for (i = 1; i <= 13; i += 2) {
             c = cf.charAt(i);
