@@ -9,8 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.CreationTimestamp;
-
 import lombok.Setter;
 
 
@@ -26,8 +24,7 @@ public class PrivacyEntity {
     @Column(name = "codiceFiscaleRefP")
     private String codiceFiscaleRefP;
 
-    @Column(name = "dataAccettazione", nullable = false, updatable = false, insertable = false)
-    @CreationTimestamp
+    @Column(name = "dataAccettazione")
     private LocalDateTime dataAccettazione;
 
    

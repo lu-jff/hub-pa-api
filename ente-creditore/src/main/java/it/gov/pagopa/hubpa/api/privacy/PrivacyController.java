@@ -1,5 +1,7 @@
 package it.gov.pagopa.hubpa.api.privacy;
 
+import java.time.LocalDateTime;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,7 @@ public class PrivacyController {
     @GetMapping(value = "/privacy/refp/{codiceFiscaleRefP}")
     public BooleanResponseDto getEnteCreditoreByRefP(@PathVariable("codiceFiscaleRefP") String codiceFiscaleRefP) {
 	logger.info("GET privacy");
-	long count = privacyService.countByRefP(codiceFiscaleRefP);
+	long count = privacyService.countByRefP(codiceFiscaleRefP.toUpperCase());
 	return new BooleanResponseDto(count > 0);
     }
 
@@ -35,7 +37,8 @@ public class PrivacyController {
     @ApiOperation(value = "Crea un record di accettazione provacy", notes = "Crea un record di accettazione provacy", response = BooleanResponseDto.class)
     public BooleanResponseDto createPrivacy(@PathVariable("codiceFiscaleRefP") String codiceFiscaleRefP) {
 	PrivacyEntity privacy = new PrivacyEntity();
-	privacy.setCodiceFiscaleRefP(codiceFiscaleRefP);
+	privacy.setCodiceFiscaleRefP(codiceFiscaleRefP.toUpperCase());
+	privacy.setDataAccettazione(LocalDateTime.now());
 	PrivacyEntity privacyCreated = privacyService.create(privacy);
 
 	return new BooleanResponseDto(privacyCreated != null);
