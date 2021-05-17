@@ -25,7 +25,7 @@ public class PrivacyController {
 
     @ApiOperation(value = "Verifica se un Ref-P ha accettato la privacy", response = BooleanResponseDto.class)
     @GetMapping(value = "/privacy/refp/{codiceFiscaleRefP}")
-    public BooleanResponseDto getEnteCreditoreByRefP(@PathVariable("codiceFiscaleRefP") String codiceFiscaleRefP) {
+    public BooleanResponseDto checkPrivacyByRefP(@PathVariable("codiceFiscaleRefP") String codiceFiscaleRefP) {
 	logger.info("GET privacy");
 	long count = privacyService.countByRefP(codiceFiscaleRefP.toUpperCase());
 	return new BooleanResponseDto(count > 0);
@@ -34,7 +34,7 @@ public class PrivacyController {
     @PostMapping(value = "privacy/{codiceFiscaleRefP}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    @ApiOperation(value = "Crea un record di accettazione provacy", notes = "Crea un record di accettazione provacy", response = BooleanResponseDto.class)
+    @ApiOperation(value = "Crea un record di accettazione provacy", notes = "Crea un record di accettazione privacy", response = BooleanResponseDto.class)
     public BooleanResponseDto createPrivacy(@PathVariable("codiceFiscaleRefP") String codiceFiscaleRefP) {
 	PrivacyEntity privacy = new PrivacyEntity();
 	privacy.setCodiceFiscaleRefP(codiceFiscaleRefP.toUpperCase());
