@@ -79,7 +79,7 @@ services:
     build:
       context: ./support
     ports:
-      - "8087:8087"
+      - "8086:8086"
     container_name: support
     
   hub-spid-login-ms:
