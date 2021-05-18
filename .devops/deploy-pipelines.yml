@@ -22,7 +22,7 @@ parameters:
       - hub-spid-login-ms
       - payments
       - queue-worker
-      - service-management
+      - service-managment
       - upload-payments
     default: ente-creditore
   - name: REPOSITORY
