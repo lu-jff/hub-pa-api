@@ -11,8 +11,6 @@ import javax.validation.Payload;
 
 import it.gov.pagopa.hubpa.api.annotation.validation.implement.IvaCodeValidator;
 
-
-
 @Documented
 @Constraint(validatedBy = IvaCodeValidator.class)
 @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE})

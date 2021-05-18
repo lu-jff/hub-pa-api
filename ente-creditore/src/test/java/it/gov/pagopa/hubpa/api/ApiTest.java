@@ -2,7 +2,13 @@ package it.gov.pagopa.hubpa.api;
 
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.client.RestTemplate;
 
+import it.gov.pagopa.hubpa.api.EnteCreditoreMicroService;
+import it.gov.pagopa.hubpa.api.config.Config;
+import it.gov.pagopa.hubpa.api.ente.EnteCreditoreDto;
+import it.gov.pagopa.hubpa.api.ente.EnteCreditoreEntity;
+import it.gov.pagopa.hubpa.api.ente.EnteCreditoreService;
 import it.gov.pagopa.hubpa.api.iban.IbanDto;
 import it.gov.pagopa.hubpa.api.iban.IbanEntity;
 import it.gov.pagopa.hubpa.api.iban.IbanService;
@@ -11,9 +17,6 @@ import it.gov.pagopa.hubpa.api.pa.PaEntity;
 import it.gov.pagopa.hubpa.api.pa.PaService;
 import it.gov.pagopa.hubpa.api.privacy.PrivacyEntity;
 import it.gov.pagopa.hubpa.api.privacy.PrivacyService;
-import it.gov.pagopa.hubpa.api.ente.EnteCreditoreService;
-import it.gov.pagopa.hubpa.api.ente.EnteCreditoreDto;
-import it.gov.pagopa.hubpa.api.ente.EnteCreditoreEntity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -22,7 +25,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,6 +43,7 @@ import org.junit.jupiter.api.Test;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest
+@ContextConfiguration(classes = { EnteCreditoreMicroService.class, Config.class })
 class ApiTest {
 
 	@Autowired
@@ -52,7 +57,7 @@ class ApiTest {
 
 	@MockBean
 	private PaService paService;
-	
+
 	@MockBean
 	private PrivacyService privacyService;
 
@@ -123,38 +128,42 @@ class ApiTest {
 		this.mockMvc.perform(post("/ente/pa").content(myJson).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful());
 	}
+
 	@Test
 	public void shouldGetPrivacy() throws Exception {
 		this.mockMvc.perform(get("/privacy/refp/tttt")).andExpect(status().isOk());
 		when(privacyService.countByRefP(any(String.class))).thenReturn(1l);
 		this.mockMvc.perform(get("/privacy/refp/tttt")).andExpect(status().isOk());
-		
+
 	}
-	
+
 	@Test
 	public void shouldNotGetPrivacy() throws Exception {
 		this.mockMvc.perform(get("/privacy/refpp/tttt")).andExpect(status().is(404));
 	}
+
 	@Test
 	public void shouldPostPrivacy() throws Exception {
 		PaDto goodPa = buildPaOK();
 		// Mock service response
 		when(privacyService.create(any(PrivacyEntity.class))).thenReturn(buildPrivacyOK());
 		String myJson = jsonMapper.writeValueAsString(goodPa);
-		
+
 		this.mockMvc.perform(post("/privacy/MRCFPFPFP").content(myJson).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful());
 	}
+
 	@Test
 	public void shouldNotPostPrivacy() throws Exception {
 		PaDto goodPa = buildPaOK();
 		// Mock service response
 		when(privacyService.create(any(PrivacyEntity.class))).thenReturn(null);
 		String myJson = jsonMapper.writeValueAsString(goodPa);
-		
+
 		this.mockMvc.perform(post("/privacy/MRCFPFPFP").content(myJson).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful());
 	}
+
 	private EnteCreditoreDto buildEnteCreditoreOK() throws ParseException {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		EnteCreditoreDto ecDto = new EnteCreditoreDto();
@@ -232,13 +241,13 @@ class ApiTest {
 	}
 
 	private PrivacyEntity buildPrivacyOK() throws ParseException {
-	    PrivacyEntity privacy = new PrivacyEntity();
+		PrivacyEntity privacy = new PrivacyEntity();
 
-	    privacy.setCodiceFiscaleRefP("MFKDFKD");
-	    privacy.setId(1l);
-	    privacy.setDataAccettazione(LocalDateTime.now());
+		privacy.setCodiceFiscaleRefP("MFKDFKD");
+		privacy.setId(1l);
+		privacy.setDataAccettazione(LocalDateTime.now());
 
-	    return privacy;
+		return privacy;
 
 	}
 

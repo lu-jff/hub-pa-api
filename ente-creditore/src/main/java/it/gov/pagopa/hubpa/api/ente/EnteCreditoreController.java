@@ -2,6 +2,9 @@ package it.gov.pagopa.hubpa.api.ente;
 
 import javax.validation.Valid;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +37,8 @@ public class EnteCreditoreController {
   @Value("${auth.introspect.path}")
   private String introspectPath;
 
+  private JsonMapper jsonMapper = new JsonMapper();
+
   private Logger logger = LoggerFactory.getLogger(EnteCreditoreController.class);
 
   @ApiOperation(value = "Recupera i dati minimali di un Ente Creditore dato un codice fiscale del Ref-P", notes = "Recupera i dati minimali di un Ente Creditore dato un codice fiscale del Ref-P", response = EnteCreditoreMinimalDto.class)
@@ -51,16 +56,43 @@ public class EnteCreditoreController {
 
   @ApiOperation(value = "Verifica se il Ref-P è autorizzato", notes = "Verifica se il Ref-P è autorizzato", response = EnteCreditoreRbacStatus.class)
   @GetMapping(value = "/rbac")
-  public EnteCreditoreRbacStatus rbac(@RequestHeader(name = "Authorization") String token) {
+  public ResponseEntity<EnteCreditoreRbacStatus> rbac(@RequestHeader(name = "Authorization") String bearerToken) {
     logger.info("Role based access control");
+
+    // Extract Token
+    String token = bearerToken.substring(7);
+
+    // Build introspection request payload
+    IntrospectReq myIntrospectReq = new IntrospectReq();
+    myIntrospectReq.setToken(token);
+
+    // Set introspection request headers
     HttpHeaders headers = new HttpHeaders();
     headers.setBearerAuth(token);
-    HttpEntity entity = new HttpEntity(headers);
 
-    ResponseEntity<RefpIntrospect> myRefp = restTemplate.exchange(introspectPath, HttpMethod.POST, entity,
-        RefpIntrospect.class);
-    EnteCreditoreEntity ecE = enteCreditoreService.getByRefP(myRefp.getBody().tokenUser.fiscalNumber);
-    return modelMapper.map(ecE, EnteCreditoreRbacStatus.class);
+    try {
+      HttpEntity<IntrospectReq> entity = new HttpEntity<>(myIntrospectReq, headers);
+
+      logger.info("Introspect Request Body: {}", jsonMapper.writeValueAsString(entity.getBody()));
+
+      ResponseEntity<RefpIntrospect> myRefp = restTemplate.exchange(introspectPath, HttpMethod.POST, entity,
+          RefpIntrospect.class);
+
+      logger.info("Introspect Response: {}", jsonMapper.writeValueAsString(myRefp.getBody()));
+
+      String fiscalNumber = myRefp.getBody().getUser().getFiscal_number();
+
+      logger.info("Ref-P Fiscal Code: {}", fiscalNumber);
+
+      EnteCreditoreEntity ecE = enteCreditoreService.getByRefP(fiscalNumber);
+
+      return new ResponseEntity<>(modelMapper.map(ecE, EnteCreditoreRbacStatus.class), HttpStatus.OK);
+    } catch (Exception ex) {
+      logger.info(ex.getMessage());
+      EnteCreditoreRbacStatus myRes = new EnteCreditoreRbacStatus();
+      myRes.setAllowed(false);
+      return new ResponseEntity<>(myRes, HttpStatus.UNAUTHORIZED);
+    }
   }
 
   @PostMapping(value = "ente")
