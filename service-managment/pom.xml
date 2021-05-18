@@ -12,7 +12,7 @@
 	</parent>
 
 	<artifactId>service-managment</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
 	<name>service-managment</name>
 	<description>Service Managment</description>
 
