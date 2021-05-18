@@ -5,8 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RefpIntrospect {
-  Boolean active;
-  String level;
-  RefpSpid user;
+public class IntrospectReq {
+  String token;
 }
