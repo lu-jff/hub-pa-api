@@ -23,8 +23,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
@@ -177,11 +175,7 @@ class PaymentsControllerTest {
     @Test
     void devCorsTest() {
 	DevCorsConfiguration mm = new DevCorsConfiguration();
-	WebMvcConfigurer corsConfigurer = mm.corsConfigurer();
-	CorsRegistry registry = new CorsRegistry();
-	corsConfigurer.addCorsMappings(registry);
 	RestTemplate restTemplate = mm.restTemplate();
-	assertThat(corsConfigurer).isNotNull();
 	assertThat(restTemplate).isNotNull();
     }
 
