@@ -26,8 +26,8 @@ services:
       - postgres
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/sermng
-      - SPRING_DATASOURCE_USERNAME=postgres-user-test
-      - SPRING_DATASOURCE_PASSWORD=postgres-pwd-test
+      - SPRING_DATASOURCE_USERNAME=postgres_user_test
+      - SPRING_DATASOURCE_PASSWORD=postgres_pwd_test
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - SPRING_CORS_ORIGINS=http://localhost:8083,http://service-managment:8083
     networks:
@@ -120,15 +120,17 @@ services:
     
           
   postgres:
-    image: 'postgres'
+    image: postgres
     container_name: postgres
+    build:
+      context: ./postgres
     ports:
       - "5432:5432"
-    volumes:
-      - "./postgres/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh"
+    # volumes:
+    #   - "./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:Z"
     environment:
-      - POSTGRES_USER=postgres-user-test
-      - POSTGRES_PASSWORD=postgres-pwd-test
+      - POSTGRES_USER=postgres_user_test
+      - POSTGRES_PASSWORD=postgres_pwd_test
     networks:
       - hubpa-net
       

@@ -1,0 +1,5 @@
+\set user `echo "$POSTGRES_USER"`
+
+
+CREATE DATABASE paymen;
+GRANT ALL PRIVILEGES ON DATABASE paymen TO :user;
