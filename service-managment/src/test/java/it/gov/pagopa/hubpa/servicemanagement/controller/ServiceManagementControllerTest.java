@@ -16,8 +16,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import it.gov.pagopa.hubpa.servicemanagement.ServiceManagementApplication;
 import it.gov.pagopa.hubpa.servicemanagement.config.DevCorsConfiguration;
@@ -157,11 +155,7 @@ class ServiceManagementControllerTest {
     @Test
     void devCorsTest() {
 	DevCorsConfiguration mm = new DevCorsConfiguration();
-	WebMvcConfigurer corsConfigurer = mm.corsConfigurer();
-	CorsRegistry registry = new CorsRegistry();
-	corsConfigurer.addCorsMappings(registry);
 	RestTemplate restTemplate = mm.restTemplate();
-	assertThat(corsConfigurer).isNotNull();
 	assertThat(restTemplate).isNotNull();
     }
 
