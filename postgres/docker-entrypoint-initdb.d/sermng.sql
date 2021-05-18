@@ -1,0 +1,5 @@
+\set user `echo "$POSTGRES_USER"`
+
+
+CREATE DATABASE sermng;
+GRANT ALL PRIVILEGES ON DATABASE sermng TO :user;

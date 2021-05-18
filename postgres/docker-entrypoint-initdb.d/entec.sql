@@ -1,0 +1,6 @@
+\set user `echo "$POSTGRES_USER"`
+
+
+CREATE DATABASE entec;
+GRANT ALL PRIVILEGES ON DATABASE entec TO :user;
+CREATE SEQUENCE IF NOT EXISTS ente_sequence START 1;
