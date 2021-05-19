@@ -2,6 +2,7 @@ package it.gov.pagopa.hubpa.servicemanagement.mock;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 import it.gov.pagopa.hubpa.servicemanagement.entity.PaymentOptionTemplate;
 import it.gov.pagopa.hubpa.servicemanagement.entity.Service;
@@ -18,7 +19,7 @@ public class ServiceMock {
 
 	// installment unique
 	PaymentOptionTemplate pp = new PaymentOptionTemplate();
-	pp.setDueDate(LocalDate.now().plusMonths(4));
+	pp.setDueDate(LocalDate.now(ZoneId.of("Europe/Paris")).plusMonths(4));
 	pp.setInstallmentNumber(0);
 	pp.setIsFinal(true);
 
@@ -36,7 +37,7 @@ public class ServiceMock {
 
 	// installment 1
 	pp = new PaymentOptionTemplate();
-	pp.setDueDate(LocalDate.now().plusMonths(2));
+	pp.setDueDate(LocalDate.now(ZoneId.of("Europe/Paris")).plusMonths(2));
 	pp.setInstallmentNumber(1);
 	pp.setIsFinal(false);
 
@@ -49,7 +50,7 @@ public class ServiceMock {
 
 	// installment 2
 	pp = new PaymentOptionTemplate();
-	pp.setDueDate(LocalDate.now().plusMonths(3));
+	pp.setDueDate(LocalDate.now(ZoneId.of("Europe/Paris")).plusMonths(3));
 	pp.setInstallmentNumber(2);
 	pp.setIsFinal(false);
 
@@ -68,7 +69,7 @@ public class ServiceMock {
 
 	// installment 3
 	pp = new PaymentOptionTemplate();
-	pp.setDueDate(LocalDate.now().plusMonths(4));
+	pp.setDueDate(LocalDate.now(ZoneId.of("Europe/Paris")).plusMonths(4));
 	pp.setInstallmentNumber(3);
 	pp.setIsFinal(false);
 

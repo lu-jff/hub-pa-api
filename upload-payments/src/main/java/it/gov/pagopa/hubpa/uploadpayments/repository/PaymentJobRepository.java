@@ -13,6 +13,6 @@ public interface PaymentJobRepository extends JpaRepository<PaymentJob, Long> {
 
     long countByFiscalCodeAndStatusNot(String fiscalCode, Integer status);
 
-    List<PaymentJob> findByFiscalCode(String fiscalCode);
+    List<PaymentJob> findByFiscalCodeOrderByInsertDateDesc(String fiscalCode);
 
 }

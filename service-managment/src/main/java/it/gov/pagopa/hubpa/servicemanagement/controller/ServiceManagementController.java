@@ -3,6 +3,8 @@ package it.gov.pagopa.hubpa.servicemanagement.controller;
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.WebDataBinder;
@@ -40,9 +42,12 @@ public class ServiceManagementController {
 	binder.setValidator(serviceManagementValidator);
     }
 
+    private Logger logger = LoggerFactory.getLogger(ServiceManagementController.class);
+    
     @ApiOperation(value = "Indica se è presente un tributo", notes = "Servizio REST per ottenere l'informazione della presenza di un tributo configurato", response = ServiceConfiguratedModel.class)
     @GetMapping(value = "service/info/{fiscalCode}")
     public ServiceConfiguratedModel isServiceConfigurated(@PathVariable("fiscalCode") String fiscalCode) {
+	logger.info("GET Service Configurated");
 	return new ServiceConfiguratedModel(serviceManagementService.isServiceConfigurated(fiscalCode));
     }
 
@@ -50,6 +55,7 @@ public class ServiceManagementController {
     @PostMapping(value = "service", consumes = { MediaType.APPLICATION_JSON_VALUE })
     public ServiceConfiguratedModel saveService(@Valid
 	    @ApiParam(value = "Modello del tributo", required = true) @RequestBody final TributeServiceModel tributeServiceModel) {
+	logger.info("POST Save Tribute");
 	it.gov.pagopa.hubpa.servicemanagement.entity.Service service = modelMapper.map(tributeServiceModel,
 		it.gov.pagopa.hubpa.servicemanagement.entity.Service.class);
 	return new ServiceConfiguratedModel(serviceManagementService.saveService(service));
@@ -58,6 +64,7 @@ public class ServiceManagementController {
     @ApiOperation(value = "Recupera i dati del tributo", notes = "Servizio REST per recuperare i dati di un tributo", response = TributeServiceModel.class)
     @GetMapping(value = "service/{fiscalCode}")
     public TributeServiceModel getService(@PathVariable("fiscalCode") String fiscalCode) {
+	logger.info("GET Get Service");
 	Service service=serviceManagementService.getService(fiscalCode);
 	TributeServiceModel tributeServiceModel=null;
 	if(service!=null) {

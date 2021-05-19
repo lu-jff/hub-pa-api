@@ -1,6 +1,7 @@
 package it.gov.pagopa.hubpa.api.privacy;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,8 @@ public class PrivacyController {
     public BooleanResponseDto createPrivacy(@PathVariable("codiceFiscaleRefP") String codiceFiscaleRefP) {
 	PrivacyEntity privacy = new PrivacyEntity();
 	privacy.setCodiceFiscaleRefP(codiceFiscaleRefP.toUpperCase());
-	privacy.setDataAccettazione(LocalDateTime.now());
+	
+	privacy.setDataAccettazione(LocalDateTime.now(ZoneId.of("Europe/Paris")));
 	PrivacyEntity privacyCreated = privacyService.create(privacy);
 
 	return new BooleanResponseDto(privacyCreated != null);

@@ -78,7 +78,7 @@ class UploadPaymentServiceTest {
 	paymentJobs.add(serviceMock);
 	paymentJobs.add(serviceMock);
 
-	when(paymentJobRepository.findByFiscalCode(any(String.class))).thenReturn(paymentJobs);
+	when(paymentJobRepository.findByFiscalCodeOrderByInsertDateDesc(any(String.class))).thenReturn(paymentJobs);
 
 	List<PaymentJob> result = paymentJobService.getAll("12345678901");
 	assertThat(result.get(0).getFileName()).isEqualTo("testFileCsv20210409.csv");

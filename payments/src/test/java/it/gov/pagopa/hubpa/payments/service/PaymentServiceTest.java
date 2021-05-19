@@ -64,29 +64,6 @@ class PaymentServiceTest {
     @Mock
     Root<PaymentPosition> personRootMock;
 
-    /*
-     * @Test void countByIdsandStatusNot() throws ServletException { List<Long> ids
-     * = new ArrayList<>(); ids.add(1l);
-     * 
-     * when(paymentJobRepository.countByJobIdInAndStatusNot(Mockito.anyList(),
-     * Mockito.anyInt())).thenReturn(2L); Long result =
-     * paymentJobService.countByIdsAndStatusNot(ids, 1);
-     * assertThat(result).isGreaterThan(1);
-     * 
-     * }
-     * 
-     * @Test void isPaymentJobAvailable() throws ServletException {
-     * 
-     * String id = "12345678901";
-     * 
-     * when(paymentJobRepository.countByFiscalCodeAndStatusNot(Mockito.anyString(),
-     * Mockito.anyInt())).thenReturn(2L); Long result =
-     * paymentJobService.countByFiscalCodeAndStatusNot(id, 1);
-     * assertThat(result).isGreaterThan(1);
-     * 
-     * }
-     */
-
     @Test
     void create() throws ServletException {
 	ReflectionTestUtils.setField(paymentService, "auxDigit", 3);

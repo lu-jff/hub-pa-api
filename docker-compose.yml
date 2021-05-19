@@ -77,6 +77,8 @@ services:
     ports:
       - "8087:8087"
     container_name: support
+    networks:
+      - hubpa-net
     
   hub-spid-login-ms:
     container_name: hub-spid-login-ms

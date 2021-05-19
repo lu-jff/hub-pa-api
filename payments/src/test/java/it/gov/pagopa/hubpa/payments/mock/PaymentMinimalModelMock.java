@@ -1,6 +1,7 @@
 package it.gov.pagopa.hubpa.payments.mock;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 import it.gov.pagopa.hubpa.payments.model.PaymentMinimalModel;
 
@@ -12,7 +13,7 @@ public class PaymentMinimalModelMock {
 	mock.setFiscalCode("MCFKLO45454545");
 	mock.setName("MARIO");
 	mock.setSurname("ROSSI");
-	mock.setDate(LocalDate.now());
+	mock.setDate(LocalDate.now(ZoneId.of("Europe/Paris")));
 	mock.setStatus(2);
 	
 	return mock;

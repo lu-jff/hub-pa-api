@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -59,11 +62,13 @@ public class PaymentsController {
     @Value("${service.service-management.path}")
     private String serviceManagementPath;
 
+    private Logger logger = LoggerFactory.getLogger(PaymentsController.class);
+    
     @ApiOperation(value = "Salva la lista dei pagamenti", notes = "Servizio REST per salvare la lista dei pagamenti", response = PaymentJobMinimalModel.class)
     @PostMapping(value = "create")
     public PaymentJobMinimalModel createPayments(
-	    @ApiParam(value = "Lista dei pagamenti", required = true) @RequestBody final UploadCsvPartialModel uploadCvsModel) {
-
+	    @ApiParam(value = "Lista dei pagamenti", required = true) @Valid @RequestBody final UploadCsvPartialModel uploadCvsModel) {
+	logger.info("POST create payments");
 	TributeServiceModel tributeServiceModel = restTemplate.getForObject(
 		serviceManagementPath + "/service-management/service/" + uploadCvsModel.getFiscalCodeCreditor(),
 		TributeServiceModel.class);
@@ -81,6 +86,8 @@ public class PaymentsController {
     public FindResponseModel getPayments(
 	    @ApiParam(value = "Filtri", required = true) @RequestBody final FindModel findModel) {
 
+	logger.info("POST find payments");
+	
 	Pageable paging = PageRequest.of(findModel.getPage(), findModel.getSize(), Sort.by("insertDate").descending());
 	Page<PaymentPosition> pageResults = paymentService.getPaymentsByFilters(findModel.getFiscalCode(),
 		findModel.getFilters(), paging);
@@ -102,7 +109,7 @@ public class PaymentsController {
     @ApiOperation(value = "Recupera il dettaglio di un pagamento dato un paymentPositionId", notes = "Recupera il dettaglio di un pagamento dato un paymentPositionId", response = PaymentPositionDetailModel.class)
     @GetMapping(value = "/info/{id}")
     public PaymentPositionDetailModel getPaymentsByPaymentPositionId(@PathVariable("id") Long id) {
-
+	logger.info("GET info");
 	return modelMapper.map(paymentService.getPaymentByPaymentPositionId(id), PaymentPositionDetailModel.class);
 
     }
@@ -111,6 +118,7 @@ public class PaymentsController {
     @GetMapping(value = "/export/{jobId}")
     public void exportCsv(@PathVariable("jobId") Long jobId, HttpServletResponse response)
 	    throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException, IOException {
+	logger.info("GET export CSV");
 	String filename = "pagamenti.csv";
 
 	response.setContentType("text/csv");

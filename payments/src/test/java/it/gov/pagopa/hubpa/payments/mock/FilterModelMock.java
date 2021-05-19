@@ -1,6 +1,7 @@
 package it.gov.pagopa.hubpa.payments.mock;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 import it.gov.pagopa.hubpa.payments.model.FilterModel;
 
@@ -10,8 +11,8 @@ public class FilterModelMock {
 
 	mock.setTextSearch("123");
 	mock.setStatus(1);
-	mock.setDateTo(LocalDate.now());
-	mock.setDateFrom(LocalDate.now());
+	mock.setDateTo(LocalDate.now(ZoneId.of("Europe/Paris")));
+	mock.setDateFrom(LocalDate.now(ZoneId.of("Europe/Paris")));
 
 	return mock;
     }
