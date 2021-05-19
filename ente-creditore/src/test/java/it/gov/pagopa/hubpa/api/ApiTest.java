@@ -143,7 +143,7 @@ class ApiTest {
 	}
 
 	@Test
-	public void shouldGetPrivacy() throws Exception {
+	void shouldGetPrivacy() throws Exception {
 		mockMvc.perform(get("/privacy/refp/tttt")).andExpect(status().isOk());
 		when(privacyService.countByRefP(any(String.class))).thenReturn(1l);
 		mockMvc.perform(get("/privacy/refp/tttt")).andExpect(status().isOk());
@@ -151,12 +151,12 @@ class ApiTest {
 	}
 
 	@Test
-	public void shouldNotGetPrivacy() throws Exception {
+	void shouldNotGetPrivacy() throws Exception {
 		mockMvc.perform(get("/privacy/refpp/tttt")).andExpect(status().is(404));
 	}
 
 	@Test
-	public void shouldPostPrivacy() throws Exception {
+	void shouldPostPrivacy() throws Exception {
 		PaDto goodPa = buildPaOK();
 		// Mock service response
 		when(privacyService.create(any(PrivacyEntity.class))).thenReturn(buildPrivacyOK());
@@ -167,7 +167,7 @@ class ApiTest {
 	}
 
 	@Test
-	public void shouldNotPostPrivacy() throws Exception {
+	void shouldNotPostPrivacy() throws Exception {
 		PaDto goodPa = buildPaOK();
 		// Mock service response
 		when(privacyService.create(any(PrivacyEntity.class))).thenReturn(null);
@@ -178,7 +178,7 @@ class ApiTest {
 	}
 
 	@Test
-	public void shouldRetrieveRbacAuth() throws Exception {
+	void shouldRetrieveRbacAuth() throws Exception {
 
 		RefpIntrospect myRefpIntro = buildGoodRefpFromIntrospect();
 		HttpHeaders headers = new HttpHeaders();
@@ -194,7 +194,7 @@ class ApiTest {
 	}
 
 	@Test
-	public void shouldRetrieveRbacNotAuthWhenIntrospectFails() throws Exception {
+	void shouldRetrieveRbacNotAuthWhenIntrospectFails() throws Exception {
 
 		RefpIntrospect myRefpIntro = buildGoodRefpFromIntrospect();
 		HttpHeaders headers = new HttpHeaders();
@@ -209,7 +209,7 @@ class ApiTest {
 	}
 
 	@Test
-	public void shouldRetrieveRbacNotAuthWhenAllowedIsFalse() throws Exception {
+	void shouldRetrieveRbacNotAuthWhenAllowedIsFalse() throws Exception {
 
 		RefpIntrospect myRefpIntro = buildGoodRefpFromIntrospect();
 		HttpHeaders headers = new HttpHeaders();
