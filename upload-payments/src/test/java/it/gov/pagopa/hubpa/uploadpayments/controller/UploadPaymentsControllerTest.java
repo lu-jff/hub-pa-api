@@ -15,8 +15,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import it.gov.pagopa.hubpa.uploadpayments.UploadPaymentsApplication;
 import it.gov.pagopa.hubpa.uploadpayments.config.DevCorsConfiguration;
@@ -128,11 +126,7 @@ class UploadPaymentsControllerTest {
     @Test
     void devCorsTest() {
 	DevCorsConfiguration mm = new DevCorsConfiguration();
-	WebMvcConfigurer corsConfigurer = mm.corsConfigurer();
-	CorsRegistry registry = new CorsRegistry();
-	corsConfigurer.addCorsMappings(registry);
 	RestTemplate restTemplate = mm.restTemplate();
-	assertThat(corsConfigurer).isNotNull();
 	assertThat(restTemplate).isNotNull();
     }
 

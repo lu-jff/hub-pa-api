@@ -9,35 +9,38 @@ import it.gov.pagopa.hubpa.api.annotation.validation.IvaCode;
 
 public class IvaCodeValidator implements ConstraintValidator<IvaCode, String> {
 
-	private java.util.regex.Pattern pattern;
-	private String regex ="^[0-9]{11}$";
-	
-	@Override
-	public boolean isValid(String value, ConstraintValidatorContext arg1) {
-		if (value == null || value.length() == 0) {
-	         return true;
-	    }
-		Matcher m = pattern.matcher(value);
-		if (!m.matches()) {
-            return false;
-        }
-		
-		int i, c, s = 0;
-        for (i = 0; i <= 9; i += 2) {
-            s += value.charAt(i) - '0';
-        }
-        for (i = 1; i <= 9; i += 2) {
-            c = 2 * (value.charAt(i) - '0');
-            if (c > 9) {
-                c = c - 9;
-            }
-            s += c;
-        }
-        return (10 - s % 10) % 10 == value.charAt(10) - '0';
+    private java.util.regex.Pattern pattern;
+    private String regex = "^[0-9]{11}$";
+
+    @Override
+    public boolean isValid(String value, ConstraintValidatorContext arg1) {
+	if (value == null || value.length() != 11) {
+	    return false;
+	}
+	Matcher m = pattern.matcher(value);
+	if (!m.matches()) {
+	    return false;
 	}
 
-	@Override
-	public void initialize(IvaCode arg0) {
-		pattern = java.util.regex.Pattern.compile(regex);
+	int i = 0;
+	int c = 0;
+	int s = 0;
+	for (i = 0; i <= 9; i += 2) {
+	    s += value.charAt(i) - '0';
 	}
+	for (i = 1; i <= 9; i += 2) {
+	    c = 2 * (value.charAt(i) - '0');
+	    if (c > 9) {
+		c = c - 9;
+	    }
+	    s += c;
+	}
+	return (10 - s % 10) % 10 == value.charAt(10) - '0';
+    }
+
+    @Override
+    public void initialize(IvaCode arg0) {
+	pattern = java.util.regex.Pattern.compile(regex);
+    }
+
 }
