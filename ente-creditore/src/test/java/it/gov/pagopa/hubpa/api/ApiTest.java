@@ -4,11 +4,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.client.RestTemplate;
 
-import it.gov.pagopa.hubpa.api.EnteCreditoreMicroService;
 import it.gov.pagopa.hubpa.api.config.Config;
 import it.gov.pagopa.hubpa.api.ente.EnteCreditoreDto;
 import it.gov.pagopa.hubpa.api.ente.EnteCreditoreEntity;
 import it.gov.pagopa.hubpa.api.ente.EnteCreditoreService;
+import it.gov.pagopa.hubpa.api.ente.RefpIntrospect;
+import it.gov.pagopa.hubpa.api.ente.RefpSpid;
 import it.gov.pagopa.hubpa.api.iban.IbanDto;
 import it.gov.pagopa.hubpa.api.iban.IbanEntity;
 import it.gov.pagopa.hubpa.api.iban.IbanService;
@@ -19,17 +20,23 @@ import it.gov.pagopa.hubpa.api.privacy.PrivacyEntity;
 import it.gov.pagopa.hubpa.api.privacy.PrivacyService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.modelmapper.ModelMapper;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -50,6 +57,9 @@ class ApiTest {
 	private MockMvc mockMvc;
 
 	@MockBean
+	private RestTemplate restTemplate;
+
+	@MockBean
 	private EnteCreditoreService enteCreditoreService;
 
 	@MockBean
@@ -61,17 +71,20 @@ class ApiTest {
 	@MockBean
 	private PrivacyService privacyService;
 
+	@Value("${auth.introspect.path}")
+	private String introspectPath;
+
 	private JsonMapper jsonMapper = new JsonMapper();
 	private ModelMapper modelMapper = new ModelMapper();
 
 	@Test
 	public void shouldGetEnte() throws Exception {
-		this.mockMvc.perform(get("/ente/refp/tttt")).andExpect(status().isOk());
+		mockMvc.perform(get("/ente/refp/tttt")).andExpect(status().isOk());
 	}
 
 	@Test
 	public void shouldNotGetEnte() throws Exception {
-		this.mockMvc.perform(get("/ente/xxx/tttt")).andExpect(status().is(404));
+		mockMvc.perform(get("/ente/xxx/tttt")).andExpect(status().is(404));
 	}
 
 	@Test
@@ -82,18 +95,18 @@ class ApiTest {
 				.thenReturn(modelMapper.map(goodEc, EnteCreditoreEntity.class));
 		jsonMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
 		String myJson = jsonMapper.writeValueAsString(goodEc);
-		this.mockMvc.perform(post("/ente").content(myJson).contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(post("/ente").content(myJson).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful());
 	}
 
 	@Test
 	public void shouldGetIban() throws Exception {
-		this.mockMvc.perform(get("/ente/tttt/iban")).andExpect(status().isOk());
+		mockMvc.perform(get("/ente/tttt/iban")).andExpect(status().isOk());
 	}
 
 	@Test
 	public void shouldNotGetIban() throws Exception {
-		this.mockMvc.perform(get("/ente/tttt/ibpn")).andExpect(status().is(404));
+		mockMvc.perform(get("/ente/tttt/ibpn")).andExpect(status().is(404));
 	}
 
 	@Test
@@ -104,18 +117,18 @@ class ApiTest {
 		jsonMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
 		String myJson = jsonMapper.writeValueAsString(goodIban);
 		System.out.println(myJson);
-		this.mockMvc.perform(post("/ente/iban").content(myJson).contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(post("/ente/iban").content(myJson).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful());
 	}
 
 	@Test
 	public void shouldGetPa() throws Exception {
-		this.mockMvc.perform(get("/ente/pa")).andExpect(status().isOk());
+		mockMvc.perform(get("/ente/pa")).andExpect(status().isOk());
 	}
 
 	@Test
 	public void shouldNotGetPa() throws Exception {
-		this.mockMvc.perform(get("/ente/pax")).andExpect(status().is(404));
+		mockMvc.perform(get("/ente/pax")).andExpect(status().is(404));
 	}
 
 	@Test
@@ -125,21 +138,21 @@ class ApiTest {
 		when(paService.create(any(PaEntity.class))).thenReturn(modelMapper.map(goodPa, PaEntity.class));
 		String myJson = jsonMapper.writeValueAsString(goodPa);
 		System.out.println(myJson);
-		this.mockMvc.perform(post("/ente/pa").content(myJson).contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(post("/ente/pa").content(myJson).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful());
 	}
 
 	@Test
 	public void shouldGetPrivacy() throws Exception {
-		this.mockMvc.perform(get("/privacy/refp/tttt")).andExpect(status().isOk());
+		mockMvc.perform(get("/privacy/refp/tttt")).andExpect(status().isOk());
 		when(privacyService.countByRefP(any(String.class))).thenReturn(1l);
-		this.mockMvc.perform(get("/privacy/refp/tttt")).andExpect(status().isOk());
+		mockMvc.perform(get("/privacy/refp/tttt")).andExpect(status().isOk());
 
 	}
 
 	@Test
 	public void shouldNotGetPrivacy() throws Exception {
-		this.mockMvc.perform(get("/privacy/refpp/tttt")).andExpect(status().is(404));
+		mockMvc.perform(get("/privacy/refpp/tttt")).andExpect(status().is(404));
 	}
 
 	@Test
@@ -149,7 +162,7 @@ class ApiTest {
 		when(privacyService.create(any(PrivacyEntity.class))).thenReturn(buildPrivacyOK());
 		String myJson = jsonMapper.writeValueAsString(goodPa);
 
-		this.mockMvc.perform(post("/privacy/MRCFPFPFP").content(myJson).contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(post("/privacy/MRCFPFPFP").content(myJson).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful());
 	}
 
@@ -160,8 +173,65 @@ class ApiTest {
 		when(privacyService.create(any(PrivacyEntity.class))).thenReturn(null);
 		String myJson = jsonMapper.writeValueAsString(goodPa);
 
-		this.mockMvc.perform(post("/privacy/MRCFPFPFP").content(myJson).contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(post("/privacy/MRCFPFPFP").content(myJson).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful());
+	}
+
+	@Test
+	public void shouldRetrieveRbacAuth() throws Exception {
+
+		RefpIntrospect myRefpIntro = buildGoodRefpFromIntrospect();
+		HttpHeaders headers = new HttpHeaders();
+		headers.setBearerAuth("fake-token");
+
+		when(restTemplate.exchange(ArgumentMatchers.eq(introspectPath), ArgumentMatchers.eq(HttpMethod.POST),
+				ArgumentMatchers.any(), ArgumentMatchers.<Class<RefpIntrospect>>any()))
+						.thenReturn(new ResponseEntity<RefpIntrospect>(myRefpIntro, HttpStatus.OK));
+		when(enteCreditoreService.getByRefP(any(String.class))).thenReturn(buildEnteCreditoreEntity());
+
+		mockMvc.perform(get("/rbac").headers(headers)).andExpect(status().is2xxSuccessful());
+
+	}
+
+	@Test
+	public void shouldRetrieveRbacNotAuthWhenIntrospectFails() throws Exception {
+
+		RefpIntrospect myRefpIntro = buildGoodRefpFromIntrospect();
+		HttpHeaders headers = new HttpHeaders();
+		headers.setBearerAuth("fake-token");
+
+		when(restTemplate.exchange(ArgumentMatchers.eq(introspectPath), ArgumentMatchers.eq(HttpMethod.POST),
+				ArgumentMatchers.any(), ArgumentMatchers.<Class<RefpIntrospect>>any()))
+						.thenReturn(new ResponseEntity<RefpIntrospect>(myRefpIntro, HttpStatus.NOT_FOUND));
+
+		mockMvc.perform(get("/rbac").headers(headers)).andExpect(status().isUnauthorized());
+
+	}
+
+	@Test
+	public void shouldRetrieveRbacNotAuthWhenAllowedIsFalse() throws Exception {
+
+		RefpIntrospect myRefpIntro = buildGoodRefpFromIntrospect();
+		HttpHeaders headers = new HttpHeaders();
+		headers.setBearerAuth("fake-token");
+
+		when(restTemplate.exchange(ArgumentMatchers.eq(introspectPath), ArgumentMatchers.eq(HttpMethod.POST),
+				ArgumentMatchers.any(), ArgumentMatchers.<Class<RefpIntrospect>>any()))
+						.thenReturn(new ResponseEntity<RefpIntrospect>(myRefpIntro, HttpStatus.NOT_FOUND));
+
+		EnteCreditoreEntity EcNotAllowed = buildEnteCreditoreEntity();
+		EcNotAllowed.setAllowed(false);
+		when(enteCreditoreService.getByRefP(any(String.class))).thenReturn(EcNotAllowed);
+
+		mockMvc.perform(get("/rbac").headers(headers)).andExpect(status().isUnauthorized());
+
+	}
+
+	private EnteCreditoreEntity buildEnteCreditoreEntity() throws ParseException {
+		EnteCreditoreDto myEcDto = buildEnteCreditoreOK();
+		EnteCreditoreEntity myEcEntity = modelMapper.map(myEcDto, EnteCreditoreEntity.class);
+		myEcEntity.setAllowed(true);
+		return myEcEntity;
 	}
 
 	private EnteCreditoreDto buildEnteCreditoreOK() throws ParseException {
@@ -249,6 +319,19 @@ class ApiTest {
 
 		return privacy;
 
+	}
+
+	private RefpIntrospect buildGoodRefpFromIntrospect() {
+		RefpIntrospect myRefpIntro = new RefpIntrospect();
+		myRefpIntro.setActive(true);
+		myRefpIntro.setLevel("L2");
+		myRefpIntro.setUser(new RefpSpid());
+		myRefpIntro.getUser().setEmail("pppp@ppp.op");
+		myRefpIntro.getUser().setName("ssssss");
+		myRefpIntro.getUser().setFamily_name("ddddd");
+		myRefpIntro.getUser().setFiscal_number("AAAGGG89U76G666T");
+		myRefpIntro.getUser().setMobile_phone("666666666");
+		return myRefpIntro;
 	}
 
 }

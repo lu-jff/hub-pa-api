@@ -1,9 +1,8 @@
 package it.gov.pagopa.hubpa.api.ente;
 
-import javax.validation.Valid;
+import java.util.Optional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.json.JsonMapper;
+import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -11,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import io.swagger.annotations.ApiOperation;
@@ -36,8 +36,6 @@ public class EnteCreditoreController {
 
   @Value("${auth.introspect.path}")
   private String introspectPath;
-
-  private JsonMapper jsonMapper = new JsonMapper();
 
   private Logger logger = LoggerFactory.getLogger(EnteCreditoreController.class);
 
@@ -73,18 +71,14 @@ public class EnteCreditoreController {
     try {
       HttpEntity<IntrospectReq> entity = new HttpEntity<>(myIntrospectReq, headers);
 
-      logger.info("Introspect Request Body: {}", jsonMapper.writeValueAsString(entity.getBody()));
-
       ResponseEntity<RefpIntrospect> myRefp = restTemplate.exchange(introspectPath, HttpMethod.POST, entity,
           RefpIntrospect.class);
-
-      logger.info("Introspect Response: {}", jsonMapper.writeValueAsString(myRefp.getBody()));
-
-      String fiscalNumber = myRefp.getBody().getUser().getFiscal_number();
-
-      logger.info("Ref-P Fiscal Code: {}", fiscalNumber);
-
+      String fiscalNumber = Optional.of(myRefp.getBody()).get().getUser().getFiscal_number();
       EnteCreditoreEntity ecE = enteCreditoreService.getByRefP(fiscalNumber);
+
+      if (Boolean.FALSE.equals(ecE.getAllowed())) {
+        throw new RestClientException("Allowed is false, Not Authorized");
+      }
 
       return new ResponseEntity<>(modelMapper.map(ecE, EnteCreditoreRbacStatus.class), HttpStatus.OK);
     } catch (Exception ex) {
