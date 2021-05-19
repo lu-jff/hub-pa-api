@@ -30,8 +30,8 @@ public class PaymentJobService {
     @Value("${QUEUE_NAME}")
     private String queueName;
 
-    @Value("${ENV}")
-    private String env;
+    // @Value("${ENV}")
+    // private String env;
 
     // Send JSON messages
     @Bean
