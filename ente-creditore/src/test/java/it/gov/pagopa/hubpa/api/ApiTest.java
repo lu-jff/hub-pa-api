@@ -45,6 +45,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import org.junit.jupiter.api.Test;
 
@@ -315,7 +316,7 @@ class ApiTest {
 
 		privacy.setCodiceFiscaleRefP("MFKDFKD");
 		privacy.setId(1l);
-		privacy.setDataAccettazione(LocalDateTime.now());
+		privacy.setDataAccettazione(LocalDateTime.now(ZoneId.of("Europe/Paris")));
 
 		return privacy;
 

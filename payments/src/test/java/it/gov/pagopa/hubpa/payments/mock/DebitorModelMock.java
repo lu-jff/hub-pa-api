@@ -2,6 +2,7 @@ package it.gov.pagopa.hubpa.payments.mock;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 import it.gov.pagopa.hubpa.payments.model.DebitorModel;
 import it.gov.pagopa.hubpa.payments.model.PaymentOptionsModel;
@@ -70,7 +71,7 @@ public class DebitorModelMock {
 
 	PaymentOptionsModel mock = new PaymentOptionsModel();
 	mock.setAmount(new BigDecimal(200));
-	mock.setDuoDate(LocalDate.now());
+	mock.setDuoDate(LocalDate.now(ZoneId.of("Europe/Paris")));
 	mock.setFiscalCode("12345678901");
 	mock.setIsConclusive(Boolean.TRUE);
 	mock.setMetadata(null);
@@ -87,7 +88,7 @@ public class DebitorModelMock {
 
 	PaymentOptionsModel mock = new PaymentOptionsModel();
 	mock.setAmount(new BigDecimal(120));
-	mock.setDuoDate(LocalDate.now());
+	mock.setDuoDate(LocalDate.now(ZoneId.of("Europe/Paris")));
 	mock.setFiscalCode("12345678901");
 	mock.setIsConclusive(Boolean.FALSE);
 	mock.setMetadata(null);
@@ -103,7 +104,7 @@ public class DebitorModelMock {
 
 	PaymentOptionsModel mock = new PaymentOptionsModel();
 	mock.setAmount(new BigDecimal(80));
-	mock.setDuoDate(LocalDate.now());
+	mock.setDuoDate(LocalDate.now(ZoneId.of("Europe/Paris")));
 	mock.setFiscalCode("12345678901");
 	mock.setIsConclusive(Boolean.FALSE);
 	mock.setMetadata(null);

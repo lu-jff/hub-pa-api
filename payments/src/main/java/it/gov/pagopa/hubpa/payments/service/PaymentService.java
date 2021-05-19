@@ -3,6 +3,7 @@ package it.gov.pagopa.hubpa.payments.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -116,7 +117,7 @@ public class PaymentService {
     private String generateNotificationCode(String idDominioPa) {
 	Long lastNumber = 1l;
 	IncrementalIuvNumber incrementalIuvNumber = incrementalIuvNumberRepository.findByIdDominioPaAndAnno(idDominioPa,
-		LocalDate.now().getYear());
+		LocalDateTime.now(ZoneId.of("Europe/Paris")).getYear());
 	if (incrementalIuvNumber != null) {
 	    lastNumber = (incrementalIuvNumber.getLastUsedNumber() + 1);
 	    incrementalIuvNumber.setLastUsedNumber(lastNumber);
@@ -124,7 +125,7 @@ public class PaymentService {
 	} else {
 
 	    incrementalIuvNumber = new IncrementalIuvNumber();
-	    incrementalIuvNumber.setAnno(LocalDate.now().getYear());
+	    incrementalIuvNumber.setAnno(LocalDateTime.now(ZoneId.of("Europe/Paris")).getYear());
 	    incrementalIuvNumber.setIdDominioPa(idDominioPa);
 	    incrementalIuvNumber.setLastUsedNumber(lastNumber);
 	}

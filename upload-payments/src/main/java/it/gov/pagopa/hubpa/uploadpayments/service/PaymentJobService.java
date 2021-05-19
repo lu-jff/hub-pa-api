@@ -52,7 +52,7 @@ public class PaymentJobService {
     }
 
     public List<PaymentJob> getAll(String fiscalCode) {
-        return paymentJobRepository.findByFiscalCode(fiscalCode);
+        return paymentJobRepository.findByFiscalCodeOrderByInsertDateDesc(fiscalCode);
     }
 
     public void uploadRows(UploadCsvModel uploadCsvModel) {

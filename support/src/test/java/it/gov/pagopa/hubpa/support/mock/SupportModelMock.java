@@ -1,10 +1,11 @@
 package it.gov.pagopa.hubpa.support.mock;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+
 import it.gov.pagopa.hubpa.support.model.SupportModel;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -22,7 +23,7 @@ public class SupportModelMock {
         model.setTelephone("");
         model.setTypeContact("");
         model.setPlatformCall("");
-        model.setDateRequest(LocalDate.now());
+        model.setDateRequest(LocalDate.now(ZoneId.of("Europe/Paris")));
         model.setTimeRequest("");
         return model;
     }

@@ -1,5 +1,6 @@
 package it.gov.pagopa.hubpa.api.ente;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.validation.constraints.NotEmpty;
@@ -50,4 +51,5 @@ public class EnteCreditoreDto {
     private String idStazione;
     private String statoAssociazione;
     private Date dataStatoAssociazione;
+    private LocalDateTime dataStatoAssociazione2;
 }

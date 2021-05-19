@@ -1,6 +1,7 @@
 package it.gov.pagopa.hubpa.payments.mapper;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 import org.modelmapper.Converter;
@@ -54,7 +55,7 @@ public class ConvertDebitorModelToDebitor implements Converter<DebitorModel, Deb
 	paymentPosition.setOfficeName(paymentPositionModel.getOfficeName());
 	paymentPosition.setOrganizationFiscalCode(paymentPositionModel.getOrganizationFiscalCode());
 	paymentPosition.setStatus(paymentPositionModel.getStatus());
-	paymentPosition.setInsertDate(LocalDateTime.now());
+	paymentPosition.setInsertDate(LocalDateTime.now(ZoneId.of("Europe/Paris")));
 	paymentPosition.setAmount(paymentPositionModel.getAmount());
 
 	List<PaymentOptionsModel> paymentOptions = paymentPositionModel.getPaymentOptions();

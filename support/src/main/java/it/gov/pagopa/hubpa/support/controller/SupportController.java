@@ -1,6 +1,8 @@
 package it.gov.pagopa.hubpa.support.controller;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,11 +26,14 @@ public class SupportController {
 
     @Autowired
     ModelMapper modelMapper;
+    
+    private Logger logger = LoggerFactory.getLogger(SupportController.class);
 
     @ApiOperation(value = "Salva la richiesta di supporto", notes = "Servizio REST per salvare la richiesta di supporto", response = BooleanResponseModel.class)
     @PostMapping(value = "send", consumes = { MediaType.APPLICATION_JSON_VALUE })
-    public BooleanResponseModel saveService(
+    public BooleanResponseModel saveSupport(
 	    @ApiParam(value = "Modello del supporto", required = true) @RequestBody final SupportModel supportModel) {
+	logger.info("POST Save Support");
 	it.gov.pagopa.hubpa.support.entity.Support service = modelMapper.map(supportModel, Support.class);
 	return new BooleanResponseModel(serviceManagementService.save(service));
     }

@@ -1,6 +1,7 @@
 package it.gov.pagopa.hubpa.uploadpayments.mapping;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
@@ -16,7 +17,7 @@ public class ConvertUploadCsvModelToPaymentJob implements Converter<UploadCsvMod
 	PaymentJob destination = new PaymentJob();
 	destination.setFiscalCode(source.getFiscalCodeCreditor());
 	destination.setFileName(source.getCsv().getFileName());
-	destination.setInsertDate(LocalDateTime.now());
+	destination.setInsertDate(LocalDateTime.now(ZoneId.of("Europe/Paris")));
 	destination.setStatus(JobStatusEnum.IN_ATTESA.getStatus());
 
 	return destination;

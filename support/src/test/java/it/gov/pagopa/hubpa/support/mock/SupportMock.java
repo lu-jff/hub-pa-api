@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Getter
 @Setter
@@ -24,9 +25,9 @@ public class SupportMock {
         model.setTelephone("");
         model.setTypeContact("");
         model.setPlatformCall("");
-        model.setDateRequest(LocalDate.now());
+        model.setDateRequest(LocalDate.now(ZoneId.of("Europe/Paris")));
         model.setTimeRequest("");
-        model.setMailSentDate(LocalDateTime.now());
+        model.setMailSentDate(LocalDateTime.now(ZoneId.of("Europe/Paris")));
         return model;
     }
 
@@ -44,9 +45,9 @@ public class SupportMock {
         model.setTelephone("");
         model.setTypeContact("CALL");
         model.setPlatformCall("");
-        model.setDateRequest(LocalDate.now());
+        model.setDateRequest(LocalDate.now(ZoneId.of("Europe/Paris")));
         model.setTimeRequest("");
-        model.setMailSentDate(LocalDateTime.now());
+        model.setMailSentDate(LocalDateTime.now(ZoneId.of("Europe/Paris")));
         return model;
     }
 }

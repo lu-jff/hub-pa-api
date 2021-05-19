@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
@@ -70,7 +71,7 @@ public class SupportService {
             mailService.send(mailSupportFrom, support.getEmail(), null, subject, body, true);
             mailService.send(mailSupportFrom, mailSupportTo, null, subject, bodyExtra, true);
 
-            support.setMailSentDate(LocalDateTime.now());
+            support.setMailSentDate(LocalDateTime.now(ZoneId.of("Europe/Paris")));
 
             return true;
         } catch (Exception e) {
