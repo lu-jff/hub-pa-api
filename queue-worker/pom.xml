@@ -14,7 +14,7 @@
 
 	<groupId>it.gov.pagopa.hubpa</groupId>
 	<artifactId>qworker</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3</version>
 	<name>qworker</name>
 	<description>Worker to process enqueued CSVs</description>
 
