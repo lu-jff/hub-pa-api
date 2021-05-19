@@ -41,7 +41,7 @@ class SupportControllerTest {
         Support support = SupportMock.getMock();
         when(supportService.save(any(Support.class))).thenReturn(Boolean.TRUE);
         when(modelMapperMock.map(any(SupportModel.class), any())).thenReturn(support);
-        BooleanResponseModel response = supportController.saveService(supportModel);
+        BooleanResponseModel response = supportController.saveSupport(supportModel);
         assertThat(response.getResult()).isTrue();
     }
 
