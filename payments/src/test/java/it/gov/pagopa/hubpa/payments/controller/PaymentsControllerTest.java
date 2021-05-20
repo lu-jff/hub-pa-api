@@ -23,20 +23,16 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.validation.DataBinder;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.client.RestTemplate;
 
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
 import it.gov.pagopa.hubpa.payments.PaymentsApplication;
-import it.gov.pagopa.hubpa.payments.annotation.validation.implement.FiscalCodeValidator;
 import it.gov.pagopa.hubpa.payments.config.DevCorsConfiguration;
 import it.gov.pagopa.hubpa.payments.config.MappingsConfiguration;
 import it.gov.pagopa.hubpa.payments.entity.Debitor;
@@ -77,9 +73,6 @@ class PaymentsControllerTest {
 
     @Mock
     private ModelMapper modelMapperMock;
-
-    @Autowired
-    private LocalValidatorFactoryBean fiscalCodeValidator;
 
     @Mock
     private PaymentService paymentService;
