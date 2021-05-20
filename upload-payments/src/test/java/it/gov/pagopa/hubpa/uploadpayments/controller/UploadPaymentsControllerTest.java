@@ -2,10 +2,12 @@ package it.gov.pagopa.hubpa.uploadpayments.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,10 +22,12 @@ import it.gov.pagopa.hubpa.uploadpayments.UploadPaymentsApplication;
 import it.gov.pagopa.hubpa.uploadpayments.config.DevCorsConfiguration;
 import it.gov.pagopa.hubpa.uploadpayments.config.MappingsConfiguration;
 import it.gov.pagopa.hubpa.uploadpayments.entity.PaymentJob;
+import it.gov.pagopa.hubpa.uploadpayments.mock.PaymentJobMinimalModelMock;
 import it.gov.pagopa.hubpa.uploadpayments.mock.PaymentJobMock;
 import it.gov.pagopa.hubpa.uploadpayments.mock.PaymentJobModelMock;
 import it.gov.pagopa.hubpa.uploadpayments.mock.UploadCsvModelMock;
 import it.gov.pagopa.hubpa.uploadpayments.model.BooleanResponseModel;
+import it.gov.pagopa.hubpa.uploadpayments.model.PaymentJobMinimalModel;
 import it.gov.pagopa.hubpa.uploadpayments.model.PaymentJobModel;
 import it.gov.pagopa.hubpa.uploadpayments.model.PaymentsModel;
 import it.gov.pagopa.hubpa.uploadpayments.model.UploadCsvModel;
@@ -96,7 +100,26 @@ class UploadPaymentsControllerTest {
 	BooleanResponseModel result = uploadPaymentsController.createJobRecord(paymentJobModel);
 	assertThat(result.getResult()).isTrue();
     }
+    @Test
+    void updatePaymentJob() {
+	PaymentJobMinimalModel paymentJobModel = PaymentJobMinimalModelMock.getMock();
+	when(paymentJobService.getJob(any(Long.class))).thenReturn(Optional.of(PaymentJobMock.getMock()));
+	when(paymentJobService.create(any(PaymentJob.class))).thenReturn(Boolean.TRUE);
+	BooleanResponseModel result = uploadPaymentsController.updatePaymentJob(1l,paymentJobModel);
+	assertThat(result.getResult()).isTrue();
+    }
 
+    @Test
+    void uploadCsvModels() {
+	PaymentJob paymentJob = PaymentJobMock.getMock();
+	UploadCsvModel uploadCsvModel=UploadCsvModelMock.getMock();
+	when(modelMapperMock.map(any(UploadCsvModel.class), any())).thenReturn(paymentJob);
+	when(paymentJobService.savePaymentJob(any(PaymentJob.class))).thenReturn(1l);
+	doNothing().when(paymentJobService).uploadRows(any(UploadCsvModel.class));
+	BooleanResponseModel result = uploadPaymentsController.uploadCsvModels(uploadCsvModel);
+	assertThat(result.getResult()).isTrue();
+    }
+    
     @Test
     void mapperTest() {
 	MappingsConfiguration mm = new MappingsConfiguration();
