@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import it.gov.pagopa.hubpa.payments.annotation.validation.FiscalCode;
@@ -25,7 +26,7 @@ public class CsvRowModel implements Serializable {
     @Size(max=70)
     private String surname;
     @NotEmpty
-    @FiscalCode
+    @Pattern(regexp = "^([A-Z]{6}[0-9LMNPQRSTUV]{2}[ABCDEHLMPRST]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1})$|([0-9]{11})$",message="Codice fiscale errato")
     private String fiscalCode;
     private Integer type;
     @NotEmpty
