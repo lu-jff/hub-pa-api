@@ -26,7 +26,8 @@ public class CsvRowModel implements Serializable {
     @Size(max=70)
     private String surname;
     @NotEmpty
-    @Pattern(regexp = "^([A-Z]{6}[0-9LMNPQRSTUV]{2}[ABCDEHLMPRST]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1})$|([0-9]{11})$",message="Codice fiscale errato")
+    //@Pattern(regexp = "^([A-Z]{6}[0-9LMNPQRSTUV]{2}[ABCDEHLMPRST]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1})$|([0-9]{11})$",message="Codice fiscale errato")
+    @FiscalCode
     private String fiscalCode;
     private Integer type;
     @NotEmpty
