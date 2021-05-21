@@ -66,6 +66,8 @@ services:
     ports:
       - "8085:8085"
     container_name: payments
+    depends_on:
+      - postgres
     networks:
       - hubpa-net
     
@@ -77,6 +79,8 @@ services:
     ports:
       - "8087:8087"
     container_name: support
+    depends_on:
+      - postgres
     networks:
       - hubpa-net
     
