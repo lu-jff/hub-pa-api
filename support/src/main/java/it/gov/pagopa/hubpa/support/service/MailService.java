@@ -5,6 +5,7 @@ import java.util.Properties;
 
 import javax.mail.Message;
 import javax.mail.Message.RecipientType;
+import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
@@ -52,7 +53,7 @@ public class MailService {
 	properties.put("mail.smtp.auth", smtpAuthVal);
     }
 
-    public void send(String from, String to, String cc, String subject, String message, boolean html) throws Exception {
+    public void send(String from, String to, String cc, String subject, String message, boolean html) throws MessagingException {
 	this.initProperties();
 	Session session = Session.getInstance(properties);
 	Message mail = new MimeMessage(session);
