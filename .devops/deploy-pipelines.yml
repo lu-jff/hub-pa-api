@@ -49,12 +49,12 @@ variables:
     AZURE_SUBSCRIPTION: $(DEV_AZURE_SUBSCRIPTION)
     CONTAINER_REGISTRY: $(DEV_CONTAINER_REGISTRY)
     PREFIX: "hubpa-d"
-    CONTAINER_REGISTRY_NAME: "hubpad"
+    CONTAINER_REGISTRY_NAME: "hubpadarc"
   ${{ if eq(parameters['ENV'], 'prod') }}:
     AZURE_SUBSCRIPTION: $(PROD_AZURE_SUBSCRIPTION)
     CONTAINER_REGISTRY: $(PROD_CONTAINER_REGISTRY)
     PREFIX: "hubpa-p"
-    CONTAINER_REGISTRY_NAME: "hubpap"
+    CONTAINER_REGISTRY_NAME: "hubpaparc"
   MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
   MAVEN_OPTS: "-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)"
   title: ""
