@@ -71,12 +71,12 @@ pool:
 stages:
   # Create a release
   - stage: release_service
-    condition: and(eq(variables['Build.SourceBranch'], 'refs/heads/main'),
-      ne('${{ parameters.REPOSITORY }}', 'auth'))
+    # condition: and(eq(variables['Build.SourceBranch'], 'refs/heads/main'),
+    #   ne('${{ parameters.REPOSITORY }}', 'auth'))
     pool:
       vmImage: "ubuntu-latest"
     jobs:
-      - job: release_service
+      - job: releaseService
         steps:
           - checkout: self
             clean: true
@@ -136,8 +136,9 @@ stages:
 
   # Create a release
   - stage: deploy
-    condition: and(eq(variables['Build.SourceBranch'], 'refs/heads/main'),
-      not(failed('release_service')))
+    # condition: and(eq(variables['Build.SourceBranch'], 'refs/heads/main'),
+    #   not(failed('release_service')))
+    condition: not(failed('releaseService'))
     pool:
       vmImage: "ubuntu-latest"
     jobs:
