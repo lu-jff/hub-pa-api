@@ -24,6 +24,7 @@ class MailServiceTest {
         ReflectionTestUtils.setField(mailService, "mailSmtpAuth", "mailSmtpAuth");
         ReflectionTestUtils.setField(mailService, "mailUser", "mailUser");
         ReflectionTestUtils.setField(mailService, "mailPassword", "mailPassword");
+        ReflectionTestUtils.setField(mailService, "mailSmtpStartTls", "mailSmtpStartTls");
         //Test1
         assertThatNoException().isThrownBy(() -> { 
             mailService.send("user@host.domain", "user@host.domain", "cc", "subject", "message", Boolean.FALSE);
