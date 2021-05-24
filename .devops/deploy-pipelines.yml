@@ -141,25 +141,26 @@ stages:
     pool:
       vmImage: "ubuntu-latest"
     jobs:
-      - job: deploy
+      - job: checkout
         steps:
           - checkout: self
             clean: true
             persistCredentials: true
             submodules: true
-
+      - job: deployJava
+        condition: eq('${{ parameters.STACK }}', 'java')
+        dependsOn: checkout
+        steps:
           - task: Cache@2
-            condition: eq('${{ parameters.STACK }}', 'java')
             inputs:
               key: 'maven | "$(Agent.OS)" | pom.xml'
               restoreKeys: |
                 maven | "$(Agent.OS)"
                 maven
               path: $(MAVEN_CACHE_FOLDER)
-            displayName: Cache Maven local repo
+            displayName: Set Maven Cache
 
           - task: Bash@3
-            condition: eq('${{ parameters.STACK }}', 'java')
             name: pomversion
             inputs:
               targetType: "inline"
@@ -168,19 +169,7 @@ stages:
                 echo "##vso[task.setvariable variable=next;isOutput=true]$version"
               failOnStderr: true
 
-          - task: Bash@3
-            condition: eq('${{ parameters.STACK }}', 'node')
-            name: pkgversion
-            inputs:
-              targetType: "inline"
-              workingDirectory: "${{ parameters.MS_NAME }}"
-              script: |
-                version=$(node -p "require('./package.json').version")
-                echo "##vso[task.setvariable variable=next;isOutput=true]$version"
-              failOnStderr: true
-
           - task: Maven@3
-            condition: eq('${{ parameters.STACK }}', 'java')
             displayName: Build Service
             inputs:
               mavenPomFile: "${{ parameters.MS_NAME }}/pom.xml"
@@ -192,23 +181,49 @@ stages:
               testResultsFiles: "**/surefire-reports/TEST-*.xml"
               goals: "package"
 
+          
+
+          - task: Docker@2
+            displayName: Build and Push Image
+            inputs:
+              containerRegistry: $(CONTAINER_REGISTRY)
+              repository: "${{ parameters.REPOSITORY }}"
+              command: "buildAndPush"
+              Dockerfile: "./${{ parameters.MS_NAME }}/Dockerfile.deploy"
+              tags: "$(pomversion.next)"
+
+          - task: AzureRMWebAppDeployment@4
+            displayName: Deploy Microservice
+            inputs:
+              appType: webAppContainer
+              ConnectedServiceName: $(AZURE_SUBSCRIPTION)
+              WebAppName: "${{variables.PREFIX}}-${{ parameters.REPOSITORY }}-ms"
+              DockerNamespace: "${{variables.CONTAINER_REGISTRY_NAME}}.azurecr.io"
+              DockerRepository: "${{ parameters.REPOSITORY }}"
+              DockerImageTag: "$(pomversion.next)"
+
+      - job: deployNode
+        condition: eq('${{ parameters.STACK }}', 'node')
+        dependsOn: checkout
+        steps:
+          
           - task: UseNode@1
-            condition: eq('${{ parameters.STACK }}', 'node')
+            displayName: "Set up Node.js"
             inputs:
               version: $(NODE_VERSION)
-              displayName: "Set up Node.js"
-
+              
           - task: Bash@3
-            condition: eq('${{ parameters.STACK }}', 'node')
-            displayName: ls
+            name: pkgversion
+            displayName: "Read version from package.json"
             inputs:
-              workingDirectory: "${{ parameters.MS_NAME }}"
               targetType: "inline"
+              workingDirectory: "${{ parameters.MS_NAME }}"
               script: |
-                ls
-
-          - task: Bash@3
-            condition: eq('${{ parameters.STACK }}', 'node')
+                version=$(node -p "require('./package.json').version")
+                echo "##vso[task.setvariable variable=next;isOutput=true]$version"
+              failOnStderr: true
+              
+          - task: Bash@3"
             displayName: Install Node Packages
             inputs:
               workingDirectory: "${{ parameters.MS_NAME }}"
@@ -225,38 +240,17 @@ stages:
               script: |
                 yarn predeploy
 
-          - task: Docker@2
-            condition: eq('${{ parameters.STACK }}', 'java')
-            displayName: Build and Push Image
-            inputs:
-              containerRegistry: $(CONTAINER_REGISTRY)
-              repository: "${{ parameters.REPOSITORY }}"
-              command: "buildAndPush"
-              Dockerfile: "./${{ parameters.MS_NAME }}/Dockerfile.deploy"
-              tags: "$(pomversion.next)"
-
-          # to be removed: rename dockerfile
+           # to be removed: rename dockerfile
           - task: Docker@2
             condition: eq('${{ parameters.STACK }}', 'node')
-            displayName: Build and Push Image
+            displayName: Build and Push Image on ACR
             inputs:
               containerRegistry: $(CONTAINER_REGISTRY)
               repository: "${{ parameters.REPOSITORY }}"
               command: "buildAndPush"
               Dockerfile: "./${{ parameters.MS_NAME }}/Dockerfile"
               tags: "$(pkgversion.next)"
-
-          - task: AzureRMWebAppDeployment@4
-            condition: eq('${{ parameters.STACK }}', 'java')
-            displayName: Deploy Microservice
-            inputs:
-              appType: webAppContainer
-              ConnectedServiceName: $(AZURE_SUBSCRIPTION)
-              WebAppName: "${{variables.PREFIX}}-${{ parameters.REPOSITORY }}-ms"
-              DockerNamespace: "${{variables.CONTAINER_REGISTRY_NAME}}.azurecr.io"
-              DockerRepository: "${{ parameters.REPOSITORY }}"
-              DockerImageTag: "$(pomversion.next)"
-
+          
           - task: AzureRMWebAppDeployment@4
             condition: eq('${{ parameters.STACK }}', 'node')
             displayName: Deploy Microservice
