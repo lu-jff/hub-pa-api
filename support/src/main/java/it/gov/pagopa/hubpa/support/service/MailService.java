@@ -30,6 +30,9 @@ public class MailService {
 
     @Value("${global.mail.smtp.auth}")
     private String mailSmtpAuth;
+    
+    @Value("${global.mail.starttls.enable}")
+    private String mailSmtpStartTls;
 
     @Value("${global.mail.user}")
     private String mailUser;
@@ -45,7 +48,7 @@ public class MailService {
     private void initProperties() {
 	properties.put("mail.smtp.host", mailSmtpHost);
 	properties.put("mail.smtp.port", mailSmtpPort);
-	properties.put("mail.smtp.starttls.enable", "true"); 
+	properties.put("mail.smtp.starttls.enable", mailSmtpStartTls); 
 	String smtpAuthVal = mailSmtpAuth;
 	if ("true".equals(smtpAuthVal)) {
 	    this.smtpAuth = true;
