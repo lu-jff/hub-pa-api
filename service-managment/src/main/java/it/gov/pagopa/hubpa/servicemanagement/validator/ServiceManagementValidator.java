@@ -2,8 +2,10 @@ package it.gov.pagopa.hubpa.servicemanagement.validator;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.Errors;
@@ -18,6 +20,12 @@ public class ServiceManagementValidator implements Validator {
 
     private String errors = "errors";
     private String installmentDesc = "Rata ";
+    
+    @Value("${tefa.date.check.enable}")
+    private Boolean checkDateEnable;
+    
+    @Value("${tefa.date.min}")
+    private String dateMinTefaStr;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -27,6 +35,8 @@ public class ServiceManagementValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
 	TributeServiceModel tributeServiceModel = (TributeServiceModel) target;
+	
+	LocalDate dateMinTefa=LocalDate.parse(dateMinTefaStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
 	ValidationUtils.rejectIfEmptyOrWhitespace(errors, "denomination", "denomination","Denominazione obbligatoria");
 	ValidationUtils.rejectIfEmptyOrWhitespace(errors, "ibanPrimary", "ibanPrimary_code", "Selezionare un IBAN primario");
@@ -50,21 +60,21 @@ public class ServiceManagementValidator implements Validator {
 	    errors.reject("installment", "Inserire almeno una rata o soluzione unica");
 	} else {
 	    BigDecimal totalePercentageSecondary = tributeServiceModel.getPercentageSecondary();
-	    if (!ObjectUtils.isEmpty(duoDateUnique) && duoDateUnique.isBefore(LocalDate.of(2021, 7, 1))
+	    if (checkDateEnable.booleanValue() && !ObjectUtils.isEmpty(duoDateUnique) && duoDateUnique.isBefore(dateMinTefa)
 		    && totalePercentageSecondary.doubleValue() > 0) {
 		errors.reject("installment",
-			"La data scadenza della soluzione unica deve essere maggiore del 30/06/2021");
+			"La data scadenza della soluzione unica deve essere maggiore del "+dateMinTefa.minusDays(1).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
 	    }
 	    if (!ObjectUtils.isEmpty(installmentList)) {
 
-		validateInstallments(installmentList, totalePercentageSecondary, errors);
+		validateInstallments(installmentList, totalePercentageSecondary, errors, dateMinTefa);
 	    }
 	}
 
     }
 
     private void validateInstallments(List<InstallmentModel> installmentList, BigDecimal totalePercentageSecondary,
-	    Errors errors) {
+	    Errors errors,LocalDate dateMinTefa) {
 
 	BigDecimal totalPrimary = BigDecimal.ZERO;
 	BigDecimal totalSecondary = BigDecimal.ZERO;
@@ -76,9 +86,9 @@ public class ServiceManagementValidator implements Validator {
 	    BigDecimal percentageSecondary = installmentModel.getPercentageSecondary();
 	    if (ObjectUtils.isEmpty(duoDate)) {
 		errors.reject(this.errors, installmentDesc + count + " data scadenza obbligatoria");
-	    } else if (!ObjectUtils.isEmpty(percentageSecondary) && percentageSecondary.doubleValue() > 0 && duoDate.isBefore(LocalDate.of(2021, 7, 1))) {
+	    } else if (checkDateEnable.booleanValue() && !ObjectUtils.isEmpty(percentageSecondary) && percentageSecondary.doubleValue() > 0 && duoDate.isBefore(LocalDate.of(2021, 7, 1))) {
 		errors.reject(this.errors,
-			installmentDesc + count + " data scadenza deve essere maggiore del 30/06/2021");
+			installmentDesc + count + " data scadenza deve essere maggiore del "+dateMinTefa.minusDays(1).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
 	    }
 	    if (ObjectUtils.isEmpty(percentagePrimary)) {
 		errors.reject(this.errors, installmentDesc + count + " percentuale TARI obbligatoria");

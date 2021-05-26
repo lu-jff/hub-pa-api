@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 import org.springframework.web.client.RestTemplate;
@@ -94,11 +95,13 @@ class ServiceManagementControllerTest {
 
     @Test
     void validationOK() throws ServletException {
-
+	ServiceManagementValidator serviceManagementValidator = new ServiceManagementValidator();
+	ReflectionTestUtils.setField(serviceManagementValidator, "checkDateEnable", true);
+	ReflectionTestUtils.setField(serviceManagementValidator, "dateMinTefaStr", "2021-07-01");
 	TributeServiceModel modelMock = TributeServiceModelMock.validationOKCase1();
 
 	DataBinder binder = new DataBinder(modelMock);
-	binder.setValidator(new ServiceManagementValidator());
+	binder.setValidator(serviceManagementValidator);
 
 	// validate the target object
 	binder.validate();
@@ -136,8 +139,12 @@ class ServiceManagementControllerTest {
     }
 
     private BindingResult getResultValidation(TributeServiceModel modelMock) {
+	ServiceManagementValidator serviceManagementValidator = new ServiceManagementValidator();
+	ReflectionTestUtils.setField(serviceManagementValidator, "checkDateEnable", true);
+	ReflectionTestUtils.setField(serviceManagementValidator, "dateMinTefaStr", "2021-07-01");
+
 	DataBinder binder = new DataBinder(modelMock);
-	binder.setValidator(new ServiceManagementValidator());
+	binder.setValidator(serviceManagementValidator);
 
 	// validate the target object
 	binder.validate();
