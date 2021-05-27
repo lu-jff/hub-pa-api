@@ -184,7 +184,14 @@ stages:
               testResultsFiles: "**/surefire-reports/TEST-*.xml"
               goals: "package"
 
-          
+          - task: Bash@3
+            name: aiagent
+            inputs:
+              targetType: "inline"
+              script: |
+                wget https://github.com/microsoft/ApplicationInsights-Java/releases/download/3.1.0/applicationinsights-agent-3.1.0.jar
+                mv applicationinsights-agent*jar ${{parameters.MS_NAME}}
+                ls ${{parameters.MS_NAME}}
 
           - task: Docker@2
             displayName: Build and Push Image
