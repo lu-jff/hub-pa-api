@@ -123,6 +123,7 @@ class PaymentsControllerTest {
 	PaymentPosition paymentPosition = debitor1.getPaymentPosition().get(0);
 	DebitorModel modelMock = DebitorModelMock.createDebitor1();
 	UploadCsvModel uploadCsvModelMock = UploadCsvModelMock.getMock();
+	UploadCsvModel uploadCsvModelNoRateMock = UploadCsvModelMock.getMockNoRate();
 
 	Debitor debitor = modelMapper.map(modelMock, Debitor.class);
 
@@ -130,6 +131,9 @@ class PaymentsControllerTest {
 	assertThat(debitor.getPaymentPosition().get(0).getPaymentOptions().get(0).getIsConclusive()).isTrue();
 
 	PaymentsModel paymentsModel = modelMapper.map(uploadCsvModelMock, PaymentsModel.class);
+	assertThat(paymentsModel.getDebitors().get(0).getArea()).isEqualTo("Firenze");
+	
+	paymentsModel = modelMapper.map(uploadCsvModelNoRateMock, PaymentsModel.class);
 	assertThat(paymentsModel.getDebitors().get(0).getArea()).isEqualTo("Firenze");
 
 	PaymentMinimalModel paymentMinimalModel = modelMapper.map(paymentPosition, PaymentMinimalModel.class);
