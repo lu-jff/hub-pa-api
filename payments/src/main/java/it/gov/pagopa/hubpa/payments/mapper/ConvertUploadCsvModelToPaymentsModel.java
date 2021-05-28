@@ -97,6 +97,7 @@ public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsv
 	    paymentPositionModel.getPaymentOptions().add(this.createPaymentPositionUnique(tributeServiceModel, row,
 		    totalAmountPrimary, totalAmountSecondary));
 	}
+	if (installments != null && !installments.isEmpty()) {
 	for (InstallmentModel installment : installments) {
 
 	    PaymentOptionsModel paymentOptionsModel = new PaymentOptionsModel();
@@ -158,6 +159,7 @@ public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsv
 	    }
 	    paymentOptionsModel.setAmount(installmentAmount);
 	    paymentPositionModel.getPaymentOptions().add(paymentOptionsModel);
+	}
 	}
 
 	return paymentPositionModel;
