@@ -17,6 +17,14 @@ public class UploadCsvModelMock {
 
 	return mock;
     }
+    public final static UploadCsvModel getMockNoRate() {
+	UploadCsvModel mock = new UploadCsvModel();
+	mock.setTributeService(TributeServiceModelMock.validationOKCase2());
+	mock.setJobId(1l);
+	mock.setCsv(createCsvModelMock());
+
+	return mock;
+    }
 
     private static CsvModel createCsvModelMock() {
 	CsvModel mock = new CsvModel();

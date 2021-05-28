@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.modelmapper.Converter;
@@ -77,6 +78,7 @@ public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsv
 	paymentPositionModel.setAmount(row.getAmount());
 
 	List<InstallmentModel> installments = tributeServiceModel.getInstallments();
+	installments=this.getArrayListIfNull(installments);
 
 	BigDecimal totalPercentageInstallmentPrimary = new BigDecimal(100);
 	BigDecimal totalPercentageInstallmentSecondary = new BigDecimal(100);
@@ -97,7 +99,7 @@ public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsv
 	    paymentPositionModel.getPaymentOptions().add(this.createPaymentPositionUnique(tributeServiceModel, row,
 		    totalAmountPrimary, totalAmountSecondary));
 	}
-	if (installments != null && !installments.isEmpty()) {
+
 	for (InstallmentModel installment : installments) {
 
 	    PaymentOptionsModel paymentOptionsModel = new PaymentOptionsModel();
@@ -160,9 +162,17 @@ public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsv
 	    paymentOptionsModel.setAmount(installmentAmount);
 	    paymentPositionModel.getPaymentOptions().add(paymentOptionsModel);
 	}
-	}
+	
 
 	return paymentPositionModel;
+    }
+
+    private List<InstallmentModel> getArrayListIfNull(List<InstallmentModel> installments) {
+	if(installments==null) { 
+	    installments=new ArrayList<>();	
+	}
+	return installments;
+
     }
 
     private PaymentOptionsModel createPaymentPositionUnique(TributeServiceModel tributeServiceModel, CsvRowModel row,
