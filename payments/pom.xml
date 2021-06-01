@@ -189,7 +189,6 @@
 							<source>${project.basedir}/src/main/resources/xsd/nodeForPsp.xsd</source>
 						</sources>
 						<packageName>it.gov.pagopa.hubpa.payments.model.node</packageName>
-						<outputDirectory>${project.basedir}/src/main/java/</outputDirectory>
 					</configuration>
 				</plugin>
 		</plugins>
