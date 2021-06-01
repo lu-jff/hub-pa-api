@@ -138,12 +138,17 @@ class PaymentsControllerTest {
 
 	PaymentMinimalModel paymentMinimalModel = modelMapper.map(paymentPosition, PaymentMinimalModel.class);
 	assertThat(paymentMinimalModel.getSurname()).isEqualTo("Rossi");
-
+	
 	PaymentPositionDetailModel paymentPositionDetailModel = modelMapper.map(paymentPosition,
 		PaymentPositionDetailModel.class);
 	assertThat(paymentPositionDetailModel.getFiscalCode()).isEqualTo("MRDPLL54H17D542L");
 	CsvPositionModel csvPositionModel = modelMapper.map(paymentPosition, CsvPositionModel.class);
 	assertThat(csvPositionModel.getFiscalCode()).isEqualTo("MRDPLL54H17D542L");
+	
+	paymentPosition.setInformation("POSSIBLE_DUPLICATE");
+	paymentPosition.setInsertDate(null);
+	paymentMinimalModel = modelMapper.map(paymentPosition, PaymentMinimalModel.class);
+	assertThat(paymentMinimalModel.getSurname()).isEqualTo("Rossi");
 
     }
 
@@ -251,6 +256,20 @@ class PaymentsControllerTest {
 	assertThat(csvPositionModel.getProvince()).isNotNull();
 	assertThat(csvPositionModel.getSurname()).isNotNull();
 	assertThat(csvPositionModel.getType()).isNotNull();
+
+    }
+    @Test
+    void getDTO3() {
+
+	PaymentMinimalModel csvPositionModel = PaymentMinimalModelMock.getMock();
+	assertThat(csvPositionModel.getId()).isNotNull();
+	assertThat(csvPositionModel.getFiscalCode()).isNotNull();
+	assertThat(csvPositionModel.getName()).isNotNull();
+	assertThat(csvPositionModel.getSurname()).isNotNull();
+	assertThat(csvPositionModel.getDate()).isNotNull();
+	assertThat(csvPositionModel.getStatus()).isNotNull();
+	assertThat(csvPositionModel.getIsDuplicated()).isNotNull();
+
 
     }
 

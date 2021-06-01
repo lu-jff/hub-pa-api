@@ -15,6 +15,7 @@ public class PaymentMinimalModelMock {
 	mock.setSurname("ROSSI");
 	mock.setDate(LocalDate.now(ZoneId.of("Europe/Paris")));
 	mock.setStatus(2);
+	mock.setIsDuplicated(Boolean.TRUE);
 	
 	return mock;
     }
