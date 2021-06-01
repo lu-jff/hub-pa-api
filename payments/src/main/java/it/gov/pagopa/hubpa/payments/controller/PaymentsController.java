@@ -88,7 +88,7 @@ public class PaymentsController {
 
 	logger.info("POST find payments");
 	
-	Pageable paging = PageRequest.of(findModel.getPage(), findModel.getSize(), Sort.by("insertDate").descending());
+	Pageable paging = PageRequest.of(findModel.getPage(), findModel.getSize(), Sort.by("information").descending().and(Sort.by("insertDate").descending()));
 	Page<PaymentPosition> pageResults = paymentService.getPaymentsByFilters(findModel.getFiscalCode(),
 		findModel.getFilters(), paging);
 
