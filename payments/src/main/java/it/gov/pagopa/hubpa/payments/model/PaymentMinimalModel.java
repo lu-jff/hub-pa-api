@@ -22,4 +22,5 @@ public class PaymentMinimalModel implements Serializable {
     private String surname;
     private LocalDate date;
     private Integer status;
+    private Boolean isDuplicated;
 }

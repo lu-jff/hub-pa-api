@@ -20,6 +20,7 @@ public class ConvertPaymentPositionToPaymentMinimalModel implements Converter<Pa
 	destination.setName(source.getDebitor().getName());
 	destination.setStatus(source.getStatus());
 	destination.setSurname(source.getDebitor().getSurname());
+	destination.setIsDuplicated("POSSIBLE_DUPLICATE".equals(source.getInformation())?Boolean.TRUE:Boolean.FALSE);
 
 	return destination;
     }
