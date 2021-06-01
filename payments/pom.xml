@@ -171,6 +171,27 @@
                     </execution>
                 </executions>
             </plugin>
+				<!-- Plugin required to build java classes from XSD using XJC -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>jaxb2-maven-plugin</artifactId>
+					<version>2.5.0</version>
+					<executions>
+						<execution>
+							<id>xsd-to-java</id>
+							<goals>
+								<goal>xjc</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<sources>
+							<source>${project.basedir}/src/main/resources/xsd/nodeForPsp.xsd</source>
+						</sources>
+						<packageName>it.gov.pagopa.hubpa.payments.model.node</packageName>
+						<outputDirectory>${project.basedir}/src/main/java/</outputDirectory>
+					</configuration>
+				</plugin>
 		</plugins>
 	</build>
 
