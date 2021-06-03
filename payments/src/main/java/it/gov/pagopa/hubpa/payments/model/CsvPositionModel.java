@@ -46,5 +46,7 @@ public class CsvPositionModel implements Serializable {
     private BigDecimal amount;
     @CsvBindByPosition(position = 14)
     private String information;
+    @CsvBindByPosition(position = 15)
+    private String reason;
     
 }

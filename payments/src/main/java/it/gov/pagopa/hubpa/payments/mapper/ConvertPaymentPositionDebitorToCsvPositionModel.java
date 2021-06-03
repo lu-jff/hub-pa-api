@@ -1,10 +1,14 @@
 package it.gov.pagopa.hubpa.payments.mapper;
 
+import java.util.List;
+
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 
 import it.gov.pagopa.hubpa.payments.entity.Debitor;
+import it.gov.pagopa.hubpa.payments.entity.PaymentOptions;
 import it.gov.pagopa.hubpa.payments.entity.PaymentPosition;
+import it.gov.pagopa.hubpa.payments.entity.Transfers;
 import it.gov.pagopa.hubpa.payments.model.CsvPositionModel;
 
 public class ConvertPaymentPositionDebitorToCsvPositionModel implements Converter<PaymentPosition, CsvPositionModel> {
@@ -31,7 +35,14 @@ public class ConvertPaymentPositionDebitorToCsvPositionModel implements Converte
 	destination.setType(debitor.getType());
 	destination.setInformation(paymentPosition.getInformation());
 	destination.setAmount(paymentPosition.getAmount());
-
+	List<PaymentOptions> paymentOptions = paymentPosition.getPaymentOptions();
+	if (paymentOptions != null && !paymentOptions.isEmpty()) {
+	    List<Transfers> transfers = paymentOptions.get(0).getTransfers();
+	    if (transfers != null && !transfers.isEmpty()) {
+		destination.setReason(transfers.get(0).getReason());
+	    }
+	}
+	
 	return destination;
     }
 

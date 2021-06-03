@@ -145,6 +145,23 @@ class PaymentsControllerTest {
 	CsvPositionModel csvPositionModel = modelMapper.map(paymentPosition, CsvPositionModel.class);
 	assertThat(csvPositionModel.getFiscalCode()).isEqualTo("MRDPLL54H17D542L");
 	
+	paymentPosition.getPaymentOptions().get(0).setTransfers(null);
+	csvPositionModel = modelMapper.map(paymentPosition, CsvPositionModel.class);
+	assertThat(csvPositionModel.getFiscalCode()).isEqualTo("MRDPLL54H17D542L");
+
+	paymentPosition.getPaymentOptions().get(0).setTransfers(new ArrayList<>());
+	csvPositionModel = modelMapper.map(paymentPosition, CsvPositionModel.class);
+	assertThat(csvPositionModel.getFiscalCode()).isEqualTo("MRDPLL54H17D542L");
+
+	paymentPosition.setPaymentOptions(new ArrayList<>());
+	csvPositionModel = modelMapper.map(paymentPosition, CsvPositionModel.class);
+	assertThat(csvPositionModel.getFiscalCode()).isEqualTo("MRDPLL54H17D542L");
+
+	paymentPosition.setPaymentOptions(null);
+	csvPositionModel = modelMapper.map(paymentPosition, CsvPositionModel.class);
+	assertThat(csvPositionModel.getFiscalCode()).isEqualTo("MRDPLL54H17D542L");
+
+	
 	paymentPosition.setInformation("POSSIBLE_DUPLICATE");
 	paymentPosition.setInsertDate(null);
 	paymentMinimalModel = modelMapper.map(paymentPosition, PaymentMinimalModel.class);
