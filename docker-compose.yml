@@ -1,19 +1,6 @@
 version: '3.8'
 
 services:
-
-  ente-creditore:
-    env_file: "./ente-creditore/.env"
-    image: 'ente-creditore:latest'
-    build:
-      context: ./ente-creditore
-    ports:
-      - "8082:8082"
-    container_name: ente-creditore
-    depends_on:
-      - postgres
-    networks:
-      - hubpa-net
   
   service-managment:
     env_file: "./service-managment/.env"
@@ -66,60 +53,6 @@ services:
     networks:
       - hubpa-net
     
-  support:
-    env_file: "./support/.env"
-    image: 'support:latest'
-    build:
-      context: ./support
-    ports:
-      - "8087:8087"
-    container_name: support
-    depends_on:
-      - postgres
-    networks:
-      - hubpa-net
-    
-  hub-spid-login-ms:
-    container_name: hub-spid-login-ms
-    image: 'hub-spid-login-ms:latest'
-    build:
-      context: ./hub-spid-login-ms
-      dockerfile: ./Dockerfile
-    env_file: "./hub-spid-login-ms/.env"
-    # expose:
-    #   - "9090"
-    ports:
-      - "9090:8080"
-    depends_on:
-      - redis
-    networks:
-      - hubpa-net
-    
-
-  spid-testenv2:
-    image: italia/spid-testenv2:1.1.0
-    ports:
-      - "8088:8088"
-    volumes:
-      - "./hub-spid-login-ms/conf-testenv:/app/conf"
-      - "./hub-spid-login-ms/certs:/app/certs:ro"
-    depends_on: 
-      - hub-spid-login-ms
-    networks:
-      - hubpa-net
-
-  
-  redis:
-    container_name: redis
-    image: wodby/redis:3.2-2.1.5
-    environment:
-      REDIS_TIMEOUT: 300
-      REDIS_TCP_KEEPALIVE: 60
-      REDIS_MAXMEMORY: 182m
-    networks:
-      - hubpa-net
-    
-          
   postgres:
     image: postgres
     container_name: postgres
@@ -134,17 +67,6 @@ services:
       - POSTGRES_PASSWORD=postgres_pwd_test
     networks:
       - hubpa-net
-      
-  api-gateway:
-    image: nginx
-    ports:
-      - "8000:8080"
-    volumes:
-      - "./api-gateway/nginx.conf:/etc/nginx/nginx.conf:ro"
-      - "./api-gateway/tokenPolicy.js:/home/tokenPolicy.js:ro"
-    networks:
-      - hubpa-net
-
   
   # During integration tests use Azure Service Bus
   # rabbitmq:
