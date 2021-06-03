@@ -100,11 +100,10 @@ public class PaymentsController {
     }
 
     @ApiOperation(value = "Esporta i pagamenti in formato csv dato un jobId", notes = "Esporta i pagamenti in formato csv dato un jobId")
-    @GetMapping(value = "/export/{jobId}")
-    public void exportCsv(@PathVariable("jobId") Long jobId, HttpServletResponse response)
+    @GetMapping(value = "/export/{jobId}/{filename}")
+    public void exportCsv(@PathVariable("jobId") Long jobId, @PathVariable("filename") String filename, HttpServletResponse response)
 	    throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException, IOException {
 	logger.info("GET export CSV");
-	String filename = "pagamenti.csv";
 
 	response.setContentType("text/csv");
 	response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
