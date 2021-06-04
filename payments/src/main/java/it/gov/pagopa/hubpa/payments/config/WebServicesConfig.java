@@ -25,10 +25,10 @@ public class WebServicesConfig extends WsConfigurerAdapter {
         return new ServletRegistrationBean<>(servlet, "/paForNode_Service/*");
     }
 
-    @Bean(name = "node")
+    @Bean(name = "partner")
     public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema nodeSchema) {
         DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
-        wsdl11Definition.setPortTypeName("NodePort");
+        wsdl11Definition.setPortTypeName("paForNode_PortType");
         wsdl11Definition.setLocationUri("/paForNode_Service");
         wsdl11Definition.setTargetNamespace("http://pagopa-api.pagopa.gov.it/pa/paForNode.xsd");
         wsdl11Definition.setSchema(nodeSchema);
