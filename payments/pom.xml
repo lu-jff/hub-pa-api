@@ -53,6 +53,7 @@
 			</exclusions>
 		</dependency>
 
+		<!-- Dependency to SOAP web service - START - -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web-services</artifactId>
@@ -62,7 +63,8 @@
 			<groupId>wsdl4j</groupId>
 			<artifactId>wsdl4j</artifactId>
 		</dependency>
-		
+		<!-- Dependency to SOAP web service - END - -->
+
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
@@ -179,6 +181,7 @@
 					</execution>
 				</executions>
 			</plugin>
+
 			<!-- Plugin required to build java classes from XSD using XJC -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -187,6 +190,7 @@
 				<executions>
 					<execution>
 						<id>xsd-to-java</id>
+						<phase>generate-sources</phase>
 						<goals>
 							<goal>xjc</goal>
 						</goals>
@@ -196,7 +200,7 @@
 					<sources>
 						<source>${project.basedir}/src/main/resources/xsd/paForNode.xsd</source>
 					</sources>
-					<packageName>it.gov.pagopa.hubpa.payments.model.node</packageName>
+					<packageName>it.gov.pagopa.hubpa.payments.model.partner</packageName>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -212,7 +216,7 @@
 						</goals>
 						<configuration>
 							<sources>
-								<source>target/generated-sources/xjc</source>
+								<source>target/generated-sources</source>
 							</sources>
 						</configuration>
 					</execution>
