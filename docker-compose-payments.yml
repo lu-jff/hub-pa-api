@@ -30,12 +30,19 @@ services:
     networks:
       - hubpa-net
   
-  # During integration tests use Azure Service Bus
-  # rabbitmq:
-  #   image: rabbitmq:3-management
-  #   ports:
-  #     - "5672:5672"
-  #     - "15672:15672"
+  service-managment:
+    env_file: "./service-managment/.env"
+    image: 'service-managment:latest'
+    build:
+      context: ./service-managment
+    ports:
+      - "8083:8083"
+    container_name: service-managment
+    depends_on:
+      - postgres
+    networks:
+      - hubpa-net
+      
 networks:
   hubpa-net:
     driver: bridge
