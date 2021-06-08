@@ -1,12 +1,17 @@
 package it.gov.pagopa.hubpa.payments.controller;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
+import com.opencsv.ICSVWriter;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import it.gov.pagopa.hubpa.payments.entity.Debitor;
+import it.gov.pagopa.hubpa.payments.entity.PaymentPosition;
+import it.gov.pagopa.hubpa.payments.model.*;
+import it.gov.pagopa.hubpa.payments.model.tribute.TributeServiceModel;
+import it.gov.pagopa.hubpa.payments.service.PaymentService;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,35 +22,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import com.opencsv.ICSVWriter;
-import com.opencsv.bean.StatefulBeanToCsv;
-import com.opencsv.bean.StatefulBeanToCsvBuilder;
-import com.opencsv.exceptions.CsvDataTypeMismatchException;
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
-
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import it.gov.pagopa.hubpa.payments.entity.Debitor;
-import it.gov.pagopa.hubpa.payments.entity.PaymentPosition;
-import it.gov.pagopa.hubpa.payments.model.CsvPositionModel;
-import it.gov.pagopa.hubpa.payments.model.FindModel;
-import it.gov.pagopa.hubpa.payments.model.FindResponseModel;
-import it.gov.pagopa.hubpa.payments.model.PaymentJobMinimalModel;
-import it.gov.pagopa.hubpa.payments.model.PaymentMinimalModel;
-import it.gov.pagopa.hubpa.payments.model.PaymentPositionDetailModel;
-import it.gov.pagopa.hubpa.payments.model.PaymentsModel;
-import it.gov.pagopa.hubpa.payments.model.UploadCsvModel;
-import it.gov.pagopa.hubpa.payments.model.UploadCsvPartialModel;
-import it.gov.pagopa.hubpa.payments.model.tribute.TributeServiceModel;
-import it.gov.pagopa.hubpa.payments.service.PaymentService;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController()
 @RequestMapping("payments")
@@ -137,4 +121,13 @@ public class PaymentsController {
 
     }
 
+	@ApiOperation(value = "Pubblica i pagamenti selezionati", notes = "Servizio REST per pubblicare i pagamenti selezionati", response = BooleanResponseModel.class)
+	@PostMapping(value = "publishPayments")
+	public BooleanResponseModel publishPayments(@ApiParam(value = "Lista di ID e data", required = true) @RequestBody final PublishModel publishModel) {
+		logger.info("POST publish payments");
+		for (Long id: publishModel.getIds()) {
+			paymentService.updatePublishPayment(id, publishModel.getPublishDate());
+		}
+		return new BooleanResponseModel(true);
+	}
 }

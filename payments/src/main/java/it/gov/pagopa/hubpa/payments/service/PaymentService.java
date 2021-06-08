@@ -7,6 +7,8 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
+import it.gov.pagopa.hubpa.payments.enumeration.PaymentStatusEnum;
+import it.gov.pagopa.hubpa.payments.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -20,8 +22,6 @@ import it.gov.pagopa.hubpa.payments.entity.PaymentOptions;
 import it.gov.pagopa.hubpa.payments.entity.PaymentPosition;
 import it.gov.pagopa.hubpa.payments.enumeration.JobStatusEnum;
 import it.gov.pagopa.hubpa.payments.iuvgenerator.IuvCodeBusiness;
-import it.gov.pagopa.hubpa.payments.model.FilterModel;
-import it.gov.pagopa.hubpa.payments.model.PaymentJobMinimalModel;
 import it.gov.pagopa.hubpa.payments.repository.DebitorRepository;
 import it.gov.pagopa.hubpa.payments.repository.IncrementalIuvNumberRepository;
 import it.gov.pagopa.hubpa.payments.repository.PaymentPositionRepository;
@@ -30,6 +30,7 @@ import it.gov.pagopa.hubpa.payments.repository.specification.PaymentPositionWith
 import it.gov.pagopa.hubpa.payments.repository.specification.PaymentPositionWithFiscalCode;
 import it.gov.pagopa.hubpa.payments.repository.specification.PaymentPositionWithStatus;
 import it.gov.pagopa.hubpa.payments.repository.specification.PaymentPositionWithTextSearch;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PaymentService {
@@ -200,4 +201,17 @@ public class PaymentService {
 	return paymentPositionRepository.findAllByJobId(jobId);
     }
 
+	@Transactional
+	public void updatePublishPayment(Long id, LocalDate publishDate) {
+		Optional<PaymentPosition> paymentOptional = paymentPositionRepository.findById(id);
+		PaymentPosition payment;
+		if(paymentOptional.isPresent()){
+			payment = paymentOptional.get();
+			if (payment.getStatus().equals(PaymentStatusEnum.BOZZA.getStatus())) {
+				payment.setStatus(PaymentStatusEnum.PUBBLICATO.getStatus());
+				payment.setPublishDate(publishDate);
+				paymentPositionRepository.saveAndFlush(payment);
+			}
+		}
+	}
 }

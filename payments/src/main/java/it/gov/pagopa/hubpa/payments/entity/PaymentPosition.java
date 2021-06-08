@@ -1,6 +1,7 @@
 package it.gov.pagopa.hubpa.payments.entity;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +51,8 @@ public class PaymentPosition {
     private BigDecimal amount;
     @Column(name = "information", nullable = true)
     private String information;
+    @Column(name = "publish_date", nullable = true)
+    private LocalDate publishDate;
 
     @ManyToOne(targetEntity = Debitor.class, fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "debitor_id")
