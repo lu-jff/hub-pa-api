@@ -11,15 +11,19 @@ import it.gov.pagopa.hubpa.payments.model.partner.PaSendRTRes;
 import it.gov.pagopa.hubpa.payments.model.partner.PaVerifyPaymentNoticeReq;
 import it.gov.pagopa.hubpa.payments.model.partner.PaVerifyPaymentNoticeRes;
 import it.gov.pagopa.hubpa.payments.model.partner.StOutcome;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class PartnerService {
 
 	public PaVerifyPaymentNoticeRes paVerifyPaymentNotice(PaVerifyPaymentNoticeReq request) {
 
+		log.debug(String.format("paVerifyPaymentNotice %s", request.getIdPA()));
+
 		// mock response
 		PaVerifyPaymentNoticeRes result = new PaVerifyPaymentNoticeRes();
-		result.setCompanyName("request.getIdBrokerPSP()");
+		result.setCompanyName("company name");
 		result.setOfficeName("officeName");
 		result.setFiscalCodePA("77777777777");
 		result.setPaymentDescription("payment");
@@ -28,6 +32,8 @@ public class PartnerService {
 	}
 
 	public PaGetPaymentRes paGetPayment(PaGetPaymentReq request) {
+
+		log.debug(String.format("paVerifyPaymentNotice %s", request.getIdPA()));
 
 		// mock response
 		PaGetPaymentRes result = new PaGetPaymentRes();
@@ -39,6 +45,8 @@ public class PartnerService {
 	}
 
 	public PaSendRTRes paSendRT(PaSendRTReq request) {
+
+		log.debug(String.format("paVerifyPaymentNotice %s", request.getIdPA()));
 
 		// mock response
 		PaSendRTRes result = new PaSendRTRes();

@@ -19,11 +19,11 @@ import it.gov.pagopa.hubpa.payments.model.partner.PaSendRTRes;
 import it.gov.pagopa.hubpa.payments.model.partner.PaVerifyPaymentNoticeReq;
 import it.gov.pagopa.hubpa.payments.model.partner.PaVerifyPaymentNoticeRes;
 import it.gov.pagopa.hubpa.payments.service.PartnerService;
+import lombok.extern.slf4j.Slf4j;
 
 @Endpoint
+@Slf4j
 public class PartnerEndpoint {
-
-    private Logger logger = LoggerFactory.getLogger(PartnerEndpoint.class);
 
     @Autowired
     private PartnerService partnerService;
@@ -37,7 +37,7 @@ public class PartnerEndpoint {
     public JAXBElement<PaVerifyPaymentNoticeRes> paVerifyPaymentNotice(
             @RequestPayload JAXBElement<PaVerifyPaymentNoticeReq> request) {
 
-        logger.info(" paVerifyPaymentNotice START ");
+        log.info(" paVerifyPaymentNotice START ");
         return factory.createPaVerifyPaymentNoticeRes(partnerService.paVerifyPaymentNotice(request.getValue()));
     }
 
@@ -46,7 +46,7 @@ public class PartnerEndpoint {
     @ResponsePayload
     public JAXBElement<PaGetPaymentRes> paGetPayment(@RequestPayload JAXBElement<PaGetPaymentReq> request) {
 
-        logger.info(" paGetPayment START ");
+        log.info(" paGetPayment START ");
         return factory.createPaGetPaymentRes(partnerService.paGetPayment(request.getValue()));
     }
 
@@ -55,7 +55,7 @@ public class PartnerEndpoint {
     @ResponsePayload
     public JAXBElement<PaSendRTRes> paSendRT(@RequestPayload JAXBElement<PaSendRTReq> request) {
 
-        logger.info(" paSendRT START ");
+        log.info(" paSendRT START ");
         return factory.createPaSendRTRes(partnerService.paSendRT(request.getValue()));
     }
 }
