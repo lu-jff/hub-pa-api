@@ -17,6 +17,7 @@ import it.gov.pagopa.hubpa.payments.model.partner.PaSendRTReq;
 import it.gov.pagopa.hubpa.payments.model.partner.PaSendRTRes;
 import it.gov.pagopa.hubpa.payments.model.partner.PaVerifyPaymentNoticeReq;
 import it.gov.pagopa.hubpa.payments.model.partner.PaVerifyPaymentNoticeRes;
+import it.gov.pagopa.hubpa.payments.model.partner.StOutcome;
 
 @ExtendWith(MockitoExtension.class)
 class PartnerServiceTest {
@@ -63,7 +64,7 @@ class PartnerServiceTest {
 		PaSendRTRes responseBody = partnerService.paSendRT(requestBody);
 
 		// Test postcondiction
-		assertThat(responseBody.getOutcome()).isEqualTo("OK");
+		assertThat(responseBody.getOutcome()).isEqualTo(StOutcome.OK);
 	}
 
 }
