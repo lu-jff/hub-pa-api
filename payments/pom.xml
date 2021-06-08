@@ -149,6 +149,11 @@
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.8.7</version>
+				<configuration>
+      		<excludes>
+          	<exclude>**/config/**</exclude>
+      		</excludes>
+  			</configuration>
 				<executions>
 					<execution>
 						<goals>
@@ -172,15 +177,15 @@
 								<rule>
 									<limits>
 										<limit>
-											<minimum>0.9</minimum>
+											<minimum>0.8</minimum>
 										</limit>
 									</limits>
 								</rule>
 							</rules>
-							<excludes>
-								<exclude>**/*Config*.*</exclude>
-							</excludes>
-						</configuration>
+							<!-- <excludes>
+								<exclude>**/model/**</exclude>
+							</excludes> -->
+						</configuration> 
 					</execution>
 				</executions>
 			</plugin>
