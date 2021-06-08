@@ -34,6 +34,7 @@ steps:
         sonar.projectName=$(SONARCLOUD_PROJECT_NAME)
         sonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
         sonar.junit.reportPaths=target/surefire-reports/
+        sonar.coverage.exclusions=**/config/*
 
 
   - task: Maven@3
