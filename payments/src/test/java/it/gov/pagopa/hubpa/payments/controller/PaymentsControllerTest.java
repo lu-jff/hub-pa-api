@@ -48,9 +48,11 @@ import it.gov.pagopa.hubpa.payments.mock.PaymentJobMinimalModelMock;
 import it.gov.pagopa.hubpa.payments.mock.PaymentMinimalModelMock;
 import it.gov.pagopa.hubpa.payments.mock.PaymentPositionDetailModelMock;
 import it.gov.pagopa.hubpa.payments.mock.PaymentsModelMock;
+import it.gov.pagopa.hubpa.payments.mock.PublishModelMock;
 import it.gov.pagopa.hubpa.payments.mock.TributeServiceModelMock;
 import it.gov.pagopa.hubpa.payments.mock.UploadCsvModelMock;
 import it.gov.pagopa.hubpa.payments.mock.UploadCsvPartialModelMock;
+import it.gov.pagopa.hubpa.payments.model.BooleanResponseModel;
 import it.gov.pagopa.hubpa.payments.model.CsvPositionModel;
 import it.gov.pagopa.hubpa.payments.model.DebitorModel;
 import it.gov.pagopa.hubpa.payments.model.FilterModel;
@@ -60,6 +62,7 @@ import it.gov.pagopa.hubpa.payments.model.PaymentJobMinimalModel;
 import it.gov.pagopa.hubpa.payments.model.PaymentMinimalModel;
 import it.gov.pagopa.hubpa.payments.model.PaymentPositionDetailModel;
 import it.gov.pagopa.hubpa.payments.model.PaymentsModel;
+import it.gov.pagopa.hubpa.payments.model.PublishModel;
 import it.gov.pagopa.hubpa.payments.model.UploadCsvModel;
 import it.gov.pagopa.hubpa.payments.model.UploadCsvPartialModel;
 import it.gov.pagopa.hubpa.payments.model.tribute.TributeServiceModel;
@@ -208,6 +211,18 @@ class PaymentsControllerTest {
 	assertThatNoException();
     }
 
+    @Test
+    void publishPayments() {
+	
+	List<PaymentPosition> paymentPositionList = new ArrayList<>();
+	paymentPositionList.add(DebitorMock.createPaymentPositionMock());
+	PublishModel publishModel = PublishModelMock.getMock();
+	when(paymentService.updatePublishPayment(Mockito.any(),Mockito.any())).thenReturn(Boolean.TRUE);
+
+	BooleanResponseModel aa = paymentsController.publishPayments(publishModel);
+	assertThat(aa.getResult()).isEqualTo(Boolean.TRUE);
+    }
+    
     @Test
     void applciationTest() {
 	PaymentsApplication mm = new PaymentsApplication();

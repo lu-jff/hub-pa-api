@@ -47,7 +47,7 @@ public class PaymentsController {
     private String serviceManagementPath;
 
     private Logger logger = LoggerFactory.getLogger(PaymentsController.class);
-    
+
     @ApiOperation(value = "Salva la lista dei pagamenti", notes = "Servizio REST per salvare la lista dei pagamenti", response = PaymentJobMinimalModel.class)
     @PostMapping(value = "create")
     public PaymentJobMinimalModel createPayments(
@@ -71,8 +71,9 @@ public class PaymentsController {
 	    @ApiParam(value = "Filtri", required = true) @RequestBody final FindModel findModel) {
 
 	logger.info("POST find payments");
-	
-	Pageable paging = PageRequest.of(findModel.getPage(), findModel.getSize(), Sort.by("information").descending().and(Sort.by("insertDate").descending()));
+
+	Pageable paging = PageRequest.of(findModel.getPage(), findModel.getSize(),
+		Sort.by("information").descending().and(Sort.by("insertDate").descending()));
 	Page<PaymentPosition> pageResults = paymentService.getPaymentsByFilters(findModel.getFiscalCode(),
 		findModel.getFilters(), paging);
 
@@ -121,13 +122,14 @@ public class PaymentsController {
 
     }
 
-	@ApiOperation(value = "Pubblica i pagamenti selezionati", notes = "Servizio REST per pubblicare i pagamenti selezionati", response = BooleanResponseModel.class)
-	@PostMapping(value = "publishPayments")
-	public BooleanResponseModel publishPayments(@ApiParam(value = "Lista di ID e data", required = true) @RequestBody final PublishModel publishModel) {
-		logger.info("POST publish payments");
-		for (Long id: publishModel.getIds()) {
-			paymentService.updatePublishPayment(id, publishModel.getPublishDate());
-		}
-		return new BooleanResponseModel(true);
+    @ApiOperation(value = "Pubblica i pagamenti selezionati", notes = "Servizio REST per pubblicare i pagamenti selezionati", response = BooleanResponseModel.class)
+    @PostMapping(value = "publishPayments")
+    public BooleanResponseModel publishPayments(
+	    @ApiParam(value = "Lista di ID e data", required = true) @Valid @RequestBody final PublishModel publishModel) {
+	logger.info("POST publish payments");
+	for (Long id : publishModel.getIds()) {
+	    paymentService.updatePublishPayment(id, publishModel.getPublishDate());
 	}
+	return new BooleanResponseModel(true);
+    }
 }

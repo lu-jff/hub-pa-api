@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -100,6 +101,30 @@ class PaymentServiceTest {
     }
 
     @Test
+    void updatePublishPayment() throws ServletException {
+
+	PaymentPosition paymentPositionMock0 = DebitorMock.createPaymentPositionMock();
+	PaymentPosition paymentPositionMock = DebitorMock.createPaymentPositionMock();
+	paymentPositionMock.setId(1l);
+
+	when(paymentPositionRepository.findById(any(Long.class))).thenReturn(Optional.of(paymentPositionMock0));
+	when(paymentPositionRepository.saveAndFlush(any(PaymentPosition.class))).thenReturn(paymentPositionMock);
+
+	Boolean result = paymentService.updatePublishPayment(1l, LocalDate.now());
+	assertThat(result).isTrue();
+
+	paymentPositionMock0.setStatus(2);
+	when(paymentPositionRepository.findById(any(Long.class))).thenReturn(Optional.of(paymentPositionMock0));
+	result = paymentService.updatePublishPayment(1l, LocalDate.now());
+	assertThat(result).isFalse();
+
+	when(paymentPositionRepository.findById(any(Long.class))).thenReturn(Optional.empty());
+	result = paymentService.updatePublishPayment(1l, LocalDate.now());
+	assertThat(result).isFalse();
+
+    }
+
+    @Test
     void getPaymentsByFilters() {
 	Pageable pageable = PageRequest.of(0, 8);
 	FilterModel filterModel = FilterModelMock.getMock();
@@ -142,8 +167,7 @@ class PaymentServiceTest {
 		.thenReturn(Optional.of(DebitorMock.createPaymentPositionMock()));
 	PaymentPosition pay = paymentService.getPaymentByPaymentPositionId(1l);
 	assertThat(pay.getJobId()).isEqualTo(1);
-	when(paymentPositionRepository.findById(any(Long.class)))
-	.thenReturn(Optional.empty());
+	when(paymentPositionRepository.findById(any(Long.class))).thenReturn(Optional.empty());
 	pay = paymentService.getPaymentByPaymentPositionId(1l);
 	assertThat(pay).isNull();
     }
