@@ -168,50 +168,54 @@ public class PaymentService {
     }
 
     public Page<PaymentPosition> getPaymentsByFilters(String fiscalCode, FilterModel filters, Pageable pageable) {
-	if(filters==null) {
-	    filters=new FilterModel();
+	if (filters == null) {
+	    filters = new FilterModel();
 	}
-	LocalDateTime dateFromTime=null;
-	LocalDateTime dateToTime=null;
-	LocalDate dateFrom=filters.getDateFrom();
-	LocalDate dateTo=filters.getDateTo();
-	if(dateFrom!=null) {
-	    dateFromTime=dateFrom.atStartOfDay();
+	LocalDateTime dateFromTime = null;
+	LocalDateTime dateToTime = null;
+	LocalDate dateFrom = filters.getDateFrom();
+	LocalDate dateTo = filters.getDateTo();
+	if (dateFrom != null) {
+	    dateFromTime = dateFrom.atStartOfDay();
 	}
-	if(dateTo!=null) {
-	    dateToTime=dateTo.atTime(23, 59, 59, 999999999);
+	if (dateTo != null) {
+	    dateToTime = dateTo.atTime(23, 59, 59, 999999999);
 	}
 	Specification<PaymentPosition> spec = Specification.where(new PaymentPositionWithDateFrom(dateFromTime))
-                .and(new PaymentPositionWithDateTo(dateToTime))
-                .and(new PaymentPositionWithFiscalCode(fiscalCode))
-                .and(new PaymentPositionWithStatus(filters.getStatus()))
-                .and(new PaymentPositionWithTextSearch(filters.getTextSearch()));
+		.and(new PaymentPositionWithDateTo(dateToTime)).and(new PaymentPositionWithFiscalCode(fiscalCode))
+		.and(new PaymentPositionWithStatus(filters.getStatus()))
+		.and(new PaymentPositionWithTextSearch(filters.getTextSearch()));
 	return paymentPositionRepository.findAll(spec, pageable);
     }
 
     public PaymentPosition getPaymentByPaymentPositionId(Long id) {
 	Optional<PaymentPosition> res = paymentPositionRepository.findById(id);
-	PaymentPosition paymentPos=null;
-	if(res.isPresent()){
-	    paymentPos=res.get();
+	PaymentPosition paymentPos = null;
+	if (res.isPresent()) {
+	    paymentPos = res.get();
 	}
 	return paymentPos;
     }
-    public List<PaymentPosition> getPaymentsByJobId(Long jobId){
+
+    public List<PaymentPosition> getPaymentsByJobId(Long jobId) {
 	return paymentPositionRepository.findAllByJobId(jobId);
     }
 
-	@Transactional
-	public void updatePublishPayment(Long id, LocalDate publishDate) {
-		Optional<PaymentPosition> paymentOptional = paymentPositionRepository.findById(id);
-		PaymentPosition payment;
-		if(paymentOptional.isPresent()){
-			payment = paymentOptional.get();
-			if (payment.getStatus().equals(PaymentStatusEnum.BOZZA.getStatus())) {
-				payment.setStatus(PaymentStatusEnum.PUBBLICATO.getStatus());
-				payment.setPublishDate(publishDate);
-				paymentPositionRepository.saveAndFlush(payment);
-			}
-		}
+    @Transactional
+    public Boolean updatePublishPayment(Long id, LocalDate publishDate) {
+	Optional<PaymentPosition> paymentOptional = paymentPositionRepository.findById(id);
+	PaymentPosition payment;
+	if (paymentOptional.isPresent()) {
+	    payment = paymentOptional.get();
+	    if (payment.getStatus().equals(PaymentStatusEnum.BOZZA.getStatus())) {
+		payment.setStatus(PaymentStatusEnum.PUBBLICATO.getStatus());
+		payment.setPublishDate(publishDate);
+		paymentPositionRepository.saveAndFlush(payment);
+		return Boolean.TRUE;
+	    }
 	}
+	return Boolean.FALSE;
+    }
+    
+    
 }
