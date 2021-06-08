@@ -33,7 +33,7 @@ public class PartnerService {
 
 	public PaGetPaymentRes paGetPayment(PaGetPaymentReq request) {
 
-		log.debug(String.format("paVerifyPaymentNotice %s", request.getIdPA()));
+		log.debug(String.format("paGetPayment %s", request.getIdPA()));
 
 		// mock response
 		PaGetPaymentRes result = new PaGetPaymentRes();
@@ -46,7 +46,7 @@ public class PartnerService {
 
 	public PaSendRTRes paSendRT(PaSendRTReq request) {
 
-		log.debug(String.format("paVerifyPaymentNotice %s", request.getIdPA()));
+		log.debug(String.format("paSendRT %s", request.getIdPA()));
 
 		// mock response
 		PaSendRTRes result = new PaSendRTRes();
