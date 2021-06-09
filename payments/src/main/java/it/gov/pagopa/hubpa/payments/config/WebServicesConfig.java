@@ -1,5 +1,7 @@
 package it.gov.pagopa.hubpa.payments.config;
 
+import java.util.Properties;
+
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -29,11 +31,24 @@ public class WebServicesConfig extends WsConfigurerAdapter {
 
     @Bean(name = "partner")
     public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema nodeSchema) {
+
+        Properties soapActions = new Properties();
+        soapActions.put("paVerifyPaymentNotice", "paVerifyPaymentNotice");
+        soapActions.put("paGetPayment", "paGetPayment");
+        soapActions.put("paSendRT", "paSendRT");
+
         DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
-        wsdl11Definition.setPortTypeName("paForNode_PortType");
+        wsdl11Definition.setPortTypeName("PartnerPort");
         wsdl11Definition.setLocationUri("/partner");
-        wsdl11Definition.setTargetNamespace("http://pagopa-api.pagopa.gov.it/pa/paForNode.xsd");
+        wsdl11Definition.setTargetNamespace("http://pagopa-api.pagopa.gov.it/partner");
+
+        // Required to make the naming schema compatible to xsd definition
+        wsdl11Definition.setRequestSuffix("Req");
+        wsdl11Definition.setResponseSuffix("Res");
+
         wsdl11Definition.setSchema(nodeSchema);
+        wsdl11Definition.setSoapActions(soapActions);
+
         return wsdl11Definition;
     }
 

@@ -7,7 +7,7 @@ import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
-import org.springframework.ws.soap.addressing.server.annotation.Action;
+import org.springframework.ws.soap.server.endpoint.annotation.SoapAction;
 
 import it.gov.pagopa.hubpa.payments.model.partner.ObjectFactory;
 import it.gov.pagopa.hubpa.payments.model.partner.PaGetPaymentReq;
@@ -29,8 +29,8 @@ public class PartnerEndpoint {
     @Autowired
     private ObjectFactory factory;
 
-    @Action("http://pagopa-api.pagopa.gov.it/service/pa/paForNode/paVerifyPaymentNoticeReq")
-    @PayloadRoot(localPart = "paVerifyPaymentNoticeReq", namespace = "http://pagopa-api.pagopa.gov.it/pa/paForNode.xsd")
+    @SoapAction("paVerifyPaymentNotice")
+    @PayloadRoot(localPart = "paVerifyPaymentNoticeReq", namespace = "http://pagopa-api.pagopa.gov.it/partner")
     @ResponsePayload
     public JAXBElement<PaVerifyPaymentNoticeRes> paVerifyPaymentNotice(
             @RequestPayload JAXBElement<PaVerifyPaymentNoticeReq> request) {
@@ -39,8 +39,8 @@ public class PartnerEndpoint {
         return factory.createPaVerifyPaymentNoticeRes(partnerService.paVerifyPaymentNotice(request.getValue()));
     }
 
-    @Action("http://pagopa-api.pagopa.gov.it/service/pa/paForNode/paGetPaymentReq")
-    @PayloadRoot(localPart = "paGetPaymentReq", namespace = "http://pagopa-api.pagopa.gov.it/pa/paForNode.xsd")
+    @SoapAction("paGetPayment")
+    @PayloadRoot(localPart = "paGetPaymentReq", namespace = "http://pagopa-api.pagopa.gov.it/partner")
     @ResponsePayload
     public JAXBElement<PaGetPaymentRes> paGetPayment(@RequestPayload JAXBElement<PaGetPaymentReq> request) {
 
@@ -48,8 +48,8 @@ public class PartnerEndpoint {
         return factory.createPaGetPaymentRes(partnerService.paGetPayment(request.getValue()));
     }
 
-    @Action("http://pagopa-api.pagopa.gov.it/service/pa/paForNode/paSendRTReq")
-    @PayloadRoot(localPart = "paSendRTReq", namespace = "http://pagopa-api.pagopa.gov.it/pa/paForNode.xsd")
+    @SoapAction("paSendRT")
+    @PayloadRoot(localPart = "paSendRTReq", namespace = "http://pagopa-api.pagopa.gov.it/partner")
     @ResponsePayload
     public JAXBElement<PaSendRTRes> paSendRT(@RequestPayload JAXBElement<PaSendRTReq> request) {
 
