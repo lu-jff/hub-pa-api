@@ -216,6 +216,16 @@ public class PaymentService {
 	}
 	return Boolean.FALSE;
     }
+
+    public Boolean deletePayment(Long paymentId, Integer status) {
+	Boolean result=Boolean.FALSE;
+	PaymentPosition pp = paymentPositionRepository.findByIdAndStatus(paymentId,status);
+	if(pp!=null) {
+	    paymentPositionRepository.delete(pp);
+	    result=Boolean.TRUE;
+	}
+	return result;
+    }
     
     
 }

@@ -12,5 +12,6 @@ import it.gov.pagopa.hubpa.payments.entity.PaymentPosition;
 public interface PaymentPositionRepository extends JpaRepository<PaymentPosition, Long>, JpaSpecificationExecutor<PaymentPosition> {
 
     List<PaymentPosition> findAllByJobId(Long jobId);
+    PaymentPosition findByIdAndStatus(Long jobId,Integer status);
 
 }

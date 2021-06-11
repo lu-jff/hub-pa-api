@@ -1,5 +1,7 @@
 package it.gov.pagopa.hubpa.payments.mock;
 
+import java.time.LocalDate;
+
 import it.gov.pagopa.hubpa.payments.model.PaymentPositionDetailModel;
 
 public class PaymentPositionDetailModelMock {
@@ -12,6 +14,7 @@ public class PaymentPositionDetailModelMock {
 	mock.setFiscalCode("SDE32323");
 	mock.setNominative("Mario Rossi");
 	mock.setStatus(1);
+	mock.setPublishDate(LocalDate.now());
 	return mock;
     }
 }

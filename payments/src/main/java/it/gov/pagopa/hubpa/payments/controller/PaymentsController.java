@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import it.gov.pagopa.hubpa.payments.entity.Debitor;
 import it.gov.pagopa.hubpa.payments.entity.PaymentPosition;
+import it.gov.pagopa.hubpa.payments.enumeration.PaymentStatusEnum;
 import it.gov.pagopa.hubpa.payments.model.*;
 import it.gov.pagopa.hubpa.payments.model.tribute.TributeServiceModel;
 import it.gov.pagopa.hubpa.payments.service.PaymentService;
@@ -130,5 +131,13 @@ public class PaymentsController {
 	    paymentService.updatePublishPayment(id, publishModel.getPublishDate());
 	}
 	return new BooleanResponseModel(true);
+    }
+    
+    @ApiOperation(value = "Cancella un avviso di pagamento", notes = "Servizio REST per cancellare un avviso di pagamento", response = BooleanResponseModel.class)
+    @DeleteMapping(value = "/{fiscalCodeRefP}/{paymentId}")
+    public BooleanResponseModel delete(
+	@PathVariable("paymentId") Long paymentId) {
+	logger.info("POST publish payments");
+	return new BooleanResponseModel(paymentService.deletePayment(paymentId, PaymentStatusEnum.BOZZA.getStatus()));
     }
 }

@@ -26,6 +26,7 @@ public class ConvertPaymentPositionToPaymentPositionDetailModel implements Conve
 	    destination.setAddressLine2(debitor.getCap()+" "+debitor.getArea());
 	    destination.setDescription(source.getDescription());
 	    destination.setStatus(source.getStatus());
+	    destination.setPublishDate(source.getPublishDate());
 	    this.addInstallments(source.getPaymentOptions(),destination);
 	}
 	return destination;
