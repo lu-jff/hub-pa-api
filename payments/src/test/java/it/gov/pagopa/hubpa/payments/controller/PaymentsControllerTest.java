@@ -230,6 +230,15 @@ class PaymentsControllerTest {
     }
     
     @Test
+    void delete() {
+	
+	when(paymentService.deletePayment(Mockito.any(),Mockito.any())).thenReturn(Boolean.TRUE);
+
+	BooleanResponseModel aa = paymentsController.delete(1l);
+	assertThat(aa.getResult()).isEqualTo(Boolean.TRUE);
+    }
+    
+    @Test
     void applciationTest() {
 	PaymentsApplication mm = new PaymentsApplication();
 	Docket api = mm.api();

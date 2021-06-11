@@ -2,6 +2,7 @@ package it.gov.pagopa.hubpa.payments.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -170,6 +171,17 @@ class PaymentServiceTest {
 	when(paymentPositionRepository.findById(any(Long.class))).thenReturn(Optional.empty());
 	pay = paymentService.getPaymentByPaymentPositionId(1l);
 	assertThat(pay).isNull();
+    }
+    
+    @Test
+    void deletePayment() {
+
+	when(paymentPositionRepository.findByIdAndStatus(any(Long.class),any(Integer.class)))
+		.thenReturn(DebitorMock.createPaymentPositionMock());
+	doNothing().when(paymentPositionRepository).delete(any(PaymentPosition.class));
+	
+	Boolean res = paymentService.deletePayment(1l,1);
+	assertThat(res).isTrue();
     }
 
     @Test
