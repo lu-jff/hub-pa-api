@@ -1,9 +1,11 @@
 package it.gov.pagopa.hubpa.payments.model;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,6 +23,7 @@ public class PaymentPositionDetailModel implements Serializable {
     private String addressLine2;
     private String description;
     private Integer status;
-  
+    private LocalDate publishDate;
+    @Setter(value = AccessLevel.NONE)
     private List<InstallmentDetailModel> installments=new ArrayList<>();
 }

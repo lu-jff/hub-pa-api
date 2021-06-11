@@ -43,6 +43,7 @@ public class DebitorMock {
 	mock.setOfficeName(null);
 	mock.setOrganizationFiscalCode("12345678901");
 	mock.setStatus(1);
+	mock.setPublishDate(LocalDate.now());
 
 	mock.addPaymentOptions(createPaymentOptionsMock1());
 	mock.addPaymentOptions(createPaymentOptionsMock2());

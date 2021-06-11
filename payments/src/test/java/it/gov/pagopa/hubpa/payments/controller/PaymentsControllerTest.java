@@ -132,6 +132,9 @@ class PaymentsControllerTest {
 
 	assertThat(debitor.getFiscalCode()).isEqualTo("MRDPLL54H17D542L");
 	assertThat(debitor.getPaymentPosition().get(0).getPaymentOptions().get(0).getIsConclusive()).isTrue();
+	
+	PaymentPositionDetailModel ss = modelMapper.map(paymentPosition, PaymentPositionDetailModel.class);
+	assertThat(ss.getPublishDate()).isNotNull();
 
 	PaymentsModel paymentsModel = modelMapper.map(uploadCsvModelMock, PaymentsModel.class);
 	assertThat(paymentsModel.getDebitors().get(0).getArea()).isEqualTo("Firenze");
@@ -169,6 +172,9 @@ class PaymentsControllerTest {
 	paymentPosition.setInsertDate(null);
 	paymentMinimalModel = modelMapper.map(paymentPosition, PaymentMinimalModel.class);
 	assertThat(paymentMinimalModel.getSurname()).isEqualTo("Rossi");
+	
+	
+	
 
     }
 
@@ -304,5 +310,18 @@ class PaymentsControllerTest {
 
 
     }
+    @Test
+    void getDTO4() {
 
+	PaymentPositionDetailModel payPosDet = PaymentPositionDetailModelMock.getMock();
+	assertThat(payPosDet.getAddressLine1()).isNotNull();
+	assertThat(payPosDet.getAddressLine2()).isNotNull();
+	assertThat(payPosDet.getDescription()).isNotNull();
+	assertThat(payPosDet.getFiscalCode()).isNotNull();
+	assertThat(payPosDet.getNominative()).isNotNull();
+	assertThat(payPosDet.getPublishDate()).isNotNull();
+	assertThat(payPosDet.getStatus()).isNotNull();
+	assertThat(payPosDet.getInstallments()).isNotNull();
+
+    }
 }
