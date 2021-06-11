@@ -1,0 +1,26 @@
+{
+  "csv": {
+    "fileName": "fileName",
+    "rows": [
+      {
+        "address": "string",
+        "amount": 10,
+        "area": "string",
+        "cap": "string",
+        "country": "st",
+        "email": "string",
+        "fiscalCode": "MRARSS96H11H501S",
+        "idTenant": "string",
+        "name": "string",
+        "number": "string",
+        "phone": "string",
+        "province": "string",
+        "reason": "string",
+        "surname": "string",
+        "type": 0
+      }
+    ]
+  },
+  "fiscalCodeCreditor": "77777777777",
+  "jobId": 0
+}
