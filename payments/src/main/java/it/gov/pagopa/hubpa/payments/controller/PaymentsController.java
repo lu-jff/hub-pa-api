@@ -134,7 +134,7 @@ public class PaymentsController {
     }
     
     @ApiOperation(value = "Cancella un avviso di pagamento", notes = "Servizio REST per cancellare un avviso di pagamento", response = BooleanResponseModel.class)
-    @DeleteMapping(value = "/{fiscalCodeRefP}/{paymentId}")
+    @DeleteMapping(value = "/{paymentId}")
     public BooleanResponseModel delete(
 	@PathVariable("paymentId") Long paymentId) {
 	logger.info("POST publish payments");
