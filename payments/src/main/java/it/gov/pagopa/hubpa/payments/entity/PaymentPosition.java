@@ -53,6 +53,12 @@ public class PaymentPosition {
     private String information;
     @Column(name = "publish_date", nullable = true)
     private LocalDate publishDate;
+    @Column(name = "total_options", nullable = false)
+    private Integer totalOptions;
+    @Column(name = "paid_options", nullable = false)
+    private Integer paidOptions;
+    @Column(name = "reported_options", nullable = false)
+    private Integer reportedOptions;
 
     @ManyToOne(targetEntity = Debitor.class, fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "debitor_id")
