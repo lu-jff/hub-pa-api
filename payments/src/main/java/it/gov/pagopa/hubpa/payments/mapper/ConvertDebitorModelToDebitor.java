@@ -57,6 +57,9 @@ public class ConvertDebitorModelToDebitor implements Converter<DebitorModel, Deb
 	paymentPosition.setStatus(paymentPositionModel.getStatus());
 	paymentPosition.setInsertDate(LocalDateTime.now(ZoneId.of("Europe/Paris")));
 	paymentPosition.setAmount(paymentPositionModel.getAmount());
+	paymentPosition.setTotalOptions(paymentPositionModel.getTotalOptions());
+	paymentPosition.setPaidOptions(paymentPositionModel.getPaidOptions());
+	paymentPosition.setReportedOptions(paymentPositionModel.getReportedOptions());
 
 	List<PaymentOptionsModel> paymentOptions = paymentPositionModel.getPaymentOptions();
 	if (paymentOptions != null) {
