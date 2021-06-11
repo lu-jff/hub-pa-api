@@ -163,6 +163,9 @@ public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsv
 	    paymentPositionModel.getPaymentOptions().add(paymentOptionsModel);
 	}
 	
+	paymentPositionModel.setTotalOptions(paymentPositionModel.getPaymentOptions().size());
+	paymentPositionModel.setPaidOptions(0);
+	paymentPositionModel.setReportedOptions(0);
 
 	return paymentPositionModel;
     }
