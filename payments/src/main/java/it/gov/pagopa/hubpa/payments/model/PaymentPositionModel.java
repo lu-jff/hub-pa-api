@@ -23,6 +23,9 @@ public class PaymentPositionModel implements Serializable {
     private String description;
     private Long jobId;
     private BigDecimal amount;
-    
+    private Integer totalOptions;
+    private Integer paidOptions;
+    private Integer reportedOptions;
+
     private List<PaymentOptionsModel> paymentOptions=new ArrayList<>();
 }
