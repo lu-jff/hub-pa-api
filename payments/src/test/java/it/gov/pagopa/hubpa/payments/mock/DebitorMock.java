@@ -49,6 +49,10 @@ public class DebitorMock {
 	mock.addPaymentOptions(createPaymentOptionsMock2());
 	mock.addPaymentOptions(createPaymentOptionsMock3());
 
+	mock.setTotalOptions(mock.getPaymentOptions().size());
+	mock.setPaidOptions(0);
+	mock.setReportedOptions(0);
+
 	return mock;
     }
 
