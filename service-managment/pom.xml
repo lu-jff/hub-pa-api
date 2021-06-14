@@ -9,6 +9,7 @@
     <version>2.4.5</version>
     <relativePath/>
   </parent>
+  <groupId>it.gov.pagopa.hubpa</groupId>
   <artifactId>service-managment</artifactId>
   <version>0.0.4</version>
   <name>service-managment</name>
@@ -131,23 +132,6 @@
             <goals>
               <goal>report</goal>
             </goals>
-          </execution>
-          <execution>
-            <id>jacoco-check</id>
-            <goals>
-              <goal>check</goal>
-            </goals>
-            <configuration>
-              <rules>
-                <rule>
-                  <limits>
-                    <limit>
-                      <minimum>0.9</minimum>
-                    </limit>
-                  </limits>
-                </rule>
-              </rules>
-            </configuration>
           </execution>
         </executions>
       </plugin>
