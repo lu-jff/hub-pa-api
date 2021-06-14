@@ -210,7 +210,7 @@ class PaymentsControllerTest {
 	when(paymentService.getPaymentsByJobId(Mockito.anyLong())).thenReturn(paymentPositionList);
 	when(modelMapperMock.map(any(PaymentPosition.class), any())).thenReturn(csvPositionModel);
 
-	paymentsController.exportCsv(1l, httpServletResponse);
+	paymentsController.exportCsv(1l,"test.csv", httpServletResponse);
 	assertThatNoException();
     }
 
