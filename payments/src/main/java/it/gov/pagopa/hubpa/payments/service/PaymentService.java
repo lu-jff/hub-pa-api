@@ -89,7 +89,6 @@ public class PaymentService {
 		    debitorRepository.saveAndFlush(newDebitor);
 		}
 	    } catch (Exception ee) {
-		ee.printStackTrace();
 		nRecordAdded = nRecordAddedPre;
 		nRecordWarning = nRecordWarningPre;
 	    }
