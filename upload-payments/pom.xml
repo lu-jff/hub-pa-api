@@ -9,6 +9,7 @@
     <version>2.4.5</version>
     <relativePath/>
   </parent>
+  <groupId>it.gov.pagopa.hubpa</groupId>
   <artifactId>upload-payments</artifactId>
   <version>0.0.3</version>
   <name>upload-payments</name>
@@ -120,7 +121,6 @@
           </excludes>
         </configuration>
       </plugin>
-      <!--
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
@@ -138,25 +138,8 @@
               <goal>report</goal>
             </goals>
           </execution>
-          <execution>
-            <id>jacoco-check</id>
-            <goals>
-              <goal>check</goal>
-            </goals>
-            <configuration>
-              <rules>
-                <rule>
-                  <limits>
-                    <limit>
-                      <minimum>0.2</minimum>
-                    </limit>
-                  </limits>
-                </rule>
-              </rules>
-            </configuration>
-          </execution>
         </executions>
-      </plugin> -->
+      </plugin>
     </plugins>
   </build>
   <repositories>

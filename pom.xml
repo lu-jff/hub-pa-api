@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>it.gov.pagopa.hubpa</groupId>
   <artifactId>hub-pa-api</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.1</version>
   <name>api</name>
   <description>API for PagoPA HUB</description>
   <packaging>pom</packaging>
@@ -22,24 +22,4 @@
     <module>support</module>
     <module>report</module>
   </modules>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.7</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
 </project>
