@@ -137,7 +137,7 @@ public class PaymentsController {
     @DeleteMapping(value = "/{paymentId}")
     public BooleanResponseModel delete(
 	@PathVariable("paymentId") Long paymentId) {
-	logger.info("POST publish payments");
+	logger.info("DELETE delete payment");
 	return new BooleanResponseModel(paymentService.deletePayment(paymentId, PaymentStatusEnum.BOZZA.getStatus()));
     }
 }
