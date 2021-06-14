@@ -1,3 +1,0 @@
-POSTGRES_USER=postgres-user-test
-POSTGRES_PASSWORD=postgres-pwd-test
-POSTGRES_DB=hubpa
