@@ -1,6 +1,8 @@
 package it.gov.pagopa.hubpa.payments.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -12,6 +14,7 @@ import java.util.Optional;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 import javax.servlet.ServletException;
 
@@ -31,6 +34,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 import it.gov.pagopa.hubpa.payments.entity.Debitor;
 import it.gov.pagopa.hubpa.payments.entity.IncrementalIuvNumber;
 import it.gov.pagopa.hubpa.payments.entity.PaymentPosition;
+import it.gov.pagopa.hubpa.payments.iuvgenerator.IuvCodeBusiness;
+import it.gov.pagopa.hubpa.payments.iuvgenerator.exception.ValidationException;
 import it.gov.pagopa.hubpa.payments.mock.DebitorMock;
 import it.gov.pagopa.hubpa.payments.mock.FilterModelMock;
 import it.gov.pagopa.hubpa.payments.mock.IncrementalIuvNumberMock;
@@ -65,6 +70,8 @@ class PaymentServiceTest {
     CriteriaQuery criteriaQueryMock;
     @Mock
     Root<PaymentPosition> personRootMock;
+    @Mock
+    Join<Object, Object> joinMock;
 
     @Test
     void create() throws ServletException {
@@ -99,6 +106,11 @@ class PaymentServiceTest {
 	result = paymentService.create(debitorList);
 	assertThat(result.getNRecordFound()).isEqualTo(2);
 
+	when(paymentPositionRepository.saveAndFlush(any(PaymentPosition.class))).thenThrow(new NullPointerException());
+	debitorList.get(0).setPaymentPosition(new ArrayList<>());
+	debitorList.get(1).getPaymentPosition().get(0).setPaymentOptions(null);
+	result = paymentService.create(debitorList);
+	assertThat(result.getNRecordFound()).isEqualTo(1);
     }
 
     @Test
@@ -134,6 +146,8 @@ class PaymentServiceTest {
 	listPay.add(paymentPosition);
 	Page<PaymentPosition> page = new PageImpl<>(listPay);
 
+	when(personRootMock.join(any(String.class))).thenReturn(joinMock);
+
 	Specification<PaymentPosition> spec2 = Specification
 		.where(new PaymentPositionWithDateFrom(filterModel.getDateFrom().atStartOfDay()))
 		.and(new PaymentPositionWithDateTo(filterModel.getDateTo().atTime(23, 59, 59, 999999999)))
@@ -148,13 +162,11 @@ class PaymentServiceTest {
 	filterModel = FilterModelMock.getMock2();
 	Specification<PaymentPosition> spec = Specification.where(new PaymentPositionWithDateFrom(null))
 		.and(new PaymentPositionWithDateTo(null)).and(new PaymentPositionWithFiscalCode(null))
-		.and(new PaymentPositionWithStatus(null)).and(new PaymentPositionWithTextSearch(null));
+		.and(new PaymentPositionWithStatus(null)).and(new PaymentPositionWithTextSearch(null))
+		.and(new PaymentPositionWithTextSearch("")).or(new PaymentPositionWithTextSearch("a"));
 	spec.toPredicate(personRootMock, criteriaQueryMock, criteriaBuilderMock);
 
-	try {
-	    spec2.toPredicate(personRootMock, criteriaQueryMock, criteriaBuilderMock);
-	} catch (Exception e) {
-	}
+	spec2.toPredicate(personRootMock, criteriaQueryMock, criteriaBuilderMock);
 	when(paymentPositionRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
 	result = paymentService.getPaymentsByFilters("", filterModel, pageable);
 	assertThat(result.getSize()).isEqualTo(1);
@@ -172,16 +184,20 @@ class PaymentServiceTest {
 	pay = paymentService.getPaymentByPaymentPositionId(1l);
 	assertThat(pay).isNull();
     }
-    
+
     @Test
     void deletePayment() {
 
-	when(paymentPositionRepository.findByIdAndStatus(any(Long.class),any(Integer.class)))
+	when(paymentPositionRepository.findByIdAndStatus(any(Long.class), any(Integer.class)))
 		.thenReturn(DebitorMock.createPaymentPositionMock());
 	doNothing().when(paymentPositionRepository).delete(any(PaymentPosition.class));
-	
-	Boolean res = paymentService.deletePayment(1l,1);
+
+	Boolean res = paymentService.deletePayment(1l, 1);
 	assertThat(res).isTrue();
+
+	when(paymentPositionRepository.findByIdAndStatus(any(Long.class), any(Integer.class))).thenReturn(null);
+	res = paymentService.deletePayment(1l, 1);
+	assertThat(res).isFalse();
     }
 
     @Test
@@ -189,6 +205,26 @@ class PaymentServiceTest {
 	when(paymentPositionRepository.findAllByJobId(any(Long.class))).thenReturn(null);
 	List<PaymentPosition> pay = paymentService.getPaymentsByJobId(1l);
 	assertThat(pay).isNull();
+    }
+
+    @Test
+    void iuvValidation() {
+	IuvCodeGenerator iuvCodeGenerator = new IuvCodeGenerator.Builder().setAuxDigit(3).setSegregationCode(1).build();
+	IuvCodeBusiness.validate(iuvCodeGenerator);
+	assertThatNoException();
+
+	iuvCodeGenerator = new IuvCodeGenerator.Builder().setAuxDigit(2).setSegregationCode(1).build();
+	IuvCodeBusiness.validate(iuvCodeGenerator);
+	assertThatNoException();
+
+	IuvCodeGenerator iuvCodeGenerator3 = new IuvCodeGenerator.Builder().setAuxDigit(2).setSegregationCode(111).build();
+	assertThatThrownBy(() -> IuvCodeBusiness.validate(iuvCodeGenerator3)).isInstanceOf(ValidationException.class);
+	assertThatNoException();
+
+	
+	IuvCodeGenerator iuvCodeGenerator2 = new IuvCodeGenerator.Builder().setAuxDigit(3).setSegregationCode(null)
+		.build();
+	assertThatThrownBy(() -> IuvCodeBusiness.validate(iuvCodeGenerator2)).isInstanceOf(ValidationException.class);
     }
 
 }
