@@ -19,4 +19,5 @@ public class TransfersModel implements Serializable {
     private String organizationFiscalCode;
     private String reason;
     private String taxonomy;
+    private String ccPostal;
 }
