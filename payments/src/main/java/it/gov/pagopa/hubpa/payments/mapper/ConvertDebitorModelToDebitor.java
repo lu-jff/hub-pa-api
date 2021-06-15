@@ -98,7 +98,7 @@ public class ConvertDebitorModelToDebitor implements Converter<DebitorModel, Deb
 	transfers.setPartialAmount(transfersModel.getPartialAmount());
 	transfers.setReason(transfersModel.getReason());
 	transfers.setTaxonomy(transfersModel.getTaxonomy());
-	transfers.setCcPostal(transfersModel.getCcPostal());
+	transfers.setPostalIban(transfersModel.getPostalIban());
 	return transfers;
     }
 
