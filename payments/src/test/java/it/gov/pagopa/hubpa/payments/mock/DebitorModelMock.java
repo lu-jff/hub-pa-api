@@ -124,6 +124,7 @@ public class DebitorModelMock {
 	mock.setPartialAmount(new BigDecimal(150));
 	mock.setReason("causale tari tefa");
 	mock.setTaxonomy("10/22252/20");
+	mock.setCcPostal("000050570131");
 
 	return mock;
     }

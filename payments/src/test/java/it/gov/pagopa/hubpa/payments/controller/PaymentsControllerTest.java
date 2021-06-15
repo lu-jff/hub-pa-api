@@ -265,6 +265,7 @@ class PaymentsControllerTest {
 	assertThat(transfer.getPaymentOptions()).isNull();
 	assertThat(transfer.getReason()).isNotNull();
 	assertThat(transfer.getTaxonomy()).isNotNull();
+	assertThat(transfer.getCcPostal()).isNotNull();
 
 	FindModel findModel = FindModelMock.getMock();
 	assertThat(findModel.getFilters()).isNotNull();

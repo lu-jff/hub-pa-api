@@ -38,7 +38,9 @@ public class Transfers {
     private String reason;
     @Column(name = "taxonomy", nullable = false)
     private String taxonomy;
-    
+    @Column(name = "cc_postal", nullable = true)
+    private String ccPostal;
+
     @ManyToOne(targetEntity = PaymentOptions.class, fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "payment_option_id")
     @JsonIgnore
