@@ -124,6 +124,10 @@ public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsv
 		TransfersModel transfersModel = new TransfersModel();
 		transfersModel.setPartialAmount(partialAmount);
 		transfersModel.setIban(tributeServiceModel.getIbanPrimary());
+		transfersModel.setPostalIban(tributeServiceModel.getPostalIbanPrimary());
+		transfersModel.setPostalIbanHolder(tributeServiceModel.getPostalIbanHolderPrimary());
+		transfersModel.setPostalAuthCode(tributeServiceModel.getPostalAuthCodePrimary());
+
 		transfersModel.setOrganizationFiscalCode(tributeServiceModel.getFiscalCodePrimaryCreditor());
 		transfersModel.setReason(reason);
 		transfersModel.setTaxonomy(TAXONOMY_PRIMARY);
@@ -146,6 +150,9 @@ public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsv
 		TransfersModel transfersModel = new TransfersModel();
 		transfersModel.setPartialAmount(partialAmount);
 		transfersModel.setIban(tributeServiceModel.getIbanSecondary());
+		transfersModel.setPostalIban(tributeServiceModel.getPostalIbanSecondary());
+		transfersModel.setPostalIbanHolder(tributeServiceModel.getPostalIbanHolderSecondary());
+		transfersModel.setPostalAuthCode(tributeServiceModel.getPostalAuthCodeSecondary());
 		transfersModel.setOrganizationFiscalCode(tributeServiceModel.getFiscalCodeSecondaryCreditor());
 		transfersModel.setReason(reason);
 		transfersModel.setTaxonomy(TAXONOMY_SECONDARY);
@@ -199,6 +206,9 @@ public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsv
 	TransfersModel transfersModel = new TransfersModel();
 	transfersModel.setPartialAmount(totalAmountPrimary);
 	transfersModel.setIban(tributeServiceModel.getIbanPrimary());
+	transfersModel.setPostalIban(tributeServiceModel.getPostalIbanPrimary());
+	transfersModel.setPostalIbanHolder(tributeServiceModel.getPostalIbanHolderPrimary());
+	transfersModel.setPostalAuthCode(tributeServiceModel.getPostalAuthCodePrimary());
 	transfersModel.setOrganizationFiscalCode(tributeServiceModel.getFiscalCodePrimaryCreditor());
 	transfersModel.setReason(row.getReason());
 	transfersModel.setTaxonomy(TAXONOMY_PRIMARY);
@@ -209,6 +219,9 @@ public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsv
 	    transfersModel = new TransfersModel();
 	    transfersModel.setPartialAmount(totalAmountSecondary);
 	    transfersModel.setIban(tributeServiceModel.getIbanSecondary());
+		transfersModel.setPostalIban(tributeServiceModel.getPostalIbanSecondary());
+		transfersModel.setPostalIbanHolder(tributeServiceModel.getPostalIbanHolderSecondary());
+		transfersModel.setPostalAuthCode(tributeServiceModel.getPostalAuthCodeSecondary());
 	    transfersModel.setOrganizationFiscalCode(tributeServiceModel.getFiscalCodeSecondaryCreditor());
 	    transfersModel.setReason(row.getReason());
 	    transfersModel.setTaxonomy(TAXONOMY_SECONDARY);

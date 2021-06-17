@@ -20,4 +20,6 @@ public class TransfersModel implements Serializable {
     private String reason;
     private String taxonomy;
     private String postalIban;
+    private String postalIbanHolder;
+    private String postalAuthCode;
 }

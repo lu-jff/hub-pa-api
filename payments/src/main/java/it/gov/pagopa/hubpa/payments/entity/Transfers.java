@@ -15,6 +15,8 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import org.hibernate.annotations.Check;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +24,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "transfers")
+@Check(constraints = "postal_iban IS NOT NULL AND postal_iban_holder IS NOT NULL AND postal_auth_code IS NOT NULL OR iban IS NOT NULL AND postal_iban IS NULL AND postal_iban_holder IS NULL AND postal_auth_code IS NULL ")
 public class Transfers {
 
     @Id
@@ -30,7 +33,7 @@ public class Transfers {
 
     @Column(name = "partial_amount", nullable = false)
     private BigDecimal partialAmount;
-    @Column(name = "iban", nullable = false)
+    @Column(name = "iban", nullable = true)
     private String iban;
     @Column(name = "organization_fiscal_code", nullable = false)
     private String organizationFiscalCode;
@@ -40,6 +43,10 @@ public class Transfers {
     private String taxonomy;
     @Column(name = "postal_iban", nullable = true)
     private String postalIban;
+    @Column(name = "postal_iban_holder", nullable = true)
+    private String postalIbanHolder;
+    @Column(name = "postal_auth_code", nullable = true)
+    private String postalAuthCode;
 
     @ManyToOne(targetEntity = PaymentOptions.class, fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "payment_option_id")
