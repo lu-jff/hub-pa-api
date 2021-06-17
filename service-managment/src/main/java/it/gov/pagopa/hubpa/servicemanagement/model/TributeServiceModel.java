@@ -10,6 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TributeServiceModel {
+
     private String fiscalCodePrimaryCreditor;
     private String fiscalCodeSecondaryCreditor;
     private String ibanPrimary;
@@ -18,5 +19,10 @@ public class TributeServiceModel {
     private BigDecimal percentageSecondary;
     private LocalDate dueDateUnique;
     List<InstallmentModel> installments;
-
+    private String postalIbanPrimary;
+    private String postalIbanHolderPrimary;
+    private String postalAuthCodePrimary;
+    private String postalIbanSecondary;
+    private String postalIbanHolderSecondary;
+    private String postalAuthCodeSecondary;
 }

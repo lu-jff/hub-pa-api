@@ -17,6 +17,12 @@ public class TributeServiceModelMock {
 	tributeServiceModel.setDueDateUnique(LocalDate.now(ZoneId.of("Europe/Paris")).plusMonths(4));
 	tributeServiceModel.setIbanPrimary("IT67P0300203280575369338247");
 	tributeServiceModel.setIbanSecondary("IT76N0300203280879483594963");
+	tributeServiceModel.setPostalIbanPrimary("IT76N0300203280879483599965");
+	tributeServiceModel.setPostalIbanHolderPrimary("Postal iban holder");
+	tributeServiceModel.setPostalAuthCodePrimary("AuthCode");
+	tributeServiceModel.setPostalIbanSecondary("IT76N0300203280879483599999");
+	tributeServiceModel.setPostalIbanHolderSecondary("Secondary Postal iban holder");
+	tributeServiceModel.setPostalAuthCodeSecondary("AuthCode2");
 	tributeServiceModel.setFiscalCodePrimaryCreditor("VBMPGR31H03F993U");
 	tributeServiceModel.setFiscalCodeSecondaryCreditor("FMMFLN90H13E027F");
 	tributeServiceModel.setPercentageSecondary(BigDecimal.valueOf(5));
@@ -120,4 +126,18 @@ public class TributeServiceModelMock {
 	modelMock.setPercentageSecondary(BigDecimal.valueOf(0));
 	return modelMock;
     }
+
+	/**
+	 * TributeServiceModelMock with:
+	 *  - postalIbanPrimary too long;
+	 *  - postalIbanSecondary invalid according to Iban Regex
+	 */
+	public final static TributeServiceModel validationKOCase9() {
+	
+		TributeServiceModel modelMock = validationOKCase1();
+		modelMock.setPostalIbanPrimary("IT0121221212121212121212121122121212121");
+		modelMock.setPostalIbanSecondary("IT");
+	
+		return modelMock;
+	}
 }

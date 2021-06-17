@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,8 @@ public class ServiceManagementValidator implements Validator {
     @Value("${tefa.date.min}")
     private String dateMinTefaStr;
 
+	private static final Pattern ibanPattern = Pattern.compile("^(?:(?:IT|SM)\\d{2}[A-Z]\\d{22}|CY\\d{2}[A-Z]\\d{23}|NL\\d{2}[A-Z]{4}\\d{10}|LV\\d{2}[A-Z]{4}\\d{13}|(?:BG|BH|GB|IE)\\d{2}[A-Z]{4}\\d{14}|GI\\d{2}[A-Z]{4}\\d{15}|RO\\d{2}[A-Z]{4}\\d{16}|KW\\d{2}[A-Z]{4}\\d{22}|MT\\d{2}[A-Z]{4}\\d{23}|NO\\d{13}|(?:DK|FI|GL|FO)\\d{16}|MK\\d{17}|(?:AT|EE|KZ|LU|XK)\\d{18}|(?:BA|HR|LI|CH|CR)\\d{19}|(?:GE|DE|LT|ME|RS)\\d{20}|IL\\d{21}|(?:AD|CZ|ES|MD|SA)\\d{22}|PT\\d{23}|(?:BE|IS)\\d{24}|(?:FR|MR|MC)\\d{25}|(?:AL|DO|LB|PL)\\d{26}|(?:AZ|HU)\\d{27}|(?:GR|MU)\\d{28})$");
+
     @Override
     public boolean supports(Class<?> clazz) {
 	return TributeServiceModel.class.isAssignableFrom(clazz);
@@ -39,8 +42,6 @@ public class ServiceManagementValidator implements Validator {
 	LocalDate dateMinTefa=LocalDate.parse(dateMinTefaStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
 	ValidationUtils.rejectIfEmptyOrWhitespace(errors, "denomination", "denomination","Denominazione obbligatoria");
-	ValidationUtils.rejectIfEmptyOrWhitespace(errors, "ibanPrimary", "ibanPrimary_code", "Selezionare un IBAN primario");
-	ValidationUtils.rejectIfEmptyOrWhitespace(errors, "ibanSecondary", "ibanSecondary_code", "Selezionare un IBAN secondario");
 	ValidationUtils.rejectIfEmpty(errors, "percentageSecondary", "percentageSecondary", "Percentuale TEFA obbligatoria");
 	ValidationUtils.rejectIfEmpty(errors, "fiscalCodePrimaryCreditor", "fiscalCodePrimaryCreditor", "Codice fiscale ente primario obbligatorio");
 	ValidationUtils.rejectIfEmpty(errors, "fiscalCodeSecondaryCreditor", "fiscalCodeSecondaryCreditor", "Codice fiscale ente secondario obbligatorio");
@@ -48,12 +49,23 @@ public class ServiceManagementValidator implements Validator {
 	if (errors.hasErrors()) {
 	    return;
 	}
-	if(tributeServiceModel.getIbanPrimary().length()>27) {
-	    errors.reject("ibanPrimary", "IBAN primario deve essere di 27 caratteri");
+
+	if (!this.checkIbanExist(tributeServiceModel)) {
+	    errors.reject("ibanExistence", "Iban postale o bancario configurati parzialmente o assenti");
 	}
-	if(tributeServiceModel.getIbanSecondary().length()>27) {
-	    errors.reject("ibanSecondary", "IBAN secondario deve essere di 27 caratteri");
+	if ( tributeServiceModel.getIbanPrimary() != null && !ibanPattern.matcher(tributeServiceModel.getIbanPrimary()).matches()) {
+	    errors.reject("ibanPrimary", "IBAN primario non valido");
 	}
+	if ( tributeServiceModel.getIbanSecondary() != null && !ibanPattern.matcher(tributeServiceModel.getIbanSecondary()).matches()) {
+	    errors.reject("ibanSecondary", "IBAN secondario non valido");
+	}
+	if ( tributeServiceModel.getPostalIbanPrimary() != null && !ibanPattern.matcher(tributeServiceModel.getPostalIbanPrimary()).matches()) {
+	    errors.reject("postalIbanPrimary", "IBAN postale primario non valido");
+	}
+	if ( tributeServiceModel.getPostalIbanSecondary() != null && !ibanPattern.matcher(tributeServiceModel.getPostalIbanSecondary()).matches()) {
+	    errors.reject("postalIbanSecondary", "IBAN postale secondario non valido");
+	}
+	
 	LocalDate duoDateUnique = tributeServiceModel.getDueDateUnique();
 	List<InstallmentModel> installmentList = tributeServiceModel.getInstallments();
 	if (ObjectUtils.isEmpty(installmentList) && ObjectUtils.isEmpty(duoDateUnique)) {
@@ -115,4 +127,25 @@ public class ServiceManagementValidator implements Validator {
 	    errors.reject(this.errors, "La percentuale della TEFA deve essere 0");
 	}
     }
+
+	private boolean checkIbanExist(TributeServiceModel tributeServiceModel) {
+
+		String bIbanP = tributeServiceModel.getIbanPrimary();
+		String pIbanP = tributeServiceModel.getPostalIbanPrimary();
+		String pHolderP = tributeServiceModel.getPostalIbanHolderPrimary();
+		String pAuthP = tributeServiceModel.getPostalAuthCodePrimary();
+
+		String bIbanS = tributeServiceModel.getIbanSecondary();
+		String pIbanS = tributeServiceModel.getPostalIbanSecondary();
+		String pHolderS = tributeServiceModel.getPostalIbanHolderSecondary();
+		String pAuthS = tributeServiceModel.getPostalAuthCodeSecondary();
+
+		boolean checkP = pIbanP != null && pHolderP != null && pAuthP != null
+				|| bIbanP != null && pIbanP == null && pHolderP == null && pAuthP == null;
+
+		boolean checkS = pIbanS != null && pHolderS != null && pAuthS != null
+				|| bIbanS != null && pIbanS == null && pHolderS == null && pAuthS == null;
+
+		return checkP && checkS;
+	}
 }

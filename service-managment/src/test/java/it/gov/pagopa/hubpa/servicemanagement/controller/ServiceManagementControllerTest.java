@@ -82,16 +82,28 @@ class ServiceManagementControllerTest {
     }
 
     @Test
-    void mapperTest() throws ServletException {
-	MappingsConfiguration mm = new MappingsConfiguration();
-	ModelMapper modelMapper = mm.modelMapper();
-	Service serviceMock = ServiceMock.getMock();
-	TributeServiceModel modelMock = TributeServiceModelMock.validationOKCase1();
-	TributeServiceModel tributeServiceModel = modelMapper.map(serviceMock, TributeServiceModel.class);
-	Service service = modelMapper.map(modelMock, Service.class);
-	assertThat(service.getDenomination()).isEqualTo("TariTefa2021");
-	assertThat(tributeServiceModel.getDenomination()).isEqualTo("TariTefa2021");
-    }
+ 	void mapperTest() throws ServletException {
+		MappingsConfiguration mm = new MappingsConfiguration();
+		ModelMapper modelMapper = mm.modelMapper();
+		Service serviceMock = ServiceMock.getMock();
+		TributeServiceModel modelMock = TributeServiceModelMock.validationOKCase1();
+		TributeServiceModel tributeServiceModel = modelMapper.map(serviceMock, TributeServiceModel.class);
+		Service service = modelMapper.map(modelMock, Service.class);
+		assertThat(service.getDenomination()).isEqualTo("TariTefa2021");
+		assertThat(tributeServiceModel.getDenomination()).isEqualTo("TariTefa2021");
+		assertThat(tributeServiceModel.getPostalIbanPrimary())
+				.isEqualTo(serviceMock.getPaymentOptionTemplate().get(0).getTransferTemplate().get(0).getPostalIban());
+		assertThat(tributeServiceModel.getPostalIbanSecondary())
+				.isEqualTo(serviceMock.getPaymentOptionTemplate().get(0).getTransferTemplate().get(1).getPostalIban());		
+		assertThat(tributeServiceModel.getPostalIbanHolderPrimary())
+				.isEqualTo(serviceMock.getPaymentOptionTemplate().get(0).getTransferTemplate().get(0).getPostalIbanHolder());
+		assertThat(tributeServiceModel.getPostalIbanHolderSecondary())
+				.isEqualTo(serviceMock.getPaymentOptionTemplate().get(0).getTransferTemplate().get(1).getPostalIbanHolder());		
+		assertThat(tributeServiceModel.getPostalAuthCodePrimary())
+				.isEqualTo(serviceMock.getPaymentOptionTemplate().get(0).getTransferTemplate().get(0).getPostalAuthCode());
+		assertThat(tributeServiceModel.getPostalAuthCodeSecondary())
+				.isEqualTo(serviceMock.getPaymentOptionTemplate().get(0).getTransferTemplate().get(1).getPostalAuthCode());		
+	}
 
     @Test
     void validationOK() throws ServletException {
@@ -136,6 +148,9 @@ class ServiceManagementControllerTest {
 	assertThat(results.hasErrors()).isFalse();
 	results = getResultValidation(TributeServiceModelMock.validationOKCase3());
 	assertThat(results.hasErrors()).isFalse();
+
+	results = getResultValidation(TributeServiceModelMock.validationKOCase9());
+	assertThat(results.hasErrors()).isTrue();
     }
 
     private BindingResult getResultValidation(TributeServiceModel modelMock) {

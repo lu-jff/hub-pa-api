@@ -141,7 +141,14 @@ class PaymentsControllerTest {
 	assertThat(paymentsModel.getDebitors().get(0).getPaymentPosition().get(0).getTotalOptions()).isEqualTo(4);
 	assertThat(paymentsModel.getDebitors().get(0).getPaymentPosition().get(0).getPaidOptions()).isZero();
 	assertThat(paymentsModel.getDebitors().get(0).getPaymentPosition().get(0).getReportedOptions()).isZero();
-
+	assertThat(paymentsModel.getDebitors().get(0).getPaymentPosition().get(0).getPaymentOptions().get(0).getTransfers()
+			.get(0).getPostalIban()).isEqualTo(uploadCsvModelMock.getTributeService().getPostalIbanPrimary());
+	assertThat(paymentsModel.getDebitors().get(0).getPaymentPosition().get(0).getPaymentOptions().get(0).getTransfers()
+			.get(1).getPostalIban()).isEqualTo(uploadCsvModelMock.getTributeService().getPostalIbanSecondary());
+	assertThat(paymentsModel.getDebitors().get(0).getPaymentPosition().get(0).getPaymentOptions().get(0).getTransfers()
+			.get(0).getPostalAuthCode()).isEqualTo(uploadCsvModelMock.getTributeService().getPostalAuthCodePrimary());
+	assertThat(paymentsModel.getDebitors().get(0).getPaymentPosition().get(0).getPaymentOptions().get(0).getTransfers()
+			.get(1).getPostalAuthCode()).isEqualTo(uploadCsvModelMock.getTributeService().getPostalAuthCodeSecondary());
 	paymentsModel = modelMapper.map(uploadCsvModelNoRateMock, PaymentsModel.class);
 	assertThat(paymentsModel.getDebitors().get(0).getArea()).isEqualTo("Firenze");
 

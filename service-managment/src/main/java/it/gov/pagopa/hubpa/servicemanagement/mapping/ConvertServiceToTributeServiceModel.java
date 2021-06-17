@@ -74,10 +74,19 @@ public class ConvertServiceToTributeServiceModel implements Converter<Service, T
 	if (!transferTemplateList.isEmpty()) {
 	    for (TransferTemplate transferTemplate : transferTemplateList) {
 		String iban = transferTemplate.getIban();
+		String postalIban = transferTemplate.getPostalIban();
+		String postalIbanHolder = transferTemplate.getPostalIbanHolder();
+		String postalAuthCode = transferTemplate.getPostalAuthCode();
 		if (Boolean.TRUE.equals(transferTemplate.getIsSecondaryCreditor())) {
 		    tributeServiceModel.setIbanSecondary(iban);
+			tributeServiceModel.setPostalIbanSecondary(postalIban);
+			tributeServiceModel.setPostalIbanHolderSecondary(postalIbanHolder);
+			tributeServiceModel.setPostalAuthCodeSecondary(postalAuthCode);
 		} else {
 		    tributeServiceModel.setIbanPrimary(iban);
+			tributeServiceModel.setPostalIbanPrimary(postalIban);
+			tributeServiceModel.setPostalIbanHolderPrimary(postalIbanHolder);
+			tributeServiceModel.setPostalAuthCodePrimary(postalAuthCode);
 		}
 	    }
 	}

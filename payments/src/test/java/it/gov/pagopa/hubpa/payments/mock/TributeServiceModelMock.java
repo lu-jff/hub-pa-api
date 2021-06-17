@@ -17,6 +17,12 @@ public class TributeServiceModelMock {
 	tributeServiceModel.setDueDateUnique(LocalDate.now(ZoneId.of("Europe/Paris")).plusMonths(4));
 	tributeServiceModel.setIbanPrimary("IT67P0300203280575369338247");
 	tributeServiceModel.setIbanSecondary("IT76N0300203280879483594963");
+	tributeServiceModel.setPostalIbanPrimary("IT76N0300203280879483594666");
+	tributeServiceModel.setPostalIbanHolderPrimary("postal Iban Holder1 1");
+	tributeServiceModel.setPostalAuthCodePrimary("postalAuthCode1");
+	tributeServiceModel.setPostalIbanSecondary("IT76N0300203280879483594667");
+	tributeServiceModel.setPostalIbanHolderSecondary("postal Iban Holder 2");
+	tributeServiceModel.setPostalAuthCodeSecondary("postalAuthCode2");
 	tributeServiceModel.setFiscalCodePrimaryCreditor("VBMPGR31H03F993U");
 	tributeServiceModel.setFiscalCodeSecondaryCreditor("FMMFLN90H13E027F");
 	tributeServiceModel.setPercentageSecondary(BigDecimal.valueOf(5));
