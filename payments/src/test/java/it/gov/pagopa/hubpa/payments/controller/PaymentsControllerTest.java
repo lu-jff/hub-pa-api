@@ -249,6 +249,19 @@ class PaymentsControllerTest {
 						.isEqualTo(uploadCsvModelMock.getTributeService().getPostalAuthCodeSecondary());
 	}
 
+	@Test
+	void countOptionMapperTest() {
+		
+		MappingsConfiguration mm = new MappingsConfiguration();
+		ModelMapper modelMapper = mm.modelMapper();
+		UploadCsvModel uploadCsvModelMock = UploadCsvModelMock.getMock();
+
+		PaymentsModel paymentsModel = modelMapper.map(uploadCsvModelMock, PaymentsModel.class);
+		assertThat(paymentsModel.getDebitors().get(0).getPaymentPosition().get(0).getTotalOptions()).isEqualTo(4);
+		assertThat(paymentsModel.getDebitors().get(0).getPaymentPosition().get(0).getPaidOptions()).isZero();
+		assertThat(paymentsModel.getDebitors().get(0).getPaymentPosition().get(0).getReportedOptions()).isZero();
+	}
+
     @Test
     void getPayments() {
 	FindModel findModelMock = FindModelMock.getMock();
