@@ -28,7 +28,7 @@ public class ServiceManagementValidator implements Validator {
     @Value("${tefa.date.min}")
     private String dateMinTefaStr;
 
-	private static final Pattern ibanPattern = Pattern.compile("^(?:(?:IT|SM)\\d{2}[A-Z]\\d{22}|CY\\d{2}[A-Z]\\d{23}|NL\\d{2}[A-Z]{4}\\d{10}|LV\\d{2}[A-Z]{4}\\d{13}|(?:BG|BH|GB|IE)\\d{2}[A-Z]{4}\\d{14}|GI\\d{2}[A-Z]{4}\\d{15}|RO\\d{2}[A-Z]{4}\\d{16}|KW\\d{2}[A-Z]{4}\\d{22}|MT\\d{2}[A-Z]{4}\\d{23}|NO\\d{13}|(?:DK|FI|GL|FO)\\d{16}|MK\\d{17}|(?:AT|EE|KZ|LU|XK)\\d{18}|(?:BA|HR|LI|CH|CR)\\d{19}|(?:GE|DE|LT|ME|RS)\\d{20}|IL\\d{21}|(?:AD|CZ|ES|MD|SA)\\d{22}|PT\\d{23}|(?:BE|IS)\\d{24}|(?:FR|MR|MC)\\d{25}|(?:AL|DO|LB|PL)\\d{26}|(?:AZ|HU)\\d{27}|(?:GR|MU)\\d{28})$");
+	private static final Pattern IBAN_PATTERN = Pattern.compile("^(?:(?:IT|SM)\\d{2}[A-Z]\\d{22}|CY\\d{2}[A-Z]\\d{23}|NL\\d{2}[A-Z]{4}\\d{10}|LV\\d{2}[A-Z]{4}\\d{13}|(?:BG|BH|GB|IE)\\d{2}[A-Z]{4}\\d{14}|GI\\d{2}[A-Z]{4}\\d{15}|RO\\d{2}[A-Z]{4}\\d{16}|KW\\d{2}[A-Z]{4}\\d{22}|MT\\d{2}[A-Z]{4}\\d{23}|NO\\d{13}|(?:DK|FI|GL|FO)\\d{16}|MK\\d{17}|(?:AT|EE|KZ|LU|XK)\\d{18}|(?:BA|HR|LI|CH|CR)\\d{19}|(?:GE|DE|LT|ME|RS)\\d{20}|IL\\d{21}|(?:AD|CZ|ES|MD|SA)\\d{22}|PT\\d{23}|(?:BE|IS)\\d{24}|(?:FR|MR|MC)\\d{25}|(?:AL|DO|LB|PL)\\d{26}|(?:AZ|HU)\\d{27}|(?:GR|MU)\\d{28})$");
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -53,16 +53,16 @@ public class ServiceManagementValidator implements Validator {
 	if (!this.checkIbanExist(tributeServiceModel)) {
 	    errors.reject("ibanExistence", "Iban postale o bancario configurati parzialmente o assenti");
 	}
-	if ( tributeServiceModel.getIbanPrimary() != null && !ibanPattern.matcher(tributeServiceModel.getIbanPrimary()).matches()) {
-	    errors.reject("ibanPrimary", "IBAN primario non valido");
+	if (!this.ibanPredicate(tributeServiceModel.getIbanPrimary())) {
+		errors.reject("ibanPrimary", "IBAN primario non valido");
 	}
-	if ( tributeServiceModel.getIbanSecondary() != null && !ibanPattern.matcher(tributeServiceModel.getIbanSecondary()).matches()) {
-	    errors.reject("ibanSecondary", "IBAN secondario non valido");
+	if (!this.ibanPredicate(tributeServiceModel.getIbanSecondary())) {
+		errors.reject("ibanSecondary", "IBAN secondario non valido");
 	}
-	if ( tributeServiceModel.getPostalIbanPrimary() != null && !ibanPattern.matcher(tributeServiceModel.getPostalIbanPrimary()).matches()) {
+	if (!this.ibanPredicate(tributeServiceModel.getPostalIbanPrimary())) {
 	    errors.reject("postalIbanPrimary", "IBAN postale primario non valido");
 	}
-	if ( tributeServiceModel.getPostalIbanSecondary() != null && !ibanPattern.matcher(tributeServiceModel.getPostalIbanSecondary()).matches()) {
+	if (!this.ibanPredicate(tributeServiceModel.getPostalIbanSecondary())) {
 	    errors.reject("postalIbanSecondary", "IBAN postale secondario non valido");
 	}
 	
@@ -147,5 +147,10 @@ public class ServiceManagementValidator implements Validator {
 				|| bIbanS != null && pIbanS == null && pHoldS == null && pAuthS == null;
 
 		return checkP && checkS;
+	}
+
+	private boolean ibanPredicate(String iban){
+
+		return iban == null || iban != null && IBAN_PATTERN.matcher(iban).matches();
 	}
 }
