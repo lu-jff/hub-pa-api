@@ -140,4 +140,179 @@ public class TributeServiceModelMock {
 	
 		return modelMock;
 	}
+
+	/**
+	 * TributeServiceModelMock with:
+	 *  - valid postalIbanPrimary but invalid AuthCodePrimary;
+	 */
+	public final static TributeServiceModel validationKOCase10() {
+	
+		TributeServiceModel modelMock = validationOKCase1();
+		modelMock.setPostalAuthCodePrimary(null);
+	
+		return modelMock;
+	}
+
+	/**
+	 * TributeServiceModelMock with:
+	 *  - valid postalIbanPrimary but invalid IbanholderPrimary;
+	 */
+	public final static TributeServiceModel validationKOCase11() {
+	
+		TributeServiceModel modelMock = validationOKCase1();
+		modelMock.setPostalIbanHolderPrimary(null);
+	
+		return modelMock;
+	}
+
+	/**
+	 * TributeServiceModelMock with:
+	 *  - null postalIbanPrimary;
+	 */
+	public final static TributeServiceModel validationKOCase12() {
+	
+		TributeServiceModel modelMock = validationOKCase1();
+		modelMock.setPostalIbanPrimary(null);
+	
+		return modelMock;
+	}
+
+	/**
+	 * TributeServiceModelMock with:
+	 *  - valid postalIbanSecondary but invalid AuthCodeSecondary;
+	 */
+	public final static TributeServiceModel validationKOCase13() {
+	
+		TributeServiceModel modelMock = validationOKCase1();
+		modelMock.setPostalAuthCodeSecondary(null);
+	
+		return modelMock;
+	}
+
+	/**
+	 * TributeServiceModelMock with:
+	 *  - valid postalIbanSecondary but invalid IbanholderSecondary;
+	 */
+	public final static TributeServiceModel validationKOCase14() {
+	
+		TributeServiceModel modelMock = validationOKCase1();
+		modelMock.setPostalIbanHolderSecondary(null);
+	
+		return modelMock;
+	}
+
+	/**
+	 * TributeServiceModelMock with:
+	 *  - null postalIbanSecondary;
+	 */
+	public final static TributeServiceModel validationKOCase15() {
+	
+		TributeServiceModel modelMock = validationOKCase1();
+		modelMock.setPostalIbanSecondary(null);
+	
+		return modelMock;
+	}
+
+	/**
+	 * TributeServiceModelMock with:
+	 *  - null ibanPrimary;
+	 */
+	public final static TributeServiceModel validationKOCase16() {
+	
+		TributeServiceModel modelMock = validationOKCase1();
+		modelMock.setIbanPrimary(null);
+		modelMock.setPostalIbanPrimary(null);
+
+		return modelMock;
+	}
+
+	/**
+	 * TributeServiceModelMock with:
+	 *  - null ibanSecondary;
+	 */
+	public final static TributeServiceModel validationKOCase17() {
+	
+		TributeServiceModel modelMock = validationOKCase1();
+		modelMock.setIbanSecondary(null);
+		modelMock.setPostalIbanSecondary(null);
+
+		return modelMock;
+	}
+
+	/**
+	 * TributeServiceModelMock with:
+	 *  - null ibanPrimary and PostalIbanHolderPrimary;
+	 */
+	public final static TributeServiceModel validationKOCase18() {
+	
+		TributeServiceModel modelMock = validationOKCase1();
+		modelMock.setIbanPrimary(null);
+		modelMock.setPostalIbanHolderPrimary(null);
+
+		return modelMock;
+	}
+
+	/**
+	 * TributeServiceModelMock with:
+	 *  - null ibanSecondary and PostalIbanHolderSecondary;
+	 */
+	public final static TributeServiceModel validationKOCase19() {
+	
+		TributeServiceModel modelMock = validationOKCase1();
+		modelMock.setIbanSecondary(null);
+		modelMock.setPostalIbanHolderSecondary(null);
+
+		return modelMock;
+	}
+
+		/**
+	 * TributeServiceModelMock with:
+	 *  - null ibanPrimary and PostalAuthCodePrimary;
+	 */
+	public final static TributeServiceModel validationKOCase20() {
+	
+		TributeServiceModel modelMock = validationOKCase1();
+		modelMock.setIbanPrimary(null);
+		modelMock.setPostalAuthCodePrimary(null);
+
+		return modelMock;
+	}
+
+	/**
+	 * TributeServiceModelMock with:
+	 *  - null ibanSecondary and PostalAuthCodeSecondary;
+	 */
+	public final static TributeServiceModel validationKOCase21() {
+	
+		TributeServiceModel modelMock = validationOKCase1();
+		modelMock.setIbanSecondary(null);
+		modelMock.setPostalAuthCodeSecondary(null);
+
+		return modelMock;
+	}
+
+
+	/**
+	 * TributeServiceModelMock with:
+	 *  - null ibanSecondary;
+	 */
+	public final static TributeServiceModel validationOKCase22() {
+	
+		TributeServiceModel modelMock = validationOKCase1();
+		modelMock.setIbanSecondary(null);
+
+		return modelMock;
+	}
+
+		/**
+	 * TributeServiceModelMock with:
+	 *  - null ibanSecondary;
+	 */
+	public final static TributeServiceModel validationOKCase23() {
+	
+		TributeServiceModel modelMock = validationOKCase1();
+		modelMock.setIbanPrimary(null);
+
+		return modelMock;
+	}
 }

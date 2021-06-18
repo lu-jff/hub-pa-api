@@ -23,6 +23,9 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "transfer_template")
+/**
+ * At least one of postal iban and bank iban 
+ */
 @Check(constraints = "postal_iban IS NOT NULL AND postal_iban_holder IS NOT NULL AND postal_auth_code IS NOT NULL OR iban IS NOT NULL AND postal_iban IS NULL AND postal_iban_holder IS NULL AND postal_auth_code IS NULL ")
 
 public class TransferTemplate {
