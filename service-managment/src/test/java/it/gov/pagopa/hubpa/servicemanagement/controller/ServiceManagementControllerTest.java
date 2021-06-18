@@ -159,7 +159,7 @@ class ServiceManagementControllerTest {
     }
 
 	@Test
-	void validationTributeWithInvalidIBan() throws ServletException {
+	void validationInvalidPrimaryIBan() throws ServletException {
 		BindingResult results;
 
 		results = getResultValidation(TributeServiceModelMock.validationKOCase9());
@@ -174,6 +174,21 @@ class ServiceManagementControllerTest {
 		results = getResultValidation(TributeServiceModelMock.validationKOCase12());
 		assertThat(results.hasErrors()).isTrue();
 
+		results = getResultValidation(TributeServiceModelMock.validationKOCase16());
+		assertThat(results.hasErrors()).isTrue();
+
+		results = getResultValidation(TributeServiceModelMock.validationKOCase18());
+		assertThat(results.hasErrors()).isTrue();
+
+		results = getResultValidation(TributeServiceModelMock.validationKOCase20());
+		assertThat(results.hasErrors()).isTrue();
+
+	}
+
+	@Test
+	void validationInvalidSecondaryIBan() throws ServletException {
+		BindingResult results;
+
 		results = getResultValidation(TributeServiceModelMock.validationKOCase13());
 		assertThat(results.hasErrors()).isTrue();
 
@@ -183,20 +198,12 @@ class ServiceManagementControllerTest {
 		results = getResultValidation(TributeServiceModelMock.validationKOCase15());
 		assertThat(results.hasErrors()).isTrue();
 
-		results = getResultValidation(TributeServiceModelMock.validationKOCase16());
-		assertThat(results.hasErrors()).isTrue();
-
 		results = getResultValidation(TributeServiceModelMock.validationKOCase17());
-		assertThat(results.hasErrors()).isTrue();
-
-		results = getResultValidation(TributeServiceModelMock.validationKOCase18());
 		assertThat(results.hasErrors()).isTrue();
 
 		results = getResultValidation(TributeServiceModelMock.validationKOCase19());
 		assertThat(results.hasErrors()).isTrue();
 
-		results = getResultValidation(TributeServiceModelMock.validationKOCase20());
-		assertThat(results.hasErrors()).isTrue();
 
 		results = getResultValidation(TributeServiceModelMock.validationKOCase21());
 		assertThat(results.hasErrors()).isTrue();

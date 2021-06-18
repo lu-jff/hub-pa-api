@@ -17,13 +17,13 @@ public class IbanValidator implements ConstraintValidator<Iban, String> {
     private static final String IBAN_EMIRATES = "AE\\d{21}";
     private static final String IBAN_ALBANIA = "AL\\d{10}[A-Z0-9]{16}";
 
-    private static final List<Pattern> IBAN_PATTERNS = new ArrayList<Pattern>(Arrays.asList(Pattern.compile(IBAN_ITALY),
+    private static final List<Pattern> IBAN_PATTERNS = new ArrayList<>(Arrays.asList(Pattern.compile(IBAN_ITALY),
             Pattern.compile(IBAN_ANDORRA), Pattern.compile(IBAN_EMIRATES), Pattern.compile(IBAN_ALBANIA)));
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext arg1) {
 
-        return value == null || value.length() == 0 ? false
-                : IBAN_PATTERNS.stream().allMatch(pattern -> pattern.matcher(value).matches());
+        return value == null || value.length() == 0 ? Boolean.FALSE
+                : IBAN_PATTERNS.stream().anyMatch(pattern -> pattern.matcher(value).matches());
     }
 }
