@@ -28,8 +28,6 @@ public class ServiceManagementValidator implements Validator {
     @Value("${tefa.date.min}")
     private String dateMinTefaStr;
 
-    private static final IBANValidator ibanValidator = IBANValidator.getInstance();
-			
     @Override
     public boolean supports(Class<?> clazz) {
 	return TributeServiceModel.class.isAssignableFrom(clazz);
@@ -151,6 +149,6 @@ public class ServiceManagementValidator implements Validator {
 
 	private boolean ibanPredicate(String iban) {
 
-		return iban == null || ibanValidator.isValid(iban);
+		return iban == null || IBANValidator.getInstance().isValid(iban);
 	}
 }
