@@ -3,11 +3,9 @@ package it.gov.pagopa.hubpa.servicemanagement.validator;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
 
+import org.apache.commons.validator.routines.IBANValidator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -30,13 +28,7 @@ public class ServiceManagementValidator implements Validator {
     @Value("${tefa.date.min}")
     private String dateMinTefaStr;
 
-	private static final String IBAN_ITALY = "IT\\d{2}[A-Z]{1}\\d{10}[A-Z0-9]{12}";
-    private static final String IBAN_ANDORRA = "AD\\d{10}[A-Z0-9]{12}";
-    private static final String IBAN_EMIRATES = "AE\\d{21}";
-    private static final String IBAN_ALBANIA = "AL\\d{10}[A-Z0-9]{16}";
-
-    private static final List<Pattern> IBAN_PATTERNS = new ArrayList<>(Arrays.asList(Pattern.compile(IBAN_ITALY),
-            Pattern.compile(IBAN_ANDORRA), Pattern.compile(IBAN_EMIRATES), Pattern.compile(IBAN_ALBANIA)));
+    private static final IBANValidator ibanValidator = IBANValidator.getInstance();
 			
     @Override
     public boolean supports(Class<?> clazz) {
@@ -159,6 +151,6 @@ public class ServiceManagementValidator implements Validator {
 
 	private boolean ibanPredicate(String iban) {
 
-		return iban == null || IBAN_PATTERNS.stream().anyMatch(pattern -> pattern.matcher(iban).matches());
+		return iban == null || ibanValidator.isValid(iban);
 	}
 }
