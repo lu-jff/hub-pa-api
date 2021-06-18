@@ -13,7 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import it.gov.pagopa.hubpa.payments.annotation.validation.implement.IbanCustomValidator;
 
 @ExtendWith(MockitoExtension.class)
-public class IbanCustomValidatorTest {
+class IbanCustomValidatorTest {
 
     @InjectMocks
     private IbanCustomValidator ibanValidator;
