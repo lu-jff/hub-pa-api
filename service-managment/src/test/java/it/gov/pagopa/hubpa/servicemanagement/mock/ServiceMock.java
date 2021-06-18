@@ -25,7 +25,7 @@ public class ServiceMock {
 
 	TransferTemplate tt = new TransferTemplate();
 	tt.setIban("IT67P0300203280575369338247");
-	tt.setPostalIban("IT76N0300203280879483594666");
+	tt.setPostalIban("IT60X0542811101000000123456");
 	tt.setPostalIbanHolder("postal Iban Holder");
 	tt.setPostalAuthCode("postalAuthCode");
 	tt.setIsSecondaryCreditor(false);
@@ -33,7 +33,7 @@ public class ServiceMock {
 	pp.addTransferTemplate(tt);
 	tt = new TransferTemplate();
 	tt.setIban("IT76N0300203280879483594963");
-	tt.setPostalIban("IT76N0300203280879483594666");
+	tt.setPostalIban("IT60X0542811101000000123456");
 	tt.setPostalIbanHolder("postal Iban Holder");
 	tt.setPostalAuthCode("postalAuthCode");;
 	tt.setIsSecondaryCreditor(true);
@@ -49,7 +49,7 @@ public class ServiceMock {
 
 	tt = new TransferTemplate();
 	tt.setIban("IT67P0300203280575369338247");
-	tt.setPostalIban("IT76N0300203280879483594666");
+	tt.setPostalIban("IT60X0542811101000000123456");
 	tt.setPostalIbanHolder("postal Iban Holder");
 	tt.setPostalAuthCode("postalAuthCode");;
 	tt.setIsSecondaryCreditor(false);
@@ -65,7 +65,7 @@ public class ServiceMock {
 
 	tt = new TransferTemplate();
 	tt.setIban("IT67P0300203280575369338247");
-	tt.setPostalIban("IT76N0300203280879483594666");
+	tt.setPostalIban("IT60X0542811101000000123456");
 	tt.setPostalIbanHolder("postal Iban Holder");
 	tt.setPostalAuthCode("postalAuthCode");
 	tt.setIsSecondaryCreditor(false);
@@ -73,7 +73,7 @@ public class ServiceMock {
 	pp.addTransferTemplate(tt);
 	tt = new TransferTemplate();
 	tt.setIban("IT76N0300203280879483594963");
-	tt.setPostalIban("IT76N0300203280879483594666");
+	tt.setPostalIban("IT60X0542811101000000123456");
 	tt.setPostalIbanHolder("postal Iban Holder");
 	tt.setPostalAuthCode("postalAuthCode");
 	tt.setIsSecondaryCreditor(true);
@@ -90,7 +90,7 @@ public class ServiceMock {
 
 	tt = new TransferTemplate();
 	tt.setIban("IT67P0300203280575369338247");
-	tt.setPostalIban("IT76N0300203280879483594666");
+	tt.setPostalIban("IT60X0542811101000000123456");
 	tt.setPostalIbanHolder("postal Iban Holder");
 	tt.setPostalAuthCode("postalAuthCode");
 	tt.setIsSecondaryCreditor(false);
@@ -98,7 +98,7 @@ public class ServiceMock {
 	pp.addTransferTemplate(tt);
 	tt = new TransferTemplate();
 	tt.setIban("IT76N0300203280879483594963");
-	tt.setPostalIban("IT76N0300203280879483594666");
+	tt.setPostalIban("IT60X0542811101000000123456");
 	tt.setPostalIbanHolder("postal Iban Holder");
 	tt.setPostalAuthCode("postalAuthCode");
 	tt.setIsSecondaryCreditor(true);
