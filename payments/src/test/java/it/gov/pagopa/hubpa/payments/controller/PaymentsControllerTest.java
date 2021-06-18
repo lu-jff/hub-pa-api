@@ -235,6 +235,27 @@ class PaymentsControllerTest {
 
     }
 
+	@Test
+	void ibanMapperTest() {
+		MappingsConfiguration mm = new MappingsConfiguration();
+		ModelMapper modelMapper = mm.modelMapper();
+		UploadCsvModel uploadCsvModelMock = UploadCsvModelMock.getMock();
+
+		PaymentsModel paymentsModel = modelMapper.map(uploadCsvModelMock, PaymentsModel.class);
+		assertThat(paymentsModel.getDebitors().get(0).getPaymentPosition().get(0).getPaymentOptions().get(0)
+				.getTransfers().get(0).getPostalIban())
+						.isEqualTo(uploadCsvModelMock.getTributeService().getPostalIbanPrimary());
+		assertThat(paymentsModel.getDebitors().get(0).getPaymentPosition().get(0).getPaymentOptions().get(0)
+				.getTransfers().get(1).getPostalIban())
+						.isEqualTo(uploadCsvModelMock.getTributeService().getPostalIbanSecondary());
+		assertThat(paymentsModel.getDebitors().get(0).getPaymentPosition().get(0).getPaymentOptions().get(0)
+				.getTransfers().get(0).getPostalAuthCode())
+						.isEqualTo(uploadCsvModelMock.getTributeService().getPostalAuthCodePrimary());
+		assertThat(paymentsModel.getDebitors().get(0).getPaymentPosition().get(0).getPaymentOptions().get(0)
+				.getTransfers().get(1).getPostalAuthCode())
+						.isEqualTo(uploadCsvModelMock.getTributeService().getPostalAuthCodeSecondary());
+	}
+
     @Test
     void getPayments() {
 	FindModel findModelMock = FindModelMock.getMock();

@@ -5,8 +5,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.validation.constraints.Pattern;
-
 import it.gov.pagopa.hubpa.payments.annotation.validation.Iban;
 import lombok.Getter;
 import lombok.Setter;
