@@ -132,19 +132,19 @@ public class ServiceManagementValidator implements Validator {
 
 		String bIbanP = tributeServiceModel.getIbanPrimary();
 		String pIbanP = tributeServiceModel.getPostalIbanPrimary();
-		String pHolderP = tributeServiceModel.getPostalIbanHolderPrimary();
+		String pHoldP = tributeServiceModel.getPostalIbanHolderPrimary();
 		String pAuthP = tributeServiceModel.getPostalAuthCodePrimary();
 
 		String bIbanS = tributeServiceModel.getIbanSecondary();
 		String pIbanS = tributeServiceModel.getPostalIbanSecondary();
-		String pHolderS = tributeServiceModel.getPostalIbanHolderSecondary();
+		String pHoldS = tributeServiceModel.getPostalIbanHolderSecondary();
 		String pAuthS = tributeServiceModel.getPostalAuthCodeSecondary();
 
-		boolean checkP = pIbanP != null && pHolderP != null && pAuthP != null
-				|| bIbanP != null && pIbanP == null && pHolderP == null && pAuthP == null;
+		boolean checkP = pIbanP != null && pHoldP != null && pAuthP != null
+				|| bIbanP != null && pIbanP == null && pHoldP == null && pAuthP == null;
 
-		boolean checkS = pIbanS != null && pHolderS != null && pAuthS != null
-				|| bIbanS != null && pIbanS == null && pHolderS == null && pAuthS == null;
+		boolean checkS = pIbanS != null && pHoldS != null && pAuthS != null
+				|| bIbanS != null && pIbanS == null && pHoldS == null && pAuthS == null;
 
 		return checkP && checkS;
 	}
