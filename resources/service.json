@@ -3,8 +3,14 @@
   "dueDateUnique": "2021-07-01",
   "fiscalCodePrimaryCreditor": "77777777777",
   "fiscalCodeSecondaryCreditor": "77777777777",
-  "ibanPrimary": "string",
-  "ibanSecondary": "string",
+  "ibanPrimary": "IT67P0300203280575369338247",
+  "ibanSecondary": "IT67P0300203280575369338247",
+  "postalIbanPrimary": "IT67P0300203280575369338247",
+  "postalIbanHolderPrimary": "holder",
+  "postalAuthCodePrimary": "auth",
+    "postalIbanSecondary": "IT67P0300203280575369338247",
+  "postalIbanHolderSecondary": "holder",
+  "postalAuthCodeSecondary": "auth",
   "installments": [
     {
       "dueDate": "2021-07-01",
