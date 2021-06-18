@@ -151,6 +151,6 @@ public class ServiceManagementValidator implements Validator {
 
 	private boolean ibanPredicate(String iban){
 
-		return iban == null || iban != null && IBAN_PATTERN.matcher(iban).matches();
+		return iban == null || IBAN_PATTERN.matcher(iban).matches();
 	}
 }
