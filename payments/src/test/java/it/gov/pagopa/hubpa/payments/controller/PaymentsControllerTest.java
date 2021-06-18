@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -123,7 +124,9 @@ class PaymentsControllerTest {
 	MappingsConfiguration mm = new MappingsConfiguration();
 	ModelMapper modelMapper = mm.modelMapper();
 	Debitor debitor1 = DebitorMock.getMock();
+	Debitor debitor2 = DebitorMock.getMock();
 	PaymentPosition paymentPosition = debitor1.getPaymentPosition().get(0);
+	PaymentPosition paymentPosition2 = debitor2.getPaymentPosition().get(0);
 	DebitorModel modelMock = DebitorModelMock.createDebitor1();
 	UploadCsvModel uploadCsvModelMock = UploadCsvModelMock.getMock();
 	UploadCsvModel uploadCsvModelNoRateMock = UploadCsvModelMock.getMockNoRate();
@@ -133,8 +136,29 @@ class PaymentsControllerTest {
 	assertThat(debitor.getFiscalCode()).isEqualTo("MRDPLL54H17D542L");
 	assertThat(debitor.getPaymentPosition().get(0).getPaymentOptions().get(0).getIsConclusive()).isTrue();
 	
+	modelMock.getPaymentPosition().get(0).getPaymentOptions().get(0).setTransfers(null);
+	
+	debitor = modelMapper.map(modelMock, Debitor.class);
+	assertThat(debitor.getFiscalCode()).isEqualTo("MRDPLL54H17D542L");
+	
+	modelMock.getPaymentPosition().get(0).setPaymentOptions(null);
+	debitor = modelMapper.map(modelMock, Debitor.class);
+	assertThat(debitor.getFiscalCode()).isEqualTo("MRDPLL54H17D542L");
+
+	modelMock.setPaymentPosition(null);
+	debitor = modelMapper.map(modelMock, Debitor.class);
+	assertThat(debitor.getFiscalCode()).isEqualTo("MRDPLL54H17D542L");
+
 	PaymentPositionDetailModel ss = modelMapper.map(paymentPosition, PaymentPositionDetailModel.class);
 	assertThat(ss.getPublishDate()).isNotNull();
+	
+	paymentPosition2.getDebitor().getPaymentPosition().get(0).setPaymentOptions(null);
+	ss = modelMapper.map(paymentPosition2, PaymentPositionDetailModel.class);
+	assertThat(ss.getPublishDate()).isNotNull();
+	
+	paymentPosition2.setDebitor(null);
+	ss = modelMapper.map(paymentPosition2, PaymentPositionDetailModel.class);
+	assertThat(ss.getPublishDate()).isNull();
 
 	PaymentsModel paymentsModel = modelMapper.map(uploadCsvModelMock, PaymentsModel.class);
 	assertThat(paymentsModel.getDebitors().get(0).getArea()).isEqualTo("Firenze");
@@ -176,15 +200,38 @@ class PaymentsControllerTest {
 	paymentPosition.setPaymentOptions(null);
 	csvPositionModel = modelMapper.map(paymentPosition, CsvPositionModel.class);
 	assertThat(csvPositionModel.getFiscalCode()).isEqualTo("MRDPLL54H17D542L");
-
 	
 	paymentPosition.setInformation("POSSIBLE_DUPLICATE");
 	paymentPosition.setInsertDate(null);
 	paymentMinimalModel = modelMapper.map(paymentPosition, PaymentMinimalModel.class);
 	assertThat(paymentMinimalModel.getSurname()).isEqualTo("Rossi");
 	
+	uploadCsvModelMock.getTributeService().setPercentageSecondary(BigDecimal.ZERO);
+	PaymentsModel paymentsModel2 = modelMapper.map(uploadCsvModelMock, PaymentsModel.class);
+	assertThat(paymentsModel2.getDebitors().get(0).getArea()).isEqualTo("Firenze");
 	
 	
+	uploadCsvModelMock.getTributeService().getInstallments().get(0).setPercentageSecondary(null);
+	paymentsModel2 = modelMapper.map(uploadCsvModelMock, PaymentsModel.class);
+	assertThat(paymentsModel2.getDebitors().get(0).getArea()).isEqualTo("Firenze");
+	
+	uploadCsvModelMock.getTributeService().getInstallments().get(0).setPercentageSecondary(new BigDecimal(100));
+	paymentsModel2 = modelMapper.map(uploadCsvModelMock, PaymentsModel.class);
+	assertThat(paymentsModel2.getDebitors().get(0).getArea()).isEqualTo("Firenze");
+
+	uploadCsvModelMock.getTributeService().getInstallments().get(0).setPercentagePrimary(null);
+	uploadCsvModelMock.getTributeService().setPercentageSecondary(null);
+	paymentsModel2 = modelMapper.map(uploadCsvModelMock, PaymentsModel.class);
+	assertThat(paymentsModel2.getDebitors().get(0).getArea()).isEqualTo("Firenze");
+
+	uploadCsvModelMock.getTributeService().getInstallments().get(0).setPercentagePrimary(BigDecimal.ZERO);
+	paymentsModel2 = modelMapper.map(uploadCsvModelMock, PaymentsModel.class);
+	assertThat(paymentsModel2.getDebitors().get(0).getArea()).isEqualTo("Firenze");
+
+	
+	uploadCsvModelMock.getTributeService().setDueDateUnique(null);
+	paymentsModel2 = modelMapper.map(uploadCsvModelMock, PaymentsModel.class);
+	assertThat(paymentsModel2.getDebitors().get(0).getArea()).isEqualTo("Firenze");
 
     }
 
@@ -249,7 +296,7 @@ class PaymentsControllerTest {
     }
     
     @Test
-    void applciationTest() {
+    void applicationTest() {
 	PaymentsApplication mm = new PaymentsApplication();
 	Docket api = mm.api();
 	assertThat(api).isNotNull();

@@ -86,7 +86,7 @@ public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsv
 	BigDecimal totalAmountPrimary = amount;
 	BigDecimal totalAmountSecondary = BigDecimal.ZERO;
 	BigDecimal totalPercentageSecondary = tributeServiceModel.getPercentageSecondary();
-	if (totalPercentageSecondary.doubleValue() > 0) {
+	if (totalPercentageSecondary != null && totalPercentageSecondary.doubleValue() > 0) {
 	    totalAmountSecondary = this.percentage(amount, totalPercentageSecondary)
 		    .round(new MathContext(4, RoundingMode.HALF_UP));
 	    totalAmountPrimary = amount.subtract(totalAmountSecondary);
@@ -94,11 +94,8 @@ public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsv
 
 	BigDecimal residualAmountPrimary = new BigDecimal(totalAmountPrimary.toString());
 	BigDecimal residualAmountSecondary = new BigDecimal(totalAmountSecondary.toString());
-
-	if (dueDateUnique != null) {
-	    paymentPositionModel.getPaymentOptions().add(this.createPaymentPositionUnique(tributeServiceModel, row,
-		    totalAmountPrimary, totalAmountSecondary));
-	}
+	this.addPaymentOptionUnique(paymentPositionModel, dueDateUnique, tributeServiceModel, row, totalAmountPrimary,
+		totalAmountSecondary);
 
 	for (InstallmentModel installment : installments) {
 
@@ -175,6 +172,17 @@ public class ConvertUploadCsvModelToPaymentsModel implements Converter<UploadCsv
 	paymentPositionModel.setReportedOptions(0);
 
 	return paymentPositionModel;
+    }
+
+    private void addPaymentOptionUnique(PaymentPositionModel paymentPositionModel, LocalDate dueDateUnique,
+	    TributeServiceModel tributeServiceModel, CsvRowModel row, BigDecimal totalAmountPrimary,
+	    BigDecimal totalAmountSecondary) {
+
+	if (dueDateUnique != null) {
+	    paymentPositionModel.getPaymentOptions().add(this.createPaymentPositionUnique(tributeServiceModel, row,
+		    totalAmountPrimary, totalAmountSecondary));
+	}
+
     }
 
     private List<InstallmentModel> getArrayListIfNull(List<InstallmentModel> installments) {
