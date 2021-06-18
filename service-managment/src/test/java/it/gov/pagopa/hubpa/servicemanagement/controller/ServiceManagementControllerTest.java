@@ -156,46 +156,52 @@ class ServiceManagementControllerTest {
 	results = getResultValidation(TributeServiceModelMock.validationOKCase3());
 	assertThat(results.hasErrors()).isFalse();
 
-	results = getResultValidation(TributeServiceModelMock.validationKOCase9());
-	assertThat(results.hasErrors()).isTrue();
-
-	results = getResultValidation(TributeServiceModelMock.validationKOCase10());
-	assertThat(results.hasErrors()).isTrue();
-	
-	results = getResultValidation(TributeServiceModelMock.validationKOCase11());
-	assertThat(results.hasErrors()).isTrue();
-
-	results = getResultValidation(TributeServiceModelMock.validationKOCase12());
-	assertThat(results.hasErrors()).isTrue();
-
-	results = getResultValidation(TributeServiceModelMock.validationKOCase13());
-	assertThat(results.hasErrors()).isTrue();
-
-	results = getResultValidation(TributeServiceModelMock.validationKOCase14());
-	assertThat(results.hasErrors()).isTrue();
-
-	results = getResultValidation(TributeServiceModelMock.validationKOCase15());
-	assertThat(results.hasErrors()).isTrue();
-
-	results = getResultValidation(TributeServiceModelMock.validationKOCase16());
-	assertThat(results.hasErrors()).isTrue();
-
-	results = getResultValidation(TributeServiceModelMock.validationKOCase17());
-	assertThat(results.hasErrors()).isTrue();
-
-	results = getResultValidation(TributeServiceModelMock.validationKOCase18());
-	assertThat(results.hasErrors()).isTrue();
-
-	results = getResultValidation(TributeServiceModelMock.validationKOCase19());
-	assertThat(results.hasErrors()).isTrue();
-
-	results = getResultValidation(TributeServiceModelMock.validationKOCase20());
-	assertThat(results.hasErrors()).isTrue();
-
-	results = getResultValidation(TributeServiceModelMock.validationKOCase21());
-	assertThat(results.hasErrors()).isTrue();
-
     }
+
+	@Test
+	void validationTributeWithInvalidIBan() throws ServletException {
+		BindingResult results;
+
+		results = getResultValidation(TributeServiceModelMock.validationKOCase9());
+		assertThat(results.hasErrors()).isTrue();
+
+		results = getResultValidation(TributeServiceModelMock.validationKOCase10());
+		assertThat(results.hasErrors()).isTrue();
+
+		results = getResultValidation(TributeServiceModelMock.validationKOCase11());
+		assertThat(results.hasErrors()).isTrue();
+
+		results = getResultValidation(TributeServiceModelMock.validationKOCase12());
+		assertThat(results.hasErrors()).isTrue();
+
+		results = getResultValidation(TributeServiceModelMock.validationKOCase13());
+		assertThat(results.hasErrors()).isTrue();
+
+		results = getResultValidation(TributeServiceModelMock.validationKOCase14());
+		assertThat(results.hasErrors()).isTrue();
+
+		results = getResultValidation(TributeServiceModelMock.validationKOCase15());
+		assertThat(results.hasErrors()).isTrue();
+
+		results = getResultValidation(TributeServiceModelMock.validationKOCase16());
+		assertThat(results.hasErrors()).isTrue();
+
+		results = getResultValidation(TributeServiceModelMock.validationKOCase17());
+		assertThat(results.hasErrors()).isTrue();
+
+		results = getResultValidation(TributeServiceModelMock.validationKOCase18());
+		assertThat(results.hasErrors()).isTrue();
+
+		results = getResultValidation(TributeServiceModelMock.validationKOCase19());
+		assertThat(results.hasErrors()).isTrue();
+
+		results = getResultValidation(TributeServiceModelMock.validationKOCase20());
+		assertThat(results.hasErrors()).isTrue();
+
+		results = getResultValidation(TributeServiceModelMock.validationKOCase21());
+		assertThat(results.hasErrors()).isTrue();
+
+	}
 
     private BindingResult getResultValidation(TributeServiceModel modelMock) {
 	ServiceManagementValidator serviceManagementValidator = new ServiceManagementValidator();
