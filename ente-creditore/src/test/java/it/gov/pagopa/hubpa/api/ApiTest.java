@@ -46,6 +46,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -102,14 +104,28 @@ class ApiTest {
 
 	@Test
 	public void shouldGetIban() throws Exception {
-		mockMvc.perform(get("/ente/tttt/iban")).andExpect(status().isOk());
+		mockMvc.perform(get("/ente/tttt/1/iban")).andExpect(status().isOk());
+	}
+	
+	@Test
+	public void shouldGetIbanNull() throws Exception {
+	    	when(ibanService.getByEnteCreditore(any(String.class),any(String.class))).thenReturn(null);
+		mockMvc.perform(get("/ente/tttt/1/iban")).andExpect(status().isOk());
 	}
 
 	@Test
 	public void shouldNotGetIban() throws Exception {
 		mockMvc.perform(get("/ente/tttt/ibpn")).andExpect(status().is(404));
 	}
-
+	@Test
+	public void shouldGetIban2() throws Exception {
+	    	List<IbanEntity> listIban=new ArrayList<>();
+	    	listIban.add(buildIbanEntity());
+	    	when(ibanService.getByEnteCreditore(any(String.class),any(String.class))).thenReturn(listIban);
+		mockMvc.perform(get("/ente/tttt/1/iban")).andExpect(status().isOk());
+	}
+	
+	
 	@Test
 	public void shouldPostIban() throws Exception {
 		IbanDto goodIban = buildIbanOK();
@@ -235,6 +251,13 @@ class ApiTest {
 		return myEcEntity;
 	}
 
+	private IbanEntity buildIbanEntity() throws ParseException {
+	    	IbanDto myIbanDto = buildIbanOK();
+	    	IbanEntity myIbanEntity = modelMapper.map(myIbanDto, IbanEntity.class);
+
+		return myIbanEntity;
+	}
+	
 	private EnteCreditoreDto buildEnteCreditoreOK() throws ParseException {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		EnteCreditoreDto ecDto = new EnteCreditoreDto();
