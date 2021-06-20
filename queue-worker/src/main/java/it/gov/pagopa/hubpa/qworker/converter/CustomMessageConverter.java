@@ -1,4 +1,4 @@
-package it.gov.pagopa.hubpa.qworker;
+package it.gov.pagopa.hubpa.qworker.converter;
 
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.apache.qpid.jms.message.JmsBytesMessage;
