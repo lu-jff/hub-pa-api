@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import it.gov.pagopa.hubpa.commons.model.PaymentJobMinimalModel;
@@ -30,6 +31,28 @@ public class QueueReceiveControllerTest {
 
   @Mock
   private RestTemplate restTemplate;
+
+  @Test
+  public void receiveMessageShouldThrowOnPaymentCreate() {
+
+    RestClientException exception = new RestClientException("Fake Error");
+
+    when(restTemplate.postForObject(matches("/payments/create"), any(UploadCsvModel.class),
+        eq(PaymentJobMinimalModel.class))).thenThrow(exception);
+
+    BooleanResponseModel goodResponse = new BooleanResponseModel();
+    goodResponse.setResult(true);
+
+    when(restTemplate.postForObject(matches("/upload-payments/update/"), any(PaymentJobMinimalModel.class),
+        eq(BooleanResponseModel.class))).thenReturn(goodResponse);
+
+    UploadCsvModel myCsv = UploadCsvModelMock.getMock();
+
+    queueReceiveController.receiveMessage(myCsv);
+
+    verify(restTemplate, times(2)).postForObject(anyString(), any(), any());
+
+  }
 
   @Test
   public void receiveMessageShouldNotThrow() {
