@@ -5,12 +5,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 
+import it.gov.pagopa.hubpa.payments.config.WebServicesConfig;
+import it.gov.pagopa.hubpa.payments.mock.DebitorMock;
 import it.gov.pagopa.hubpa.payments.mock.PaGetPaymentReqMock;
+import it.gov.pagopa.hubpa.payments.mock.PaGetPaymentResMock;
 import it.gov.pagopa.hubpa.payments.mock.PaSendRTReqMock;
 import it.gov.pagopa.hubpa.payments.mock.PaVerifyPaymentNoticeReqMock;
+import it.gov.pagopa.hubpa.payments.mock.PaVerifyPaymentNoticeResMock;
 
+import it.gov.pagopa.hubpa.payments.model.partner.ObjectFactory;
 import it.gov.pagopa.hubpa.payments.model.partner.PaGetPaymentReq;
 import it.gov.pagopa.hubpa.payments.model.partner.PaGetPaymentRes;
 import it.gov.pagopa.hubpa.payments.model.partner.PaSendRTReq;
@@ -18,53 +27,77 @@ import it.gov.pagopa.hubpa.payments.model.partner.PaSendRTRes;
 import it.gov.pagopa.hubpa.payments.model.partner.PaVerifyPaymentNoticeReq;
 import it.gov.pagopa.hubpa.payments.model.partner.PaVerifyPaymentNoticeRes;
 import it.gov.pagopa.hubpa.payments.model.partner.StOutcome;
+import it.gov.pagopa.hubpa.payments.repository.DebitorRepository;
+import it.gov.pagopa.hubpa.payments.repository.IncrementalIuvNumberRepository;
+import it.gov.pagopa.hubpa.payments.repository.PaymentPositionRepository;
 
 @ExtendWith(MockitoExtension.class)
 class PartnerServiceTest {
 
-	@InjectMocks
-	private PartnerService partnerService;
+  @InjectMocks
+  private PartnerService partnerService;
 
-	@Test
-	void paVerifyPaymentNoticeTest() throws Exception {
+  @Mock
+  DebitorRepository debitorRepository;
 
-		// Test preconditions
-		PaVerifyPaymentNoticeReq requestBody = PaVerifyPaymentNoticeReqMock.getMock();
+  @Mock
+  PaymentPositionRepository paymentPositionRepository;
 
-		// Test execution
-		PaVerifyPaymentNoticeRes responseBody = partnerService.paVerifyPaymentNotice(requestBody);
+  @Mock
+  IncrementalIuvNumberRepository incrementalIuvNumberRepository;
 
-		// Test postcondiction
-		assertThat(responseBody.getFiscalCodePA()).isEqualTo("77777777777");
-		assertThat(responseBody.getOfficeName()).isEqualTo("officeName");
-		assertThat(responseBody.getPaymentDescription()).isEqualTo("payment");
-	}
+  @Mock
+  private ObjectFactory factory;
 
-	@Test
-	void paGetPaymentTest() {
+  private ObjectFactory factoryUtil = new ObjectFactory();
 
-		// Test preconditions
-		PaGetPaymentReq requestBody = PaGetPaymentReqMock.getMock();
+  @Test
+  void paVerifyPaymentNoticeTest() {
 
-		// Test execution
-		PaGetPaymentRes responseBody = partnerService.paGetPayment(requestBody);
+    // Test preconditions
+    PaVerifyPaymentNoticeReq requestBody = PaVerifyPaymentNoticeReqMock.getMock();
+    PaVerifyPaymentNoticeRes responseBody = PaVerifyPaymentNoticeResMock.getMock();
 
-		// Test postcondiction
-		assertThat(responseBody.getData().getCompanyName()).isEqualTo("company name");
-		assertThat(responseBody.getData().getCreditorReferenceId()).isEqualTo("id");
-	}
+    when(factory.createPaVerifyPaymentNoticeRes(responseBody))
+        .thenReturn(factoryUtil.createPaVerifyPaymentNoticeRes(responseBody));
 
-	@Test
-	void paSendRTTest() {
+    when(paymentPositionRepository.findByNotificationCode(requestBody.getNotificationCode()))
+        .thenReturn(DebitorMock.createPaymentPositionMock());
 
-		// Test preconditions
-		PaSendRTReq requestBody = PaSendRTReqMock.getMock();
+    // Test execution
+    PaVerifyPaymentNoticeRes responseBody = partnerService.paVerifyPaymentNotice(requestBody);
 
-		// Test execution
-		PaSendRTRes responseBody = partnerService.paSendRT(requestBody);
+    // Test postcondiction
+    assertThat(responseBody.getFiscalCodePA()).isEqualTo("77777777777");
+    assertThat(responseBody.getOfficeName()).isEqualTo("officeName");
+    assertThat(responseBody.getPaymentDescription()).isEqualTo("payment");
+  }
 
-		// Test postcondiction
-		assertThat(responseBody.getOutcome()).isEqualTo(StOutcome.OK);
-	}
+  @Test
+  void paGetPaymentTest() {
+
+    // Test preconditions
+    PaGetPaymentReq requestBody = PaGetPaymentReqMock.getMock();
+
+    // Test execution
+    PaGetPaymentRes responseBody = partnerService.paGetPayment(requestBody);
+
+    // Test postcondiction
+    assertThat(responseBody.getData().getCompanyName()).isEqualTo("company name");
+    assertThat(responseBody.getData().getCreditorReferenceId()).isEqualTo("id");
+  }
+
+  @Test
+  void paSendRTTest() {
+
+    // Test preconditions
+    PaSendRTReq requestBody = PaSendRTReqMock.getMock();
+
+    // Test execution
+    PaSendRTRes responseBody = partnerService.paSendRT(requestBody);
+
+    // Test postcondiction
+    assertThat(responseBody.getOutcome()).isEqualTo(StOutcome.OK);
+  }
 
 }
