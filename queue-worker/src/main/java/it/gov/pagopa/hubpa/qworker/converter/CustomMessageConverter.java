@@ -20,7 +20,6 @@ public class CustomMessageConverter extends MappingJackson2MessageConverter {
 
     private static final String TYPE_ID_PROPERTY = "_type";
     private static final Symbol CONTENT_TYPE = Symbol.valueOf("application/json");
-    private final Logger logger = LoggerFactory.getLogger(CustomMessageConverter.class);
 
     public CustomMessageConverter() {
         this.setTargetType(MessageType.TEXT);

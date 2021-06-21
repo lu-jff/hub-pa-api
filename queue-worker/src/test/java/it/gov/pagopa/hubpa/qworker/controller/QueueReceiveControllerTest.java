@@ -24,7 +24,7 @@ import it.gov.pagopa.hubpa.testutils.model.mock.UploadCsvModelMock;
 import it.gov.pagopa.hubpa.testutils.model.mock.PaymentJobMinimalModelMock;
 
 @ExtendWith(MockitoExtension.class)
-public class QueueReceiveControllerTest {
+class QueueReceiveControllerTest {
 
   @InjectMocks
   private QueueReceiveController queueReceiveController;
@@ -33,7 +33,7 @@ public class QueueReceiveControllerTest {
   private RestTemplate restTemplate;
 
   @Test
-  public void receiveMessageShouldThrowOnUploadPayments() {
+  void receiveMessageShouldThrowOnUploadPayments() {
 
     RestClientException exception = new RestClientException("Fake Error");
 
@@ -52,7 +52,7 @@ public class QueueReceiveControllerTest {
   }
 
   @Test
-  public void receiveMessageShouldThrowOnPaymentCreate() {
+  void receiveMessageShouldThrowOnPaymentCreate() {
 
     RestClientException exception = new RestClientException("Fake Error");
 
@@ -74,7 +74,7 @@ public class QueueReceiveControllerTest {
   }
 
   @Test
-  public void receiveMessageShouldNotThrow() {
+  void receiveMessageShouldNotThrow() {
 
     when(restTemplate.postForObject(matches("/payments/create"), any(UploadCsvModel.class),
         eq(PaymentJobMinimalModel.class))).thenReturn(PaymentJobMinimalModelMock.getMock());

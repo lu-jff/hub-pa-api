@@ -25,7 +25,7 @@ import org.springframework.jms.support.converter.MappingJackson2MessageConverter
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @ExtendWith(MockitoExtension.class)
-public class CustomMessageConverterTest {
+class CustomMessageConverterTest {
 
   @InjectMocks
   private CustomMessageConverter customMessageConverter;
@@ -34,7 +34,7 @@ public class CustomMessageConverterTest {
   MappingJackson2MessageConverter converter;
 
   @Test
-  public void shouldConvertTheMessage() throws JMSException, IOException {
+  void shouldConvertTheMessage() throws JMSException, IOException {
     ObjectMapper mapper = new ObjectMapper();
 
     Session mockSession = mock(Session.class);
