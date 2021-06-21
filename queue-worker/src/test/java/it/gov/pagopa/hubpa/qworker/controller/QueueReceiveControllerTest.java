@@ -33,6 +33,25 @@ public class QueueReceiveControllerTest {
   private RestTemplate restTemplate;
 
   @Test
+  public void receiveMessageShouldThrowOnUploadPayments() {
+
+    RestClientException exception = new RestClientException("Fake Error");
+
+    when(restTemplate.postForObject(matches("/payments/create"), any(UploadCsvModel.class),
+        eq(PaymentJobMinimalModel.class))).thenReturn(PaymentJobMinimalModelMock.getMock());
+
+    when(restTemplate.postForObject(matches("/upload-payments/update/"), any(PaymentJobMinimalModel.class),
+        eq(BooleanResponseModel.class))).thenThrow(exception);
+
+    UploadCsvModel myCsv = UploadCsvModelMock.getMock();
+
+    queueReceiveController.receiveMessage(myCsv);
+
+    verify(restTemplate, times(2)).postForObject(anyString(), any(), any());
+
+  }
+
+  @Test
   public void receiveMessageShouldThrowOnPaymentCreate() {
 
     RestClientException exception = new RestClientException("Fake Error");
