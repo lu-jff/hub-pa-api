@@ -46,6 +46,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -79,17 +81,17 @@ class ApiTest {
 	private ModelMapper modelMapper = new ModelMapper();
 
 	@Test
-	public void shouldGetEnte() throws Exception {
+	void shouldGetEnte() throws Exception {
 		mockMvc.perform(get("/ente/refp/tttt")).andExpect(status().isOk());
 	}
 
 	@Test
-	public void shouldNotGetEnte() throws Exception {
+	void shouldNotGetEnte() throws Exception {
 		mockMvc.perform(get("/ente/xxx/tttt")).andExpect(status().is(404));
 	}
 
 	@Test
-	public void shouldPostEnte() throws Exception {
+	void shouldPostEnte() throws Exception {
 		EnteCreditoreDto goodEc = buildEnteCreditoreOK();
 		// Mock service response
 		when(enteCreditoreService.create(any(EnteCreditoreEntity.class)))
@@ -101,17 +103,31 @@ class ApiTest {
 	}
 
 	@Test
-	public void shouldGetIban() throws Exception {
-		mockMvc.perform(get("/ente/tttt/iban")).andExpect(status().isOk());
+	void shouldGetIban() throws Exception {
+		mockMvc.perform(get("/ente/tttt/1/iban")).andExpect(status().isOk());
+	}
+	
+	@Test
+	void shouldGetIbanNull() throws Exception {
+	    	when(ibanService.getByEnteCreditore(any(String.class),any(String.class))).thenReturn(null);
+		mockMvc.perform(get("/ente/tttt/1/iban")).andExpect(status().isOk());
 	}
 
 	@Test
-	public void shouldNotGetIban() throws Exception {
+	void shouldNotGetIban() throws Exception {
 		mockMvc.perform(get("/ente/tttt/ibpn")).andExpect(status().is(404));
 	}
-
 	@Test
-	public void shouldPostIban() throws Exception {
+	void shouldGetIban2() throws Exception {
+	    	List<IbanEntity> listIban=new ArrayList<>();
+	    	listIban.add(buildIbanEntity());
+	    	when(ibanService.getByEnteCreditore(any(String.class),any(String.class))).thenReturn(listIban);
+		mockMvc.perform(get("/ente/tttt/1/iban")).andExpect(status().isOk());
+	}
+	
+	
+	@Test
+	void shouldPostIban() throws Exception {
 		IbanDto goodIban = buildIbanOK();
 		// Mock service response
 		when(ibanService.create(any(IbanEntity.class))).thenReturn(modelMapper.map(goodIban, IbanEntity.class));
@@ -123,17 +139,17 @@ class ApiTest {
 	}
 
 	@Test
-	public void shouldGetPa() throws Exception {
+	void shouldGetPa() throws Exception {
 		mockMvc.perform(get("/ente/pa")).andExpect(status().isOk());
 	}
 
 	@Test
-	public void shouldNotGetPa() throws Exception {
+	void shouldNotGetPa() throws Exception {
 		mockMvc.perform(get("/ente/pax")).andExpect(status().is(404));
 	}
 
 	@Test
-	public void shouldPostPa() throws Exception {
+	void shouldPostPa() throws Exception {
 		PaDto goodPa = buildPaOK();
 		// Mock service response
 		when(paService.create(any(PaEntity.class))).thenReturn(modelMapper.map(goodPa, PaEntity.class));
@@ -235,6 +251,13 @@ class ApiTest {
 		return myEcEntity;
 	}
 
+	private IbanEntity buildIbanEntity() throws ParseException {
+	    	IbanDto myIbanDto = buildIbanOK();
+	    	IbanEntity myIbanEntity = modelMapper.map(myIbanDto, IbanEntity.class);
+
+		return myIbanEntity;
+	}
+	
 	private EnteCreditoreDto buildEnteCreditoreOK() throws ParseException {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		EnteCreditoreDto ecDto = new EnteCreditoreDto();

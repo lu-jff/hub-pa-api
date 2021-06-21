@@ -34,10 +34,10 @@ public class IbanController {
   private Logger logger = LoggerFactory.getLogger(IbanController.class);
 
   @ApiOperation(value = "Recupera la lista degli IBAN di un Ente Creditore", notes = "Recupera la lista degli IBAN di un Ente Creditore", response = List.class)
-  @GetMapping(value = "/ente/{codiceFiscaleEnteCreditore}/iban")
-  public List<IbanOnlyDto> getIbanByEnteCreditore(@PathVariable("codiceFiscaleEnteCreditore") String codiceFiscaleEc) {
+  @GetMapping(value = "/ente/{codiceFiscaleEnteCreditore}/{ibanMode}/iban")
+  public List<IbanOnlyDto> getIbanByEnteCreditore(@PathVariable("codiceFiscaleEnteCreditore") String codiceFiscaleEc, @PathVariable("ibanMode") String ibanMode) {
     logger.info("GET IBAN");
-    List<IbanEntity> ibans = ibanService.getByEnteCreditore(codiceFiscaleEc);
+    List<IbanEntity> ibans = ibanService.getByEnteCreditore(codiceFiscaleEc, ibanMode);
     if (ibans != null) {
       return ibans.stream().map(myEntity -> modelMapper.map(myEntity, IbanOnlyDto.class)).collect(Collectors.toList());
     } else {
