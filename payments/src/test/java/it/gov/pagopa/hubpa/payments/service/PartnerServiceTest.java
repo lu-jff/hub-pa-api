@@ -1,23 +1,21 @@
 package it.gov.pagopa.hubpa.payments.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
 
-import it.gov.pagopa.hubpa.payments.config.WebServicesConfig;
+
 import it.gov.pagopa.hubpa.payments.mock.DebitorMock;
 import it.gov.pagopa.hubpa.payments.mock.PaGetPaymentReqMock;
-import it.gov.pagopa.hubpa.payments.mock.PaGetPaymentResMock;
 import it.gov.pagopa.hubpa.payments.mock.PaSendRTReqMock;
 import it.gov.pagopa.hubpa.payments.mock.PaVerifyPaymentNoticeReqMock;
-import it.gov.pagopa.hubpa.payments.mock.PaVerifyPaymentNoticeResMock;
 
 import it.gov.pagopa.hubpa.payments.model.partner.ObjectFactory;
 import it.gov.pagopa.hubpa.payments.model.partner.PaGetPaymentReq;
@@ -56,13 +54,13 @@ class PartnerServiceTest {
 
     // Test preconditions
     PaVerifyPaymentNoticeReq requestBody = PaVerifyPaymentNoticeReqMock.getMock();
-    PaVerifyPaymentNoticeRes responseBody = PaVerifyPaymentNoticeResMock.getMock();
 
-    when(factory.createPaVerifyPaymentNoticeRes(responseBody))
-        .thenReturn(factoryUtil.createPaVerifyPaymentNoticeRes(responseBody));
+    when(factory.createCtFaultBean()).thenReturn(factoryUtil.createCtFaultBean());
 
-    when(paymentPositionRepository.findByNotificationCode(requestBody.getNotificationCode()))
-        .thenReturn(DebitorMock.createPaymentPositionMock());
+    when(factory.createPaVerifyPaymentNoticeRes()).thenReturn(factoryUtil.createPaVerifyPaymentNoticeRes());
+
+    when(paymentPositionRepository.findByNotificationCode(requestBody.getQrCode().getNoticeNumber()))
+        .thenReturn(Optional.of(DebitorMock.createPaymentPositionMock()));
 
     // Test execution
     PaVerifyPaymentNoticeRes responseBody = partnerService.paVerifyPaymentNotice(requestBody);
