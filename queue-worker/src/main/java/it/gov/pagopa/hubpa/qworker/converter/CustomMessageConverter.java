@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import org.apache.qpid.jms.message.JmsBytesMessage;
 import org.apache.qpid.jms.provider.amqp.message.AmqpJmsMessageFacade;
 import org.apache.qpid.proton.amqp.Symbol;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
 import org.springframework.stereotype.Component;
