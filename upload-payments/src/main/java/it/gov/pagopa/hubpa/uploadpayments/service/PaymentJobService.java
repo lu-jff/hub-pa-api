@@ -12,7 +12,7 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
 import it.gov.pagopa.hubpa.uploadpayments.entity.PaymentJob;
-import it.gov.pagopa.hubpa.uploadpayments.model.UploadCsvModel;
+import it.gov.pagopa.hubpa.commons.model.UploadCsvModel;
 import it.gov.pagopa.hubpa.uploadpayments.repository.PaymentJobRepository;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
 import org.springframework.jms.support.converter.MessageConverter;
