@@ -66,6 +66,7 @@ public class PartnerService {
       throws DatatypeConfigurationException {
 
     log.debug(String.format("paVerifyPaymentNotice %s", request.getIdPA()));
+    Optional<PaymentPosition> position;
     PaVerifyPaymentNoticeRes result = factory.createPaVerifyPaymentNoticeRes();
     CtFaultBean cFault = factory.createCtFaultBean();
     CtPaymentOptionsDescriptionListPA cPaymentList = factory.createCtPaymentOptionsDescriptionListPA();
@@ -102,7 +103,8 @@ public class PartnerService {
       Optional<PaymentOptions> option = paymentOptionsRepository
           .findByNotificationCode(request.getQrCode().getNoticeNumber());
 
-      Optional<PaymentPosition> position = Optional.ofNullable(option.get().getPaymentPosition());
+      Optional<PaymentPosition> position = Optional
+          .ofNullable((option.isPresent() ? option.get().getPaymentPosition() : null));
 
       if ((!option.isPresent() || !position.isPresent())
           || (!position.get().getStatus().equals(PaymentStatusEnum.PUBBLICATO.getStatus())
