@@ -104,8 +104,9 @@ public class PartnerService {
 
       Optional<PaymentPosition> position = Optional.ofNullable(option.get().getPaymentPosition());
 
-      if (!position.isPresent() || (!position.get().getStatus().equals(PaymentStatusEnum.PUBBLICATO.getStatus())
-          && (!position.get().getStatus().equals(PaymentStatusEnum.PAGATO_PARZIALE.getStatus())))) {
+      if (!option.isPresent() || !position.isPresent()
+          || (!position.get().getStatus().equals(PaymentStatusEnum.PUBBLICATO.getStatus())
+              && (!position.get().getStatus().equals(PaymentStatusEnum.PAGATO_PARZIALE.getStatus())))) {
         result.setOutcome(StOutcome.KO);
         cFault.setDescription("L'id del pagamento ricevuto " + request.getQrCode().getNoticeNumber() + " non esiste");
         cFault.setFaultCode(PaaErrorEnum.PAA_PAGAMENTO_SCONOSCIUTO.getValue());
