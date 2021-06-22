@@ -104,7 +104,7 @@ public class PartnerService {
 
       Optional<PaymentPosition> position = Optional.ofNullable(option.get().getPaymentPosition());
 
-      if (!option.isPresent() || !position.isPresent()
+      if ((!option.isPresent() || !position.isPresent())
           || (!position.get().getStatus().equals(PaymentStatusEnum.PUBBLICATO.getStatus())
               && (!position.get().getStatus().equals(PaymentStatusEnum.PAGATO_PARZIALE.getStatus())))) {
         result.setOutcome(StOutcome.KO);
@@ -113,7 +113,7 @@ public class PartnerService {
         cFault.setFaultString("pagamento sconosciuto");
         result.setFault(cFault);
       } else {
-        if (!option.get().getStatus().equals(PaymentOptionStatusEnum.NON_PAGATO.getStatus())) {
+        if (!option.isPresent() || !option.get().getStatus().equals(PaymentOptionStatusEnum.NON_PAGATO.getStatus())) {
           result.setOutcome(StOutcome.KO);
           cFault
               .setDescription("L'id del pagamento ricevuto " + request.getQrCode().getNoticeNumber() + " e' duplicato");
