@@ -7,13 +7,12 @@ import javax.xml.bind.JAXB;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.ws.soap.SoapMessageCreationException;
-import org.springframework.ws.soap.SoapMessageException;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
 
 import it.gov.pagopa.hubpa.payments.model.partner.CtFaultBean;
 import it.gov.pagopa.hubpa.payments.model.partner.CtResponse;
 import it.gov.pagopa.hubpa.payments.model.partner.ObjectFactory;
+import it.gov.pagopa.hubpa.payments.model.partner.StOutcome;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
@@ -29,7 +28,7 @@ public class SoapMessageDispatcher extends MessageDispatcherServlet {
     protected void doService(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
             throws Exception {
 
-        String fultCode = "PAA_SEMANTICA", faultDescription = "Generic Error";
+        String fultCode = null, faultDescription = null;
 
         try {
 
@@ -39,7 +38,7 @@ public class SoapMessageDispatcher extends MessageDispatcherServlet {
             log.error("Processing resulted in exception: " + e.getMessage());
             fultCode = "PAA_SINTASSI_XSD";
             faultDescription = "Structure error in request: " + e.getMessage();
-            httpServletResponse.setStatus(400);
+            httpServletResponse.setStatus(200);
         } catch (Exception e) {
 
             log.error("Processing resulted in generic exception: " + e.getMessage());
@@ -48,12 +47,13 @@ public class SoapMessageDispatcher extends MessageDispatcherServlet {
             httpServletResponse.setStatus(500);
         }
 
-        if (!(httpServletResponse.getStatus() >= 200 && httpServletResponse.getStatus() <= 299)) {
+        if (fultCode != null && faultDescription != null) {
 
             CtResponse response = factory.createCtResponse();
             CtFaultBean faultBean = factory.createCtFaultBean();
             faultBean.setDescription(faultDescription);
             faultBean.setFaultCode(fultCode);
+            response.setOutcome(StOutcome.KO);
             response.setFault(faultBean);
 
             ServletOutputStream outputStream = httpServletResponse.getOutputStream();
