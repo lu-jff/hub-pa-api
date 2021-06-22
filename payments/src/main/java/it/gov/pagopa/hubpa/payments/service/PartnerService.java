@@ -67,10 +67,10 @@ public class PartnerService {
 
     log.debug(String.format("paVerifyPaymentNotice %s", request.getIdPA()));
     PaVerifyPaymentNoticeRes result = factory.createPaVerifyPaymentNoticeRes();
-    CtFaultBean cFault = factory.createCtFaultBean();
-    CtPaymentOptionsDescriptionListPA cPaymentList = factory.createCtPaymentOptionsDescriptionListPA();
-    CtPaymentOptionDescriptionPA CtPaymentOption = factory.createCtPaymentOptionDescriptionPA();
-    // verificare che il CF idPA /Intermediario idBrokerPA/Stazione idStation
+    CtFaultBean faultError = factory.createCtFaultBean();
+    CtPaymentOptionsDescriptionListPA paymentList = factory.createCtPaymentOptionsDescriptionListPA();
+    CtPaymentOptionDescriptionPA paymentOption = factory.createCtPaymentOptionDescriptionPA();
+    // verificare che l' idPA /Intermediario /Stazione
     // corrispondono con quelli configurati altrimenti restituire rispettivamente i
     // seguenti FaultCode
     // PAA_ID_DOMINIO_ERRATO
@@ -78,24 +78,25 @@ public class PartnerService {
     // PAA_STAZIONE_INT_ERRATA
     if (!request.getIdPA().equals(ptIdDominio)) {
       result.setOutcome(StOutcome.KO);
-      cFault.setDescription("L'idPA ricevuto non e' tra quelli configurati");
-      cFault.setFaultCode(PaaErrorEnum.PAA_ID_DOMINIO_ERRATO.getValue());
-      cFault.setFaultString("ID dominio errato");
-      result.setFault(cFault);
+      faultError.setDescription("L'idPA ricevuto non e' tra quelli configurati");
+      faultError.setFaultCode(PaaErrorEnum.PAA_ID_DOMINIO_ERRATO.getValue());
+      faultError.setFaultString("ID dominio errato");
+      result.setFault(faultError);
     } else if (!request.getIdBrokerPA().equals(ptIdIntermediario)) {
       result.setOutcome(StOutcome.KO);
-      cFault.setDescription("L'IdBrokerPA ricevuto non e' tra quelli configurati");
-      cFault.setFaultCode(PaaErrorEnum.PAA_ID_INTERMEDIARIO_ERRATO.getValue());
-      cFault.setFaultString("IdBrokerPA errato");
-      result.setFault(cFault);
+      faultError.setDescription("L'IdBrokerPA ricevuto non e' tra quelli configurati");
+      faultError.setFaultCode(PaaErrorEnum.PAA_ID_INTERMEDIARIO_ERRATO.getValue());
+      faultError.setFaultString("IdBrokerPA errato");
+      result.setFault(faultError);
     } else if (!request.getIdStation().equals(ptIdStazione)) {
       result.setOutcome(StOutcome.KO);
-      cFault.setDescription("L'IdStazione ricevuto non e' tra quelli configurati");
-      cFault.setFaultCode(PaaErrorEnum.PAA_STAZIONE_INT_ERRATA.getValue());
-      cFault.setFaultString("IdStazione errato");
-      result.setFault(cFault);
+      faultError.setDescription("L'IdStazione ricevuto non e' tra quelli configurati");
+      faultError.setFaultCode(PaaErrorEnum.PAA_STAZIONE_INT_ERRATA.getValue());
+      faultError.setFaultString("IdStazione errato");
+      result.setFault(faultError);
     } else {
-      // verificare che se esiste un payment_options che ha un notification_code
+      // verificare che se esiste un payment_options NON_PAGATO che ha un
+      // notification_code
       // uguale a noticeNumber e se lo stato della relativa payment_position e'
       // PUBBLICATO
 
@@ -109,31 +110,32 @@ public class PartnerService {
           || (!position.get().getStatus().equals(PaymentStatusEnum.PUBBLICATO.getStatus())
               && (!position.get().getStatus().equals(PaymentStatusEnum.PAGATO_PARZIALE.getStatus())))) {
         result.setOutcome(StOutcome.KO);
-        cFault.setDescription("L'id del pagamento ricevuto " + request.getQrCode().getNoticeNumber() + " non esiste");
-        cFault.setFaultCode(PaaErrorEnum.PAA_PAGAMENTO_SCONOSCIUTO.getValue());
-        cFault.setFaultString("pagamento sconosciuto");
-        result.setFault(cFault);
+        faultError
+            .setDescription("L'id del pagamento ricevuto " + request.getQrCode().getNoticeNumber() + " non esiste");
+        faultError.setFaultCode(PaaErrorEnum.PAA_PAGAMENTO_SCONOSCIUTO.getValue());
+        faultError.setFaultString("pagamento sconosciuto");
+        result.setFault(faultError);
       } else {
         if (!option.isPresent() || !option.get().getStatus().equals(PaymentOptionStatusEnum.NON_PAGATO.getStatus())) {
           result.setOutcome(StOutcome.KO);
-          cFault
+          faultError
               .setDescription("L'id del pagamento ricevuto " + request.getQrCode().getNoticeNumber() + " e' duplicato");
-          cFault.setFaultCode(PaaErrorEnum.PAA_PAGAMENTO_DUPLICATO.getValue());
-          cFault.setFaultString("pagamento duplicato");
-          result.setFault(cFault);
+          faultError.setFaultCode(PaaErrorEnum.PAA_PAGAMENTO_DUPLICATO.getValue());
+          faultError.setFaultString("pagamento duplicato");
+          result.setFault(faultError);
         } else {
           // generare una paVerifyPaymentNoticeRes positiva
           result.setOutcome(StOutcome.OK);
           // paymentList
-          CtPaymentOption.setAmount(option.get().getAmount());
-          CtPaymentOption.setOptions(StAmountOption.EQ); // de-scoping
-          CtPaymentOption
+          paymentOption.setAmount(option.get().getAmount());
+          paymentOption.setOptions(StAmountOption.EQ); // de-scoping
+          paymentOption
               .setDueDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(option.get().getDuoDate().toString()));
-          CtPaymentOption.setDetailDescription(position.get().getDescription());
-          CtPaymentOption.setAllCCP(isAllCCPostalIban(option)); // allCPP fa parte del modello del option
-          cPaymentList.getPaymentOptionDescription().add(CtPaymentOption);
+          paymentOption.setDetailDescription(position.get().getDescription());
+          paymentOption.setAllCCP(isAllCCPostalIban(option)); // allCPP fa parte del modello del option
+          paymentList.getPaymentOptionDescription().add(paymentOption);
 
-          result.setPaymentList(cPaymentList);
+          result.setPaymentList(paymentList);
           // general info
           result.setPaymentDescription(position.get().getDescription());
           result.setFiscalCodePA(ptIdDominio);
