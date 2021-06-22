@@ -7,10 +7,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
+import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.zip.ZipOutputStream;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -37,10 +39,14 @@ import it.gov.pagopa.hubpa.payments.entity.PaymentPosition;
 import it.gov.pagopa.hubpa.payments.iuvgenerator.IuvCodeBusiness;
 import it.gov.pagopa.hubpa.payments.iuvgenerator.exception.ValidationException;
 import it.gov.pagopa.hubpa.payments.mock.DebitorMock;
+import it.gov.pagopa.hubpa.payments.mock.EnteCreditoreMinimalDtoMock;
 import it.gov.pagopa.hubpa.payments.mock.FilterModelMock;
 import it.gov.pagopa.hubpa.payments.mock.IncrementalIuvNumberMock;
+import it.gov.pagopa.hubpa.payments.mock.PaDtoMock;
 import it.gov.pagopa.hubpa.payments.model.FilterModel;
 import it.gov.pagopa.hubpa.payments.model.PaymentJobMinimalModel;
+import it.gov.pagopa.hubpa.payments.model.ente.EnteCreditoreMinimalDto;
+import it.gov.pagopa.hubpa.payments.model.ente.PaDto;
 import it.gov.pagopa.hubpa.payments.repository.DebitorRepository;
 import it.gov.pagopa.hubpa.payments.repository.IncrementalIuvNumberRepository;
 import it.gov.pagopa.hubpa.payments.repository.PaymentPositionRepository;
@@ -208,6 +214,40 @@ class PaymentServiceTest {
     }
 
     @Test
+    void getPaymentPositionsByIds() {
+	List<Long> ids = new ArrayList<>();
+	ids.add(1l);
+	when(paymentPositionRepository.findAllById(any())).thenReturn(null);
+	List<PaymentPosition> pay = paymentService.getPaymentPositionsByIds(ids);
+	assertThat(pay).isNull();
+    }
+
+    @Test
+    void generatePaymentNotice() throws Exception {
+	ReflectionTestUtils.setField(paymentService, "auxDigit", 3);
+	ReflectionTestUtils.setField(paymentService, "segregationCode", 82);
+	EnteCreditoreMinimalDto enteDto = EnteCreditoreMinimalDtoMock.getMock();
+	PaDto paDto = PaDtoMock.getMock();
+	List<PaymentPosition> paymentPositionList = new ArrayList<>();
+	PaymentPosition posMock = DebitorMock.createPaymentPositionMock();
+	posMock.setDebitor(DebitorMock.getMock());
+	paymentPositionList.add(posMock);
+
+	byte[] bb = paymentService.generatePaymentNotice(paymentPositionList, enteDto, paDto, null);
+	assertThat(bb).isNotNull();
+
+	ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	try (ZipOutputStream zos = new ZipOutputStream(baos)) {
+
+	    paymentService.generatePaymentNotice(paymentPositionList, enteDto, paDto, zos);
+	    assertThat(zos).isNotNull();
+	} finally {
+	    baos.close();
+	}
+	assertThatNoException();
+    }
+
+    @Test
     void iuvValidation() {
 	IuvCodeGenerator iuvCodeGenerator = new IuvCodeGenerator.Builder().setAuxDigit(3).setSegregationCode(1).build();
 	IuvCodeBusiness.validate(iuvCodeGenerator);
@@ -217,11 +257,11 @@ class PaymentServiceTest {
 	IuvCodeBusiness.validate(iuvCodeGenerator);
 	assertThatNoException();
 
-	IuvCodeGenerator iuvCodeGenerator3 = new IuvCodeGenerator.Builder().setAuxDigit(2).setSegregationCode(111).build();
+	IuvCodeGenerator iuvCodeGenerator3 = new IuvCodeGenerator.Builder().setAuxDigit(2).setSegregationCode(111)
+		.build();
 	assertThatThrownBy(() -> IuvCodeBusiness.validate(iuvCodeGenerator3)).isInstanceOf(ValidationException.class);
 	assertThatNoException();
 
-	
 	IuvCodeGenerator iuvCodeGenerator2 = new IuvCodeGenerator.Builder().setAuxDigit(3).setSegregationCode(null)
 		.build();
 	assertThatThrownBy(() -> IuvCodeBusiness.validate(iuvCodeGenerator2)).isInstanceOf(ValidationException.class);

@@ -1,27 +1,60 @@
 
 package it.gov.pagopa.hubpa.payments.service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
-import it.gov.pagopa.hubpa.payments.enumeration.PaymentStatusEnum;
-import it.gov.pagopa.hubpa.payments.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StreamUtils;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.opencsv.CSVWriter;
+import com.opencsv.ICSVWriter;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
 import it.gov.pagopa.hubpa.payments.entity.Debitor;
 import it.gov.pagopa.hubpa.payments.entity.IncrementalIuvNumber;
 import it.gov.pagopa.hubpa.payments.entity.PaymentOptions;
 import it.gov.pagopa.hubpa.payments.entity.PaymentPosition;
+import it.gov.pagopa.hubpa.payments.entity.Transfers;
 import it.gov.pagopa.hubpa.payments.enumeration.JobStatusEnum;
+import it.gov.pagopa.hubpa.payments.enumeration.PaymentStatusEnum;
+import it.gov.pagopa.hubpa.payments.generate.debtposition.DebtPositionGeneration;
+import it.gov.pagopa.hubpa.payments.generate.debtposition.bean.DebtPosition;
+import it.gov.pagopa.hubpa.payments.generate.debtposition.bean.debtposition.DPPayer;
+import it.gov.pagopa.hubpa.payments.generate.debtposition.bean.debtposition.DPPaymentDetail;
+import it.gov.pagopa.hubpa.payments.generate.debtposition.bean.debtposition.DPSinglePaymentDetail;
+import it.gov.pagopa.hubpa.payments.generate.paymentnotice.PaymentNoticeGeneration;
+import it.gov.pagopa.hubpa.payments.generate.paymentnotice.bean.PNCreditorInstitution;
+import it.gov.pagopa.hubpa.payments.generate.rpt.xsd.StTipoIdentificativoUnivocoPersFG;
 import it.gov.pagopa.hubpa.payments.iuvgenerator.IuvCodeBusiness;
+import it.gov.pagopa.hubpa.payments.model.CsvNotificationModel;
+import it.gov.pagopa.hubpa.payments.model.FilterModel;
+import it.gov.pagopa.hubpa.payments.model.PaymentJobMinimalModel;
+import it.gov.pagopa.hubpa.payments.model.ente.EnteCreditoreMinimalDto;
+import it.gov.pagopa.hubpa.payments.model.ente.PaDto;
 import it.gov.pagopa.hubpa.payments.repository.DebitorRepository;
 import it.gov.pagopa.hubpa.payments.repository.IncrementalIuvNumberRepository;
 import it.gov.pagopa.hubpa.payments.repository.PaymentPositionRepository;
@@ -30,7 +63,6 @@ import it.gov.pagopa.hubpa.payments.repository.specification.PaymentPositionWith
 import it.gov.pagopa.hubpa.payments.repository.specification.PaymentPositionWithFiscalCode;
 import it.gov.pagopa.hubpa.payments.repository.specification.PaymentPositionWithStatus;
 import it.gov.pagopa.hubpa.payments.repository.specification.PaymentPositionWithTextSearch;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PaymentService {
@@ -49,6 +81,23 @@ public class PaymentService {
 
     @Value("${iuv.generate.segregationCode}")
     private Integer segregationCode;
+
+    @Value("${mailing.csv.mailingType}")
+    private String mailingType;
+
+    @Value("${mailing.csv.printMode}")
+    private String printMode;
+
+    @Value("${mailing.csv.printType}")
+    private String printType;
+
+    @Value("${mailing.csv.billingType}")
+    private String billingType;
+
+    @Value("${mailing.csv.costCenter}")
+    private String costCenter;
+
+    private String zone = "Europe/Paris";
 
     public PaymentJobMinimalModel create(List<Debitor> debitors) {
 
@@ -117,7 +166,7 @@ public class PaymentService {
     private String generateNotificationCode(String idDominioPa) {
 	Long lastNumber = 1l;
 	IncrementalIuvNumber incrementalIuvNumber = incrementalIuvNumberRepository.findByIdDominioPaAndAnno(idDominioPa,
-		LocalDateTime.now(ZoneId.of("Europe/Paris")).getYear());
+		LocalDateTime.now(ZoneId.of(this.zone)).getYear());
 	if (incrementalIuvNumber != null) {
 	    lastNumber = (incrementalIuvNumber.getLastUsedNumber() + 1);
 	    incrementalIuvNumber.setLastUsedNumber(lastNumber);
@@ -125,7 +174,7 @@ public class PaymentService {
 	} else {
 
 	    incrementalIuvNumber = new IncrementalIuvNumber();
-	    incrementalIuvNumber.setAnno(LocalDateTime.now(ZoneId.of("Europe/Paris")).getYear());
+	    incrementalIuvNumber.setAnno(LocalDateTime.now(ZoneId.of(this.zone)).getYear());
 	    incrementalIuvNumber.setIdDominioPa(idDominioPa);
 	    incrementalIuvNumber.setLastUsedNumber(lastNumber);
 	}
@@ -217,14 +266,225 @@ public class PaymentService {
     }
 
     public Boolean deletePayment(Long paymentId, Integer status) {
-	Boolean result=Boolean.FALSE;
-	PaymentPosition pp = paymentPositionRepository.findByIdAndStatus(paymentId,status);
-	if(pp!=null) {
+	Boolean result = Boolean.FALSE;
+	PaymentPosition pp = paymentPositionRepository.findByIdAndStatus(paymentId, status);
+	if (pp != null) {
 	    paymentPositionRepository.delete(pp);
-	    result=Boolean.TRUE;
+	    result = Boolean.TRUE;
 	}
 	return result;
     }
-    
-    
+
+    public List<PaymentPosition> getPaymentPositionsByIds(List<Long> ids) {
+	return paymentPositionRepository.findAllById(ids);
+    }
+
+    public byte[] generatePaymentNotice(List<PaymentPosition> paymentPositions,
+	    EnteCreditoreMinimalDto enteCreditoreMinimalDto, PaDto paDto, ZipOutputStream zos) throws Exception {
+	byte[] bb = null;
+	ByteArrayOutputStream baos = null;
+	OutputStreamWriter osw = null;
+	CSVWriter writer2 = null;
+	StatefulBeanToCsv<CsvNotificationModel> writer = null;
+	if (zos != null) {
+	    baos = new ByteArrayOutputStream();
+	    osw = new OutputStreamWriter(baos);
+	    writer2 = new CSVWriter(osw, ";".charAt(0), ICSVWriter.NO_QUOTE_CHARACTER,
+		    ICSVWriter.DEFAULT_ESCAPE_CHARACTER, ICSVWriter.DEFAULT_LINE_END);
+
+	    writer = new StatefulBeanToCsvBuilder<CsvNotificationModel>(writer2).withSeparator(';')
+		    .withApplyQuotesToAll(false).withQuotechar(ICSVWriter.NO_QUOTE_CHARACTER).withOrderedResults(false)
+		    .build();
+	}
+	String documentNumber = "docNumber0001";
+	byte[] logoData = null;
+
+	InputStream is = TypeReference.class.getResourceAsStream("/media/pagopa-logo.png");
+	logoData = StreamUtils.copyToByteArray(is);
+
+	String ciName = paDto.getComune();
+	String ciFiscalCode = paDto.getCodiceFiscale();
+	String ciWebsite = paDto.getSitoIstituzionale();
+	// TODO
+	String ciSector = "";
+
+	String ciInfo = paDto.getIndirizzo();
+	String ciCbillCode = "";
+	String ciPostalAccountHolder = null;
+	String ciPostalAccountNumber = null;
+	String ciPostalAuthorizationCode = null;
+
+	if (!paymentPositions.isEmpty()) {
+	    ciSector = paymentPositions.get(0).getDescription() + " - 2";
+	    ciCbillCode = enteCreditoreMinimalDto.getCodiceInterbancario();
+	    ciPostalAccountHolder = getPostalInfo(paymentPositions.get(0), 1);
+	    ciPostalAccountNumber = getPostalInfo(paymentPositions.get(0), 2);
+	    ciPostalAuthorizationCode = getPostalInfo(paymentPositions.get(0), 3);
+	}
+	PNCreditorInstitution creditorInstitution = PaymentNoticeGeneration.generateCreditorInstitution(logoData,
+		ciName, ciSector, ciInfo, ciFiscalCode, ciCbillCode, ciPostalAccountHolder, ciPostalAccountNumber,
+		ciPostalAuthorizationCode, ciWebsite);
+
+	int i = 0;
+	for (PaymentPosition paymentPosition : paymentPositions) {
+	    i++;
+
+	    Debitor debitor = paymentPosition.getDebitor();
+	    String pdfFileName = "avviso-" + debitor.getFiscalCode() + "-" + i + ".pdf";
+
+	    List<DebtPosition> debtPositionList = new LinkedList<>();
+
+	    int installmentNumber = 0;
+	    boolean isConclusive=false;
+	    for (PaymentOptions paymentOption : paymentPosition.getPaymentOptions()) {
+
+		if (paymentOption.getIsConclusive().booleanValue()) {
+		    debtPositionList.add(generateDebtPosition(paymentPosition.getDebitor(), paymentOption,
+			    documentNumber, 0, paymentPosition.getOrganizationFiscalCode()));
+		    isConclusive=true;
+		} else {
+		    installmentNumber++;
+		    debtPositionList.add(generateDebtPosition(paymentPosition.getDebitor(), paymentOption,
+			    documentNumber, installmentNumber, paymentPosition.getOrganizationFiscalCode()));
+		}
+	    }
+	    bb = PaymentNoticeGeneration.generate(debtPositionList, creditorInstitution, true);
+	    if (zos != null) {
+		ZipEntry entry = new ZipEntry(pdfFileName);
+		zos.putNextEntry(entry);
+		zos.write(bb);
+		zos.flush();
+		zos.closeEntry();
+
+		addCsvFile(writer, pdfFileName, debitor, paDto, isConclusive, installmentNumber);
+		osw.flush();
+	    }
+
+	}
+	if (zos != null) {
+	    ZipEntry entry = new ZipEntry("indice.csv");
+	    zos.putNextEntry(entry);
+	    zos.write(baos.toByteArray());
+	    zos.flush();
+	    zos.closeEntry();
+
+	    zos.finish();
+	    zos.flush();
+
+	    writer2.close();
+	    baos.close();
+	    osw.close();
+	}
+	return bb;
+    }
+
+    private void addCsvFile(StatefulBeanToCsv<CsvNotificationModel> writer, String pdfFileName, Debitor debitor,
+	    PaDto paDto, boolean isConclusive, int installmentNumber) throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
+	int finalPage=this.finalPageCalculation(installmentNumber);
+	int initialPage=isConclusive?1:2;
+	
+	CsvNotificationModel cnm = new CsvNotificationModel();
+	cnm.setFileName(pdfFileName);
+	cnm.setMailingType(this.mailingType);
+	cnm.setDebitorName(debitor.getName() + " " + debitor.getSurname());
+	cnm.setDebitorAddress(debitor.getAddress());
+	cnm.setDebitorCap(debitor.getCap());
+	cnm.setDebitorLocality(debitor.getArea());
+	cnm.setDebitorProvince(debitor.getProvince());
+	cnm.setDebitorNation(debitor.getCountry());
+	cnm.setCreditorName(paDto.getComune());
+	cnm.setCreditorAddress(paDto.getIndirizzo());
+	cnm.setCreditorCap(paDto.getCap());
+	cnm.setCreditorLocality(paDto.getComune());
+	cnm.setCreditorProvince(paDto.getProvincia());
+	cnm.setCreditorNation("IT");
+	cnm.setFrontages(finalPage);
+	cnm.setPagePostalFrom(initialPage);
+	cnm.setPagePostalTo(finalPage);
+	cnm.setPrintMode(this.printMode);
+	cnm.setPrintType(this.printType);
+	cnm.setBillingType(this.billingType);
+	cnm.setCostCenter(this.costCenter);
+
+	writer.write(cnm);
+    }
+
+    private int finalPageCalculation(int installmentNumber) {
+	List<Integer> pageNumberTotal = new ArrayList<>(Arrays.asList(1, 1, 2, 2, 3, 3, 3, 4, 4, 4, 5));
+	return pageNumberTotal.get(installmentNumber);
+    }
+
+    private String getPostalInfo(PaymentPosition paymentPosition, int type) {
+	String result = null;
+	if (paymentPosition != null && paymentPosition.getPaymentOptions() != null
+		&& !paymentPosition.getPaymentOptions().isEmpty()
+		&& paymentPosition.getPaymentOptions().get(0).getTransfers() != null
+		&& !paymentPosition.getPaymentOptions().get(0).getTransfers().isEmpty()) {
+
+	    for (Transfers tt : paymentPosition.getPaymentOptions().get(0).getTransfers()) {
+		if (tt.getOrganizationFiscalCode().equals(paymentPosition.getOrganizationFiscalCode())) {
+		    result=this.checkPostal(type, tt);
+		}
+	    }
+	}
+
+	return result;
+
+    }
+
+    private String checkPostal(int type, Transfers tt) {
+	String result = null;
+	if (type == 1) {
+	    result = tt.getPostalIbanHolder();
+	} else if (type == 2) {
+	    String postalIban = tt.getPostalIban();
+	    if (postalIban != null && postalIban.length() >= 12) {
+		result = postalIban.substring(postalIban.length() - 12, postalIban.length());
+	    } else {
+		result = null;
+	    }
+	} else if (type == 3) {
+	    result = tt.getPostalAuthCode();
+	}
+	return result;
+    }
+
+    private DebtPosition generateDebtPosition(Debitor debitor, PaymentOptions paymentOption, String documentNumber,
+	    int installmentNumber, String fiscalCodeEc) throws Exception {
+	StTipoIdentificativoUnivocoPersFG payerUniqueIdentificationType = StTipoIdentificativoUnivocoPersFG.F;
+	if (debitor.getType() == 2)
+	    payerUniqueIdentificationType = StTipoIdentificativoUnivocoPersFG.G;
+
+	LocalDate duoData = paymentOption.getDuoDate();
+	String notificationCode = paymentOption.getNotificationCode();
+	String iban = null;
+	String reason = null;
+	BigDecimal amount = paymentOption.getAmount();
+
+	List<Transfers> transfers = paymentOption.getTransfers();
+	for (Transfers transfer : transfers) {
+	    if (fiscalCodeEc.equals(transfer.getOrganizationFiscalCode())) {
+		iban = transfer.getIban();
+		reason = transfer.getReason();
+	    }
+	}
+
+	Date expirationDate = Date.from(duoData.atStartOfDay(ZoneId.of(this.zone)).toInstant());
+
+	DPPayer payer = DebtPositionGeneration.generatePayer(debitor.getFiscalCode(), payerUniqueIdentificationType,
+		debitor.getSurname() + " " + debitor.getName(), debitor.getAddress(), debitor.getNumber(),
+		debitor.getArea(), debitor.getProvince(), null, debitor.getCap(), null, null);
+	DPPaymentDetail paymentDetail = DebtPositionGeneration.generatePaymentDetail(fiscalCodeEc, auxDigit,
+		segregationCode, null, null, null, amount, reason, expirationDate, null, documentNumber,
+		installmentNumber, iban, null);
+	DPSinglePaymentDetail singlePaymentDetail = DebtPositionGeneration.generateSinglePaymentDetail(amount, 1,
+		reason, null, null, null, null, null);
+	List<DPSinglePaymentDetail> singlePaymentDetailList = new LinkedList<>();
+	singlePaymentDetailList.add(singlePaymentDetail);
+
+	DebtPosition debtPosition = DebtPositionGeneration.generate(payer, paymentDetail, singlePaymentDetailList);
+	debtPosition.getPaymentDetail().setNoticeNumberTestJunit(notificationCode);
+	return debtPosition;
+
+    }
 }

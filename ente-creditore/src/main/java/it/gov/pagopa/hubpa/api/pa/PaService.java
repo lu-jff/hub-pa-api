@@ -20,4 +20,7 @@ public class PaService {
     return paRepository.save(paEntity);
 
   }
+  public PaEntity getPaForTefaByCf(String fiscalCode) {
+      return paRepository.findByCodiceFiscale(fiscalCode);
+    }
 }
