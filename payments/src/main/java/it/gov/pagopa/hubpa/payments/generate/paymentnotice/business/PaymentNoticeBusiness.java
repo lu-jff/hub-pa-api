@@ -170,7 +170,7 @@ public class PaymentNoticeBusiness {
      */
     public static HashMap<Integer, DebtPosition> sortDebtPositionListByInstallmentNumberExcludingSingleInstallment(
             List<DebtPosition> debtPositionList) {
-        HashMap<Integer, DebtPosition> map = new HashMap<Integer, DebtPosition>();
+        HashMap<Integer, DebtPosition> map = new HashMap<>();
         for (DebtPosition debtPosition : debtPositionList) {
             if (debtPosition.getPaymentDetail().getInstallmentNumber() == 0) {
                 continue;

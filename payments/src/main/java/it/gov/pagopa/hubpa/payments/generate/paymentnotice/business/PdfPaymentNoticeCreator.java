@@ -118,22 +118,22 @@ public class PdfPaymentNoticeCreator {
         String template = "";
         if (paymentNotice.getCreditorInstitution().getPostalAuthorizationCode() != null) {
             if (paymentNotice.getDebtPositionList().size() == 1) {
-                template = PaymentNoticeConstants.baseTemplate;
+                template = PaymentNoticeConstants.BASE_TEMPLATE;
             } else {
                 if (PaymentNoticeBusiness.hasSingleInstallment(paymentNotice)) {
-                    template = PaymentNoticeConstants.baseTemplate;
+                    template = PaymentNoticeConstants.BASE_TEMPLATE;
                 } else {
-                    template = PaymentNoticeConstants.baseTemplate_NoPostalSection_NoSingleInstallment;
+                    template = PaymentNoticeConstants.BASE_TEMPLATE_NO_POSTAL_SECTION_NO_SINGLE_INSTALLMENT;
                 }
             }
         } else {
             if (paymentNotice.getDebtPositionList().size() == 1) {
-                template = PaymentNoticeConstants.baseTemplate_NoPostalSection;
+                template = PaymentNoticeConstants.BASE_TEMPLATE_NO_POSTAL_SECTION;
             } else {
                 if (PaymentNoticeBusiness.hasSingleInstallment(paymentNotice)) {
-                    template = PaymentNoticeConstants.baseTemplate_NoPostalSection;
+                    template = PaymentNoticeConstants.BASE_TEMPLATE_NO_POSTAL_SECTION;
                 } else {
-                    template = PaymentNoticeConstants.baseTemplate_NoPostalSection_NoSingleInstallment;
+                    template = PaymentNoticeConstants.BASE_TEMPLATE_NO_POSTAL_SECTION_NO_SINGLE_INSTALLMENT;
                 }
             }
         }
@@ -276,8 +276,8 @@ public class PdfPaymentNoticeCreator {
         canvas.addImage(
                 PdfPaymentNoticeManagement
                         .creaImgData(paymentNotice.getCreditorInstitution().getPostalAuthorizationCode() != null
-                                ? PaymentNoticeConstants.threeInstallmentsTemplate
-                                : PaymentNoticeConstants.threeInstallmentsTemplate_noPostalSection),
+                                ? PaymentNoticeConstants.THREE_INSTALLMENTS_TEMPLATE
+                                : PaymentNoticeConstants.THREE_INSTALLMENTS_TEMPLATE_NO_POSTAL_SECTION),
                 pageSize, false);
         document.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
         createInstallmentHeaderSection(PaymentNoticeConstants.PAGE_TYPE_THREE_INSTALLMENTS, startingInstallmentNumber);
@@ -338,8 +338,8 @@ public class PdfPaymentNoticeCreator {
         canvas.addImage(
                 PdfPaymentNoticeManagement
                         .creaImgData(paymentNotice.getCreditorInstitution().getPostalAuthorizationCode() != null
-                                ? PaymentNoticeConstants.twoInstallmentsTemplate
-                                : PaymentNoticeConstants.twoInstallmentsTemplate_noPostalSection),
+                                ? PaymentNoticeConstants.TWO_INSTALLMENTS_TEMPLATE
+                                : PaymentNoticeConstants.TWO_INSTALLMENTS_TEMPLATE_NO_POSTAL_SECTION),
                 pageSize, false);
         document.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
         createInstallmentHeaderSection(PaymentNoticeConstants.PAGE_TYPE_TWO_INSTALLMENTS, startingInstallmentNumber);
