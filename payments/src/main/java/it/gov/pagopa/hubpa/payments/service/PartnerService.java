@@ -3,18 +3,24 @@ package it.gov.pagopa.hubpa.payments.service;
 
 import java.util.Optional;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import it.gov.pagopa.hubpa.payments.entity.PaymentOptions;
 import it.gov.pagopa.hubpa.payments.entity.PaymentPosition;
+import it.gov.pagopa.hubpa.payments.enumeration.PaymentOptionStatusEnum;
 import it.gov.pagopa.hubpa.payments.enumeration.PaymentStatusEnum;
-import it.gov.pagopa.hubpa.payments.model.AmountOptEnum;
 import it.gov.pagopa.hubpa.payments.model.PaaErrorEnum;
 import it.gov.pagopa.hubpa.payments.model.partner.ObjectFactory;
+import it.gov.pagopa.hubpa.payments.model.partner.StAmountOption;
 import it.gov.pagopa.hubpa.payments.model.partner.CtPaymentPA;
 import it.gov.pagopa.hubpa.payments.model.partner.CtFaultBean;
 import it.gov.pagopa.hubpa.payments.model.partner.CtPaymentOptionsDescriptionListPA;
+import it.gov.pagopa.hubpa.payments.model.partner.CtPaymentOptionDescriptionPA;
 import it.gov.pagopa.hubpa.payments.model.partner.PaGetPaymentReq;
 import it.gov.pagopa.hubpa.payments.model.partner.PaGetPaymentRes;
 import it.gov.pagopa.hubpa.payments.model.partner.PaSendRTReq;
@@ -24,6 +30,7 @@ import it.gov.pagopa.hubpa.payments.model.partner.PaVerifyPaymentNoticeRes;
 import it.gov.pagopa.hubpa.payments.model.partner.StOutcome;
 import it.gov.pagopa.hubpa.payments.repository.DebitorRepository;
 import it.gov.pagopa.hubpa.payments.repository.IncrementalIuvNumberRepository;
+import it.gov.pagopa.hubpa.payments.repository.PaymentOptionsRepository;
 import it.gov.pagopa.hubpa.payments.repository.PaymentPositionRepository;
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,6 +48,9 @@ public class PartnerService {
   private PaymentPositionRepository paymentPositionRepository;
 
   @Autowired
+  private PaymentOptionsRepository paymentOptionsRepository;
+
+  @Autowired
   private ObjectFactory factory;
 
   @Value("${pt.id_dominio}")
@@ -52,13 +62,14 @@ public class PartnerService {
   @Value("${pt.id_stazione}")
   private String ptIdStazione;
 
-  public PaVerifyPaymentNoticeRes paVerifyPaymentNotice(PaVerifyPaymentNoticeReq request) {
+  public PaVerifyPaymentNoticeRes paVerifyPaymentNotice(PaVerifyPaymentNoticeReq request)
+      throws DatatypeConfigurationException {
 
     log.debug(String.format("paVerifyPaymentNotice %s", request.getIdPA()));
-    PaVerifyPaymentNoticeRes res = factory.createPaVerifyPaymentNoticeRes();
+    PaVerifyPaymentNoticeRes result = factory.createPaVerifyPaymentNoticeRes();
     CtFaultBean cFault = factory.createCtFaultBean();
     CtPaymentOptionsDescriptionListPA cPaymentList = factory.createCtPaymentOptionsDescriptionListPA();
-
+    CtPaymentOptionDescriptionPA CtPaymentOption = factory.createCtPaymentOptionDescriptionPA();
     // verificare che il CF idPA /Intermediario idBrokerPA/Stazione idStation
     // corrispondono con quelli configurati altrimenti restituire rispettivamente i
     // seguenti FaultCode
@@ -66,69 +77,85 @@ public class PartnerService {
     // PAA_ID_INTERMEDIARIO_ERRATO
     // PAA_STAZIONE_INT_ERRATA
     if (!request.getIdPA().equals(ptIdDominio)) {
-      res.setOutcome(StOutcome.KO);
+      result.setOutcome(StOutcome.KO);
       cFault.setDescription("L'idPA ricevuto non e' tra quelli configurati");
       cFault.setFaultCode(PaaErrorEnum.PAA_ID_DOMINIO_ERRATO.getValue());
       cFault.setFaultString("ID dominio errato");
-      res.setFault(cFault);
-      // result.setFault(factory.createJaxbpaVeri)
+      result.setFault(cFault);
     } else if (!request.getIdBrokerPA().equals(ptIdIntermediario)) {
-      res.setOutcome(StOutcome.KO);
+      result.setOutcome(StOutcome.KO);
       cFault.setDescription("L'IdBrokerPA ricevuto non e' tra quelli configurati");
       cFault.setFaultCode(PaaErrorEnum.PAA_ID_INTERMEDIARIO_ERRATO.getValue());
       cFault.setFaultString("IdBrokerPA errato");
-      res.setFault(cFault);
-
+      result.setFault(cFault);
     } else if (!request.getIdStation().equals(ptIdStazione)) {
-      res.setOutcome(StOutcome.KO);
+      result.setOutcome(StOutcome.KO);
       cFault.setDescription("L'IdStazione ricevuto non e' tra quelli configurati");
       cFault.setFaultCode(PaaErrorEnum.PAA_STAZIONE_INT_ERRATA.getValue());
       cFault.setFaultString("IdStazione errato");
-      res.setFault(cFault);
-
-    }
-    // verificare che se esiste un payment_options che ha un notification_code
-    // uguale a noticeNumber e lo stato della relativa payment_position sia
-    // PUBBLICATO, altrimenti restituire PAA_PAGAMENTO_SCONOSCIUTO
-    Optional<PaymentPosition> payment = paymentPositionRepository
-        .findByNotificationCode(request.getQrCode().getNoticeNumber());
-    if (!payment.isPresent() || (payment.get().getStatus() != PaymentStatusEnum.PUBBLICATO.getStatus())) {
-      res.setOutcome(StOutcome.KO);
-      cFault.setDescription("L'id del pagamento ricevuto " + request.getQrCode().getNoticeNumber() + " non esiste");
-      cFault.setFaultCode(PaaErrorEnum.PAA_PAGAMENTO_SCONOSCIUTO.getValue());
-      cFault.setFaultString("pagamento sconosciuto");
-      res.setFault(cFault);
+      result.setFault(cFault);
     } else {
-      // generare una paVerifyPaymentNoticeRes positiva con :
-      // amount = payment_options.amount
-      // dueDate = payment_options.duo_date
-      // detailDescription = payment_position.description
-      // NOTA : paymentList presente nella response di fatto corrisponde alle Option
-      // nello specifico con la verifca si richiede l'opzione legato allo
-      // IUV/NoticeNumber
-      res.setOutcome(StOutcome.OK);
-      // cPaymentList.setAmount(res.get().getAmount());
-      // cPaymentList.setOptions(AmountOptEnum.EQ.getValue());
-      // cPaymentList.setDueDate(res.get().getDueDate());
-      // cPaymentList.setDetailDescription(""); // get from payment
-      // // allCCP = true se solo se l’opzione è associabile a tutti transfer con
-      // Conti
-      // // Correnti Postali altrimenti false
-      // cPaymentList.setAllCCP(false);
+      // verificare che se esiste un payment_options che ha un notification_code
+      // uguale a noticeNumber e se lo stato della relativa payment_position e'
+      // PUBBLICATO
 
+      Optional<PaymentOptions> option = paymentOptionsRepository
+          .findByNotificationCode(request.getQrCode().getNoticeNumber());
+
+      Optional<PaymentPosition> position = Optional.of(option.get().getPaymentPosition());
+
+      if (!position.isPresent() || (position.get().getStatus() != PaymentStatusEnum.PUBBLICATO.getStatus())
+          && (position.get().getStatus() != PaymentStatusEnum.PAGATO_PARZIALE.getStatus())) {
+        result.setOutcome(StOutcome.KO);
+        cFault.setDescription("L'id del pagamento ricevuto " + request.getQrCode().getNoticeNumber() + " non esiste");
+        cFault.setFaultCode(PaaErrorEnum.PAA_PAGAMENTO_SCONOSCIUTO.getValue());
+        cFault.setFaultString("pagamento sconosciuto");
+        result.setFault(cFault);
+      } else {
+        if (option.get().getStatus() != PaymentOptionStatusEnum.NON_PAGATO.getStatus()) {
+          result.setOutcome(StOutcome.KO);
+          cFault
+              .setDescription("L'id del pagamento ricevuto " + request.getQrCode().getNoticeNumber() + " e' duplicato");
+          cFault.setFaultCode(PaaErrorEnum.PAA_PAGAMENTO_DUPLICATO.getValue());
+          cFault.setFaultString("pagamento duplicato");
+          result.setFault(cFault);
+        } else {
+          // generare una paVerifyPaymentNoticeRes positiva
+          result.setOutcome(StOutcome.OK);
+          // paymentList
+          CtPaymentOption.setAmount(option.get().getAmount());
+          CtPaymentOption.setOptions(StAmountOption.EQ); // de-scoping
+          CtPaymentOption
+              .setDueDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(option.get().getDuoDate().toString()));
+          CtPaymentOption.setDetailDescription(position.get().getDescription());
+          CtPaymentOption.setAllCCP(isAllCCPostalIban(option)); // allCPP fa parte del modello del option
+          cPaymentList.getPaymentOptionDescription().add(CtPaymentOption);
+
+          result.setPaymentList(cPaymentList);
+          // general info
+          result.setPaymentDescription(position.get().getDescription());
+          result.setFiscalCodePA(ptIdDominio);
+          result.setCompanyName(position.get().getCompanyName());
+          result.setOfficeName(position.get().getOfficeName());
+
+        }
+      }
+
+      // mock response
+      // PaVerifyPaymentNoticeRes result = new PaVerifyPaymentNoticeRes();
+      // result.setCompanyName("company name");
+      // result.setOfficeName("officeName");
+      // result.setFiscalCodePA("77777777777");
+      // result.setPaymentDescription("position ");
+      // result.setOfficeName("officeName");
+      // return result;
     }
+    return result;
 
-    return res;
+  }
 
-    // mock response
-    // PaVerifyPaymentNoticeRes result = new PaVerifyPaymentNoticeRes();
-    // result.setCompanyName("company name");
-    // result.setOfficeName("officeName");
-    // result.setFiscalCodePA("77777777777");
-    // result.setPaymentDescription("payment");
-    // result.setOfficeName("officeName");
-
-    // return result;
+  private Boolean isAllCCPostalIban(Optional<PaymentOptions> option) {
+    return true;
   }
 
   public PaGetPaymentRes paGetPayment(PaGetPaymentReq request) {

@@ -1,6 +1,7 @@
 package it.gov.pagopa.hubpa.payments.endpoints;
 
 import javax.xml.bind.JAXBElement;
+import javax.xml.datatype.DatatypeConfigurationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
@@ -23,37 +24,37 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PartnerEndpoint {
 
-    @Autowired
-    private PartnerService partnerService;
+  @Autowired
+  private PartnerService partnerService;
 
-    @Autowired
-    private ObjectFactory factory;
+  @Autowired
+  private ObjectFactory factory;
 
-    @SoapAction("paVerifyPaymentNotice")
-    @PayloadRoot(localPart = "paVerifyPaymentNoticeReq", namespace = "http://pagopa-api.pagopa.gov.it/partner")
-    @ResponsePayload
-    public JAXBElement<PaVerifyPaymentNoticeRes> paVerifyPaymentNotice(
-            @RequestPayload JAXBElement<PaVerifyPaymentNoticeReq> request) throws Exception {
+  @SoapAction("paVerifyPaymentNotice")
+  @PayloadRoot(localPart = "paVerifyPaymentNoticeReq", namespace = "http://pagopa-api.pagopa.gov.it/partner")
+  @ResponsePayload
+  public JAXBElement<PaVerifyPaymentNoticeRes> paVerifyPaymentNotice(
+      @RequestPayload JAXBElement<PaVerifyPaymentNoticeReq> request) throws DatatypeConfigurationException {
 
-        log.info(" paVerifyPaymentNotice START ");
-        return factory.createPaVerifyPaymentNoticeRes(partnerService.paVerifyPaymentNotice(request.getValue()));
-    }
+    log.info(" paVerifyPaymentNotice START ");
+    return factory.createPaVerifyPaymentNoticeRes(partnerService.paVerifyPaymentNotice(request.getValue()));
+  }
 
-    @SoapAction("paGetPayment")
-    @PayloadRoot(localPart = "paGetPaymentReq", namespace = "http://pagopa-api.pagopa.gov.it/partner")
-    @ResponsePayload
-    public JAXBElement<PaGetPaymentRes> paGetPayment(@RequestPayload JAXBElement<PaGetPaymentReq> request) {
+  @SoapAction("paGetPayment")
+  @PayloadRoot(localPart = "paGetPaymentReq", namespace = "http://pagopa-api.pagopa.gov.it/partner")
+  @ResponsePayload
+  public JAXBElement<PaGetPaymentRes> paGetPayment(@RequestPayload JAXBElement<PaGetPaymentReq> request) {
 
-        log.info(" paGetPayment START ");
-        return factory.createPaGetPaymentRes(partnerService.paGetPayment(request.getValue()));
-    }
+    log.info(" paGetPayment START ");
+    return factory.createPaGetPaymentRes(partnerService.paGetPayment(request.getValue()));
+  }
 
-    @SoapAction("paSendRT")
-    @PayloadRoot(localPart = "paSendRTReq", namespace = "http://pagopa-api.pagopa.gov.it/partner")
-    @ResponsePayload
-    public JAXBElement<PaSendRTRes> paSendRT(@RequestPayload JAXBElement<PaSendRTReq> request) {
+  @SoapAction("paSendRT")
+  @PayloadRoot(localPart = "paSendRTReq", namespace = "http://pagopa-api.pagopa.gov.it/partner")
+  @ResponsePayload
+  public JAXBElement<PaSendRTRes> paSendRT(@RequestPayload JAXBElement<PaSendRTReq> request) {
 
-        log.info(" paSendRT START ");
-        return factory.createPaSendRTRes(partnerService.paSendRT(request.getValue()));
-    }
+    log.info(" paSendRT START ");
+    return factory.createPaSendRTRes(partnerService.paSendRT(request.getValue()));
+  }
 }

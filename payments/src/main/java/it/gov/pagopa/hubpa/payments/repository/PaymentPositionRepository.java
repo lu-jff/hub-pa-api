@@ -17,6 +17,6 @@ public interface PaymentPositionRepository
 
   PaymentPosition findByIdAndStatus(Long jobId, Integer status);
 
-  Optional<PaymentPosition> findByNotificationCode(String noticeNumber);
+  Optional<PaymentPosition> findById(String id);
 
 }
