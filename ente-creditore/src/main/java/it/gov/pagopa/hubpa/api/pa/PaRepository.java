@@ -12,4 +12,6 @@ import org.springframework.stereotype.Repository;
 public interface PaRepository extends JpaRepository<PaEntity, Long> {
   @Query(value = "SELECT pa FROM PaEntity pa WHERE pa.tipologiaIstat IN :tipologieIstat")
   List<PaEntity> findPaForTefa(@Param("tipologieIstat") List<String> tipologieIstat);
+  
+  PaEntity findByCodiceFiscale(String fiscalCode);
 }

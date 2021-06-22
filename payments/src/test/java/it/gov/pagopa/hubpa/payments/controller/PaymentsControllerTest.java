@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
@@ -42,9 +43,12 @@ import it.gov.pagopa.hubpa.payments.entity.Transfers;
 import it.gov.pagopa.hubpa.payments.mock.CsvPositionModelMock;
 import it.gov.pagopa.hubpa.payments.mock.DebitorMock;
 import it.gov.pagopa.hubpa.payments.mock.DebitorModelMock;
+import it.gov.pagopa.hubpa.payments.mock.EnteCreditoreMinimalDtoMock;
+import it.gov.pagopa.hubpa.payments.mock.ExportModelMock;
 import it.gov.pagopa.hubpa.payments.mock.FilterModelMock;
 import it.gov.pagopa.hubpa.payments.mock.FindModelMock;
 import it.gov.pagopa.hubpa.payments.mock.FindResponseModelMock;
+import it.gov.pagopa.hubpa.payments.mock.PaDtoMock;
 import it.gov.pagopa.hubpa.payments.mock.PaymentJobMinimalModelMock;
 import it.gov.pagopa.hubpa.payments.mock.PaymentMinimalModelMock;
 import it.gov.pagopa.hubpa.payments.mock.PaymentPositionDetailModelMock;
@@ -56,6 +60,7 @@ import it.gov.pagopa.hubpa.payments.mock.UploadCsvPartialModelMock;
 import it.gov.pagopa.hubpa.payments.model.BooleanResponseModel;
 import it.gov.pagopa.hubpa.payments.model.CsvPositionModel;
 import it.gov.pagopa.hubpa.payments.model.DebitorModel;
+import it.gov.pagopa.hubpa.payments.model.ExportModel;
 import it.gov.pagopa.hubpa.payments.model.FilterModel;
 import it.gov.pagopa.hubpa.payments.model.FindModel;
 import it.gov.pagopa.hubpa.payments.model.FindResponseModel;
@@ -66,6 +71,8 @@ import it.gov.pagopa.hubpa.payments.model.PaymentsModel;
 import it.gov.pagopa.hubpa.payments.model.PublishModel;
 import it.gov.pagopa.hubpa.payments.model.UploadCsvModel;
 import it.gov.pagopa.hubpa.payments.model.UploadCsvPartialModel;
+import it.gov.pagopa.hubpa.payments.model.ente.EnteCreditoreMinimalDto;
+import it.gov.pagopa.hubpa.payments.model.ente.PaDto;
 import it.gov.pagopa.hubpa.payments.model.tribute.TributeServiceModel;
 import it.gov.pagopa.hubpa.payments.service.PaymentService;
 import springfox.documentation.spring.web.plugins.Docket;
@@ -305,7 +312,60 @@ class PaymentsControllerTest {
 	paymentsController.exportCsv(1l,"test.csv", httpServletResponse);
 	assertThatNoException();
     }
+    @Test
+    void exportPayments() throws Exception {
+	EnteCreditoreMinimalDto enteDto=EnteCreditoreMinimalDtoMock.getMock();
+	PaDto paDto=PaDtoMock.getMock();
+	ExportModel exportModelMock=ExportModelMock.getMock();
+	ExportModel exportModelMock2=ExportModelMock.getMock2();
+	HttpServletResponse httpServletResponse = new MockHttpServletResponse();
+	List<PaymentPosition> paymentPositionList = new ArrayList<>();
+	ReflectionTestUtils.setField(paymentsController, "entePath", "");
 
+	when(paymentService.generatePaymentNotice(any(List.class),any(EnteCreditoreMinimalDto.class),any(PaDto.class),any())).thenReturn(new byte[10]);
+	
+	//EnteCreditoreMinimalDto and paDto ok
+	when(restTemplate.getForObject(Mockito.anyString(), Mockito.eq(EnteCreditoreMinimalDto.class))).thenReturn(enteDto);
+	when(restTemplate.getForObject(Mockito.anyString(), Mockito.eq(PaDto.class))).thenReturn(paDto);
+	when(paymentService.getPaymentPositionsByIds(Mockito.any(List.class))).thenReturn(paymentPositionList);
+	paymentsController.exportPayments(exportModelMock, httpServletResponse);
+	assertThatNoException();
+
+	
+	when(paymentService.getPaymentPositionsByIds(Mockito.any(List.class))).thenReturn(paymentPositionList);
+	paymentsController.exportPayments(exportModelMock, httpServletResponse);
+	assertThatNoException();
+	
+	paymentPositionList.add(DebitorMock.createPaymentPositionMock());
+	
+	when(paymentService.getPaymentPositionsByIds(Mockito.any(List.class))).thenReturn(paymentPositionList);
+
+	paymentsController.exportPayments(exportModelMock, httpServletResponse);
+	assertThatNoException();
+	
+	paymentsController.exportPayments(exportModelMock2, httpServletResponse);
+	assertThatNoException();
+	
+	
+    }
+    
+    @Test
+    void exportPaymentsKO1() throws Exception {
+	EnteCreditoreMinimalDto enteDto=EnteCreditoreMinimalDtoMock.getMock();
+	PaDto paDto=PaDtoMock.getMock();
+	ExportModel exportModelMock=ExportModelMock.getMock();
+	HttpServletResponse httpServletResponse = new MockHttpServletResponse();
+	List<PaymentPosition> paymentPositionList = new ArrayList<>();
+	ReflectionTestUtils.setField(paymentsController, "entePath", "");
+	
+	//no result from paDto and EnteCreditoreMinimalDto
+	when(paymentService.getPaymentPositionsByIds(Mockito.any(List.class))).thenReturn(paymentPositionList);
+	paymentsController.exportPayments(exportModelMock, httpServletResponse);
+	assertThatNoException();
+
+	
+    }
+   
     @Test
     void publishPayments() {
 	

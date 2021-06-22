@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -57,5 +58,17 @@ public class PaController {
 
     return modelMapper.map(paCreated, PaDto.class);
   }
+  
+  @ApiOperation(value = "Recupera la lista delle PA", notes = "Recupera la lista delle PA", response = List.class)
+  @GetMapping(value = "/ente/pa/{fiscalCode}")
+  public PaDto getEcForTefa(@PathVariable("fiscalCode") String fiscalCode) {
+    logger.info("GET getEcForTefa");
+    PaEntity ente = paService.getPaForTefaByCf(fiscalCode);
+    if (ente != null) {
+      return modelMapper.map(ente, PaDto.class);
+    } else {
+      return null;
+    }
 
+  }
 }
