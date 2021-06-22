@@ -102,17 +102,17 @@ public class PartnerService {
       Optional<PaymentOptions> option = paymentOptionsRepository
           .findByNotificationCode(request.getQrCode().getNoticeNumber());
 
-      Optional<PaymentPosition> position = Optional.of(option.get().getPaymentPosition());
+      Optional<PaymentPosition> position = Optional.ofNullable(option.get().getPaymentPosition());
 
-      if (!position.isPresent() || (position.get().getStatus() != PaymentStatusEnum.PUBBLICATO.getStatus())
-          && (position.get().getStatus() != PaymentStatusEnum.PAGATO_PARZIALE.getStatus())) {
+      if (!position.isPresent() || (!position.get().getStatus().equals(PaymentStatusEnum.PUBBLICATO.getStatus())
+          && (!position.get().getStatus().equals(PaymentStatusEnum.PAGATO_PARZIALE.getStatus())))) {
         result.setOutcome(StOutcome.KO);
         cFault.setDescription("L'id del pagamento ricevuto " + request.getQrCode().getNoticeNumber() + " non esiste");
         cFault.setFaultCode(PaaErrorEnum.PAA_PAGAMENTO_SCONOSCIUTO.getValue());
         cFault.setFaultString("pagamento sconosciuto");
         result.setFault(cFault);
       } else {
-        if (option.get().getStatus() != PaymentOptionStatusEnum.NON_PAGATO.getStatus()) {
+        if (!option.get().getStatus().equals(PaymentOptionStatusEnum.NON_PAGATO.getStatus())) {
           result.setOutcome(StOutcome.KO);
           cFault
               .setDescription("L'id del pagamento ricevuto " + request.getQrCode().getNoticeNumber() + " e' duplicato");
@@ -140,21 +140,13 @@ public class PartnerService {
 
         }
       }
-
-      // mock response
-      // PaVerifyPaymentNoticeRes result = new PaVerifyPaymentNoticeRes();
-      // result.setCompanyName("company name");
-      // result.setOfficeName("officeName");
-      // result.setFiscalCodePA("77777777777");
-      // result.setPaymentDescription("position ");
-      // result.setOfficeName("officeName");
-      // return result;
     }
     return result;
 
   }
 
   private Boolean isAllCCPostalIban(Optional<PaymentOptions> option) {
+    // TODO : questa info sara' a livello di option
     return true;
   }
 
