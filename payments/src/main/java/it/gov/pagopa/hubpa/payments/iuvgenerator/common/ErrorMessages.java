@@ -10,6 +10,7 @@ public class ErrorMessages {
 
     }
     
+    public static final String VALIDATION_APPLICATION_CODE_ERROR = "ApplicationCode cannot be null for AuxDigit 0";
     public static final String UNEXPECTED_GENERATED_VALUE_ERROR = "Unexpected generated value: ";
     public static final String VALIDATION_ALGORITHM_NOT_IMPLEMENTED_ERROR = "Algorithm not implemented for AuxDigit: ";
     public static final String VALIDATION_AMOUNT_MIN = "The value must be grater than zero";
