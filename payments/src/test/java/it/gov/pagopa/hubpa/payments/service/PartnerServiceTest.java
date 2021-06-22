@@ -84,10 +84,37 @@ class PartnerServiceTest {
     assertThat(responseBody.getPaymentList().getPaymentOptionDescription().get(0).getAmount())
         .isEqualTo(DebitorMock.createPaymentOptionsMock4().getAmount());
     assertThat(responseBody.getPaymentList().getPaymentOptionDescription().get(0).getOptions())
-        .isEqualTo(StAmountOption.EQ);
+        .isEqualTo(StAmountOption.EQ); // de-scoping
     assertThat(responseBody.getFiscalCodePA()).isEqualTo("77777777777");
     assertThat(responseBody.getOfficeName()).isEqualTo("officeName");
     assertThat(responseBody.getPaymentDescription()).isEqualTo("paymentDescription");
+  }
+
+  @Test
+  void paVerifyPaymentNoticeTestKOsconosciuto() throws DatatypeConfigurationException {
+
+    ReflectionTestUtils.setField(partnerService, "ptIdDominio", "77777777777");
+    ReflectionTestUtils.setField(partnerService, "ptIdIntermediario", "77777777777");
+    ReflectionTestUtils.setField(partnerService, "ptIdStazione", "77777777777_01");
+
+    // Test preconditions
+    PaVerifyPaymentNoticeReq requestBody = PaVerifyPaymentNoticeReqMock.getMock();
+
+    when(factory.createCtFaultBean()).thenReturn(factoryUtil.createCtFaultBean());
+    when(factory.createPaVerifyPaymentNoticeRes()).thenReturn(factoryUtil.createPaVerifyPaymentNoticeRes());
+    when(factory.createCtPaymentOptionDescriptionPA()).thenReturn(factoryUtil.createCtPaymentOptionDescriptionPA());
+    when(factory.createCtPaymentOptionsDescriptionListPA())
+        .thenReturn(factoryUtil.createCtPaymentOptionsDescriptionListPA());
+
+    when(paymentOptionRepository.findByNotificationCode(requestBody.getQrCode().getNoticeNumber()))
+        .thenReturn(Optional.of(DebitorMock.createPaymentOptionsMock6()));
+
+    // Test execution
+    PaVerifyPaymentNoticeRes responseBody = partnerService.paVerifyPaymentNotice(requestBody);
+
+    // Test postcondiction
+    assertThat(responseBody.getOutcome()).isEqualTo(StOutcome.KO);
+    assertThat(responseBody.getFault().getFaultCode()).isEqualTo(PaaErrorEnum.PAA_PAGAMENTO_SCONOSCIUTO.getValue());
   }
 
   @Test

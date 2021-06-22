@@ -44,7 +44,7 @@ public class DebitorMock {
     mock.setJobId(1l);
     mock.setOfficeName(null);
     mock.setOrganizationFiscalCode("12345678901");
-    mock.setStatus(1);
+    mock.setStatus(PaymentStatusEnum.BOZZA.getStatus());
     mock.setPublishDate(LocalDate.now());
 
     mock.addPaymentOptions(createPaymentOptionsMock1());
@@ -96,7 +96,7 @@ public class DebitorMock {
 
     mock.addTransfers(createTransfersMock1a());
     mock.addTransfers(createTransfersMock1b());
-    mock.setPaymentPosition(createPaymentPositionMock1());
+    mock.setPaymentPosition(createPaymentPositionMock1()); // PUBBLICATO
 
     return mock;
   }
@@ -116,7 +116,27 @@ public class DebitorMock {
 
     mock.addTransfers(createTransfersMock1a());
     mock.addTransfers(createTransfersMock1b());
-    mock.setPaymentPosition(createPaymentPositionMock1());
+    mock.setPaymentPosition(createPaymentPositionMock1()); // PUBBLICATO
+
+    return mock;
+  }
+
+  public static PaymentOptions createPaymentOptionsMock6() {
+
+    PaymentOptions mock = new PaymentOptions();
+    mock.setAmount(new BigDecimal(200));
+    mock.setDuoDate(LocalDate.now(ZoneId.of("Europe/Paris")));
+    mock.setFiscalCode("77777777777");
+    mock.setIsConclusive(Boolean.TRUE);
+    mock.setMetadata(null);
+    mock.setNotificationCode("311111111112222222");
+    mock.setPaymentDate(null);
+    mock.setRetentionDate(null);
+    mock.setStatus(PaymentOptionStatusEnum.NON_PAGATO.getStatus());
+
+    mock.addTransfers(createTransfersMock1a());
+    mock.addTransfers(createTransfersMock1b());
+    mock.setPaymentPosition(createPaymentPositionMock()); // BOZZA
 
     return mock;
   }
