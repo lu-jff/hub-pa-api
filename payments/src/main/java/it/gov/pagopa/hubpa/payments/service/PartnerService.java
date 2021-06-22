@@ -66,7 +66,6 @@ public class PartnerService {
       throws DatatypeConfigurationException {
 
     log.debug(String.format("paVerifyPaymentNotice %s", request.getIdPA()));
-    Optional<PaymentPosition> position;
     PaVerifyPaymentNoticeRes result = factory.createPaVerifyPaymentNoticeRes();
     CtFaultBean cFault = factory.createCtFaultBean();
     CtPaymentOptionsDescriptionListPA cPaymentList = factory.createCtPaymentOptionsDescriptionListPA();
