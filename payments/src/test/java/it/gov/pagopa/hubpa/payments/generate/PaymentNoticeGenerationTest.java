@@ -66,7 +66,7 @@ class PaymentNoticeGenerationTest {
     Integer spd_orderSinglePayment = 1;
     String spd_causalDescriptionSinglePayment = "Causale pagamento SinglePayment";
 
-@Test
+
     void maintest() throws FileNotFoundException, IOException, Exception {
 	File fff=new File("c:\\temp\\pagopa-logo.png");
 	
