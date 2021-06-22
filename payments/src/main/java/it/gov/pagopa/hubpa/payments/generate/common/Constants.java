@@ -5,6 +5,10 @@ package it.gov.pagopa.hubpa.payments.generate.common;
  */
 public class Constants {
 
+    private Constants() {
+	throw new IllegalStateException("Utility class");
+    }
+
     public static final int AUX_DIGIT_0 = 0;
     public static final int AUX_DIGIT_3 = 3;
 

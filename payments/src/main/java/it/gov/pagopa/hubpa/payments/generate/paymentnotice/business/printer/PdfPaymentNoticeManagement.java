@@ -4,10 +4,14 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 
 import javax.imageio.ImageIO;
 
+import org.springframework.util.StreamUtils;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.itextpdf.io.font.PdfEncodings;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
@@ -37,7 +41,8 @@ public class PdfPaymentNoticeManagement {
      * @throws IOException
      */
     public static ImageData creaImgData(String imgagePath) throws IOException {
-        return ImageDataFactory.create(Files.readAllBytes(new File(new StringBuffer(imgagePath).toString()).toPath()));
+	InputStream is = TypeReference.class.getResourceAsStream(new StringBuffer(imgagePath).toString());
+        return ImageDataFactory.create(StreamUtils.copyToByteArray(is));
     }
 
     /**
@@ -47,9 +52,9 @@ public class PdfPaymentNoticeManagement {
      * @throws IOException
      */
     public static PdfFont getRobotoFontRegular() throws IOException {
+	InputStream is = TypeReference.class.getResourceAsStream(new StringBuffer(PaymentNoticeConstants.ROBOTOFONTREGULAR).toString());
         return PdfFontFactory.createFont(
-                Files.readAllBytes(
-                        new File(new StringBuffer(PaymentNoticeConstants.robotoFontRegular).toString()).toPath()),
+        	StreamUtils.copyToByteArray(is),
                 PdfEncodings.IDENTITY_H);
     }
 
@@ -60,9 +65,9 @@ public class PdfPaymentNoticeManagement {
      * @throws IOException
      */
     public static PdfFont getRobotoFontBold() throws IOException {
+	InputStream is = TypeReference.class.getResourceAsStream(new StringBuffer(PaymentNoticeConstants.ROBOTOFONTBOLD).toString());
         return PdfFontFactory.createFont(
-                Files.readAllBytes(
-                        new File(new StringBuffer(PaymentNoticeConstants.robotoFontBold).toString()).toPath()),
+        	StreamUtils.copyToByteArray(is),
                 PdfEncodings.IDENTITY_H);
     }
 
@@ -73,9 +78,9 @@ public class PdfPaymentNoticeManagement {
      * @throws IOException
      */
     public static PdfFont getTitilliumWebRegular() throws IOException {
+	InputStream is = TypeReference.class.getResourceAsStream(new StringBuffer(PaymentNoticeConstants.TITILLIUM_WEB_REGULAR).toString());
         return PdfFontFactory.createFont(
-                Files.readAllBytes(
-                        new File(new StringBuffer(PaymentNoticeConstants.titilliumWebRegular).toString()).toPath()),
+        	StreamUtils.copyToByteArray(is),
                 PdfEncodings.IDENTITY_H);
     }
 
@@ -86,9 +91,9 @@ public class PdfPaymentNoticeManagement {
      * @throws IOException
      */
     public static PdfFont getTitiilliumWebBold() throws IOException {
+	InputStream is = TypeReference.class.getResourceAsStream(new StringBuffer(PaymentNoticeConstants.TITILLIUM_WEB_BOLD).toString());
         return PdfFontFactory.createFont(
-                Files.readAllBytes(
-                        new File(new StringBuffer(PaymentNoticeConstants.titilliumWebBold).toString()).toPath()),
+        	StreamUtils.copyToByteArray(is),
                 PdfEncodings.IDENTITY_H);
     }
 
@@ -99,9 +104,9 @@ public class PdfPaymentNoticeManagement {
      * @throws IOException
      */
     public static PdfFont getTrilliumWebBlack() throws IOException {
+	InputStream is = TypeReference.class.getResourceAsStream(new StringBuffer(PaymentNoticeConstants.TITILLIUM_WEB_BLACK).toString());
         return PdfFontFactory.createFont(
-                Files.readAllBytes(
-                        new File(new StringBuffer(PaymentNoticeConstants.titilliumWebBlack).toString()).toPath()),
+        	StreamUtils.copyToByteArray(is),
                 PdfEncodings.IDENTITY_H);
     }
 
