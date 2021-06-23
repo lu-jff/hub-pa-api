@@ -25,12 +25,9 @@ import it.gov.pagopa.hubpa.payments.model.partner.ObjectFactory;
 @Configuration
 public class WebServicesConfiguration extends WsConfigurerAdapter {
 
-    @Autowired
-    private SoapMessageDispatcher servlet;
-
     @Bean
     public ServletRegistrationBean<MessageDispatcherServlet> messageDispatcherServlet(
-            ApplicationContext applicationContext) {
+            ApplicationContext applicationContext, SoapMessageDispatcher servlet) {
         servlet.setApplicationContext(applicationContext);
         servlet.setTransformWsdlLocations(true);
         return new ServletRegistrationBean<>(servlet, "/partner/*");
