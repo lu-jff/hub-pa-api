@@ -484,7 +484,7 @@ public class PaymentService {
 	singlePaymentDetailList.add(singlePaymentDetail);
 
 	DebtPosition debtPosition = DebtPositionGeneration.generate(payer, paymentDetail, singlePaymentDetailList);
-	debtPosition.getPaymentDetail().setNoticeNumberTestJunit(notificationCode);
+	debtPosition.getPaymentDetail().setNoticeNumberManual(notificationCode);
 	return debtPosition;
 
     }

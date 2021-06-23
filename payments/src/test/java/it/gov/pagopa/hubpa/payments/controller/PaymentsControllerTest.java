@@ -351,8 +351,7 @@ class PaymentsControllerTest {
     
     @Test
     void exportPaymentsKO1() throws Exception {
-	EnteCreditoreMinimalDto enteDto=EnteCreditoreMinimalDtoMock.getMock();
-	PaDto paDto=PaDtoMock.getMock();
+	
 	ExportModel exportModelMock=ExportModelMock.getMock();
 	HttpServletResponse httpServletResponse = new MockHttpServletResponse();
 	List<PaymentPosition> paymentPositionList = new ArrayList<>();

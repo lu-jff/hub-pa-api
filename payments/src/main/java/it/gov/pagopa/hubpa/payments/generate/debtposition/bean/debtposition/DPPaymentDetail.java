@@ -590,10 +590,8 @@ public class DPPaymentDetail {
     protected void setPaymentStatus(PaymentStatusEnum paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
-    public void setIuvTestJunit(String iuv) {
-	this.iuv=iuv;
-    }
-    public void setNoticeNumberTestJunit(String noticeNumber) {
+
+    public void setNoticeNumberManual(String noticeNumber) {
 	this.noticeNumber = noticeNumber;
     }
 }
