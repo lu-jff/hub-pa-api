@@ -1,5 +1,6 @@
 package it.gov.pagopa.hubpa.payments.generate.paymentnotice.business.printer;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,10 +36,10 @@ public class BankingSectionInstallmentsBusiness {
      * @param sortedDebtPositionHashMap ordered HashMap of <code>debtPosition</code>
      * @param installmentNumber         number of installment
      * @return
-     * @throws Exception
+     * @throws IOException 
      */
     public static Cell createExpirationDateCell(HashMap<Integer, DebtPosition> sortedDebtPositionHashMap,
-	    int installmentNumber) throws Exception {
+	    int installmentNumber) throws IOException {
 	Cell cell = new Cell();
 	cell.setBorder(Border.NO_BORDER).setMargin(0).setPadding(0);
 	Paragraph paragraph = new Paragraph();
@@ -86,10 +87,10 @@ public class BankingSectionInstallmentsBusiness {
      * 
      * @param debtPosition
      * @return
-     * @throws Exception
+     * @throws IOException 
      * @see DebtPosition
      */
-    public static Cell createAmountCell(DebtPosition debtPosition) throws Exception {
+    public static Cell createAmountCell(DebtPosition debtPosition) throws IOException {
 	Cell cell = new Cell();
 	cell.setBorder(Border.NO_BORDER).setMargin(0).setPadding(0);
 	Paragraph paragraph = new Paragraph();
@@ -110,9 +111,9 @@ public class BankingSectionInstallmentsBusiness {
      * 
      * @param creditorInstitutionName name of Creditor Institution
      * @return
-     * @throws Exception
+     * @throws IOException 
      */
-    public static Cell createCreditorInstitutionCell(String creditorInstitutionName) throws Exception {
+    public static Cell createCreditorInstitutionCell(String creditorInstitutionName) throws IOException {
 	Cell cell1 = new Cell();
 	cell1.setBorder(Border.NO_BORDER).setMargin(0).setPadding(0);
 	Paragraph paragraph = new Paragraph();
@@ -131,10 +132,10 @@ public class BankingSectionInstallmentsBusiness {
      * 
      * @param debtPosition
      * @return
-     * @throws Exception
+     * @throws IOException 
      * @see DebtPosition
      */
-    public static Cell createPaymentDetailsCell(DebtPosition debtPosition) throws Exception {
+    public static Cell createPaymentDetailsCell(DebtPosition debtPosition) throws IOException {
 	Cell cell = new Cell(1, 3);
 	cell.setBorder(Border.NO_BORDER).setMargin(0).setPadding(0);
 	Paragraph paragraph = new Paragraph();
@@ -156,9 +157,9 @@ public class BankingSectionInstallmentsBusiness {
      * 
      * @param cbillCode interbank code of the Creditor Institution
      * @return
-     * @throws Exception
+     * @throws IOException 
      */
-    public static Cell createCbillCell(String cbillCode) throws Exception {
+    public static Cell createCbillCell(String cbillCode) throws IOException {
 	Cell cell = new Cell();
 	cell.setBorder(Border.NO_BORDER).setMargin(0).setPadding(0);
 	Paragraph paragraph = new Paragraph();
@@ -177,9 +178,9 @@ public class BankingSectionInstallmentsBusiness {
      * 
      * @param fiscalCode fiscal code of Creditor Institution
      * @return
-     * @throws Exception
+     * @throws IOException 
      */
-    public static Cell createFiscalCodeCell(String fiscalCode) throws Exception {
+    public static Cell createFiscalCodeCell(String fiscalCode) throws IOException {
 	Cell cell = new Cell(1, 2);
 	cell.setBorder(Border.NO_BORDER).setMargin(0).setPadding(0);
 	Paragraph paragraph = new Paragraph();
@@ -199,10 +200,10 @@ public class BankingSectionInstallmentsBusiness {
      * 
      * @param debtPosition
      * @return
-     * @throws Exception
+     * @throws IOException 
      * @see DebtPosition
      */
-    public static Cell createNoticeNumberCell(DebtPosition debtPosition) throws Exception {
+    public static Cell createNoticeNumberCell(DebtPosition debtPosition) throws IOException {
 	Cell cell = new Cell(1, 3);
 	cell.setBorder(Border.NO_BORDER).setMargin(0).setPadding(0);
 	Paragraph paragraph = new Paragraph();

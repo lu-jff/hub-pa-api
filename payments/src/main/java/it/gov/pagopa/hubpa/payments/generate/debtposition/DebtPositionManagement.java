@@ -32,7 +32,7 @@ public class DebtPositionManagement {
      * @throws Exception
      * @see DebtPosition
      */
-    public static DebtPosition makePayable(DebtPosition debtPosition) throws Exception {
+    public static DebtPosition makePayable(DebtPosition debtPosition) {
         DebtPositionBusiness.changePaymentStatus(debtPosition, PaymentStatusEnum.PAYABLE);
         return debtPosition;
     }

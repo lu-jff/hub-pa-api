@@ -2,6 +2,7 @@
 package it.gov.pagopa.hubpa.payments.service;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
@@ -280,7 +281,7 @@ public class PaymentService {
     }
 
     public byte[] generatePaymentNotice(List<PaymentPosition> paymentPositions,
-	    EnteCreditoreMinimalDto enteCreditoreMinimalDto, PaDto paDto, ZipOutputStream zos) throws Exception {
+	    EnteCreditoreMinimalDto enteCreditoreMinimalDto, PaDto paDto, ZipOutputStream zos) throws IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
 	byte[] bb = null;
 	ByteArrayOutputStream baos = null;
 	OutputStreamWriter osw = null;
@@ -450,7 +451,7 @@ public class PaymentService {
     }
 
     private DebtPosition generateDebtPosition(Debitor debitor, PaymentOptions paymentOption, String documentNumber,
-	    int installmentNumber, String fiscalCodeEc) throws Exception {
+	    int installmentNumber, String fiscalCodeEc) {
 	StTipoIdentificativoUnivocoPersFG payerUniqueIdentificationType = StTipoIdentificativoUnivocoPersFG.F;
 	if (debitor.getType() == 2)
 	    payerUniqueIdentificationType = StTipoIdentificativoUnivocoPersFG.G;

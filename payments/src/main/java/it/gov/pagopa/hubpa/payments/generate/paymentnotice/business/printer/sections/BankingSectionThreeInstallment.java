@@ -1,5 +1,6 @@
 package it.gov.pagopa.hubpa.payments.generate.paymentnotice.business.printer.sections;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -50,9 +51,9 @@ public class BankingSectionThreeInstallment {
      * Generates the heading of <code>BankingSectionThreeInstallment</code>
      * 
      * @return
-     * @throws Exception
+     * @throws IOException 
      */
-    public Table createFirstRow() throws Exception {
+    public Table createFirstRow() throws IOException {
         float[] colWidths = { 164, 4, 188, 4, 164 };
         Table table = new Table(colWidths);
         table.setHeight(20).setMargin(0).setMarginLeft(20).setPadding(0);
@@ -72,9 +73,9 @@ public class BankingSectionThreeInstallment {
      * Generates the information part of <code>BankingSectionThreeInstallment</code>
      * 
      * @return
-     * @throws Exception
+     * @throws IOException 
      */
-    public Table createSecondRow() throws Exception {
+    public Table createSecondRow() throws IOException {
         float[] colWidths = { 175, 8, 175, 20, 175 };
         Table table = new Table(colWidths);
         table.setHeight(218).setMargin(0).setMarginLeft(15).setPadding(0);
@@ -90,9 +91,9 @@ public class BankingSectionThreeInstallment {
     /**
      * @param installmentNumber
      * @return
-     * @throws Exception
+     * @throws IOException 
      */
-    private Cell createPaymentInfoCell(int installmentNumber) throws Exception {
+    private Cell createPaymentInfoCell(int installmentNumber) throws IOException {
         float[] colWidths = { 55, 35, 80 };
         Table table = new Table(colWidths);
         table.setMargin(0).setPadding(0);
@@ -118,9 +119,9 @@ public class BankingSectionThreeInstallment {
 
     /**
      * @return
-     * @throws Exception
+     * @throws IOException 
      */
-    private Cell createBankingInfoCell() throws Exception {
+    private Cell createBankingInfoCell() throws IOException {
         Cell cell = new Cell(1, 3);
         cell.setBorder(Border.NO_BORDER).setMargin(0).setPadding(0);
         Paragraph paragraph = new Paragraph();

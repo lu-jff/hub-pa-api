@@ -1,5 +1,6 @@
 package it.gov.pagopa.hubpa.payments.generate.paymentnotice.business.printer.sections;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -40,9 +41,9 @@ public class PaymentDetailSection {
      * Generates the heading of <code>PaymentDetailSection</code>
      * 
      * @return
-     * @throws Exception
+     * @throws IOException 
      */
-    public Table createFirstRow() throws Exception {
+    public Table createFirstRow() throws IOException {
         float[] colWidths = { 273f, 4f, 273f };
         Table table = new Table(colWidths);
         table.setHeight(25).setMarginLeft(10).setMarginTop(2);
@@ -88,9 +89,9 @@ public class PaymentDetailSection {
      * Generates the first information part of <code>PaymentDetailSection</code>
      * 
      * @return
-     * @throws Exception
+     * @throws IOException 
      */
-    public Table createSecondRow() throws Exception {
+    public Table createSecondRow() throws IOException {
         float[] colWidths = { 260, 4, 280 };
         Table table = new Table(colWidths);
         table.setHeight(115).setMarginLeft(0).setMarginTop(6);
@@ -141,9 +142,9 @@ public class PaymentDetailSection {
      * <code>PaymentDetailSection</code>
      * 
      * @return
-     * @throws Exception
+     * @throws IOException 
      */
-    public Table createThirdRow() throws Exception {
+    public Table createThirdRow() throws IOException {
         float[] colWidths = { 500, 50 };
         Table table = new Table(colWidths);
         table.setHeight(22).setMarginLeft(0).setMarginTop(5).setBorder(Border.NO_BORDER);
@@ -165,9 +166,9 @@ public class PaymentDetailSection {
     /**
      * @param paragraph
      * @return
-     * @throws Exception
+     * @throws IOException 
      */
-    private void createAmountExpirationRow(Paragraph paragraph) throws Exception {
+    private void createAmountExpirationRow(Paragraph paragraph) throws IOException {
         Text text1 = new Text(String.format(Locale.ITALY, PaymentNoticeConstants.PDF_TEXT_AMOUNT_FORMAT,
                 PaymentNoticeBusiness.getPaymentTotaleAmount(paymentNotice.getDebtPositionList())));
         text1.setFont(PdfPaymentNoticeManagement.getTitiilliumWebBold()).setFontSize(14f);
@@ -192,9 +193,9 @@ public class PaymentDetailSection {
 
     /**
      * @param paragraph
-     * @throws Exception
+     * @throws IOException 
      */
-    private void createAmountInfoPart1(Paragraph paragraph) throws Exception {
+    private void createAmountInfoPart1(Paragraph paragraph) throws IOException {
         Text text1a1 = new Text(PaymentNoticeConstants.PDF_TEXT_YOU_CAN_PAY);
         text1a1.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(8);
         paragraph.add(text1a1);
@@ -227,9 +228,9 @@ public class PaymentDetailSection {
 
     /**
      * @param paragraph
-     * @throws Exception
+     * @throws IOException 
      */
-    private void createAmountInfoPart2(Paragraph paragraph) throws Exception {
+    private void createAmountInfoPart2(Paragraph paragraph) throws IOException {
         StringBuilder sb = new StringBuilder(PaymentNoticeConstants.PDF_TEXT_AMOUNT_INFO_PART1);
         sb.append(PaymentNoticeConstants.PDF_TEXT_AMOUNT_INFO_PART2);
         sb.append(PaymentNoticeConstants.PDF_TEXT_AMOUNT_INFO_PART3);
@@ -241,9 +242,9 @@ public class PaymentDetailSection {
 
     /**
      * @param paragraph
-     * @throws Exception
+     * @throws IOException 
      */
-    private void createWhereToPayInfoPart1(Paragraph paragraph) throws Exception {
+    private void createWhereToPayInfoPart1(Paragraph paragraph) throws IOException {
         Text text1 = new Text(PaymentNoticeConstants.PDF_TEXT_WEBSITE_TOPAY);
         text1.setFont(PdfPaymentNoticeManagement.getTitiilliumWebBold()).setFontSize(10f);
         paragraph.add(text1);
@@ -269,9 +270,9 @@ public class PaymentDetailSection {
 
     /**
      * @param paragraph
-     * @throws Exception
+     * @throws IOException 
      */
-    private void createWhereToPayInfoPart2(Paragraph paragraph) throws Exception {
+    private void createWhereToPayInfoPart2(Paragraph paragraph) throws IOException {
         Text text1 = new Text(PaymentNoticeConstants.PDF_TEXT_PAY_ON_TERRITORY);
         text1.setFont(PdfPaymentNoticeManagement.getTitiilliumWebBold()).setFontSize(11f);
         paragraph.add(text1);
@@ -288,9 +289,9 @@ public class PaymentDetailSection {
 
     /**
      * @param paragraph
-     * @throws Exception
+     * @throws IOException 
      */
-    private void createHowToPayInfo(Paragraph paragraph) throws Exception {
+    private void createHowToPayInfo(Paragraph paragraph) throws IOException {
         Text text1 = new Text(PaymentNoticeConstants.PDF_TEXT_HOW_TOPAY);
         text1.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(11);
         paragraph.add(text1);

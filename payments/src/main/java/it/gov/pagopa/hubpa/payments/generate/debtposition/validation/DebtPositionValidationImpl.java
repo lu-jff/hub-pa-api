@@ -29,10 +29,9 @@ public class DebtPositionValidationImpl implements DebtPositionValidation {
      * The validation includes:
      * <ul>
      * <li>checkConstraints - validation by annotation
-     * <li>checkUniqueIdentificationType - if
-     * <code>uniqueIdentificationType</code> = G then it must be
-     * <code>uniqueIdentificationCode</code> = valid VAT number; if
-     * <code>uniqueIdentificationType</code> = F then it must be
+     * <li>checkUniqueIdentificationType - if <code>uniqueIdentificationType</code>
+     * = G then it must be <code>uniqueIdentificationCode</code> = valid VAT number;
+     * if <code>uniqueIdentificationType</code> = F then it must be
      * <code>uniqueIdentificationCode</code> = valid fiscal code
      * <li>checkReceivedIuv - the <code>iuv</code> must be valid; check digit
      * validation
@@ -43,38 +42,36 @@ public class DebtPositionValidationImpl implements DebtPositionValidation {
      * <code>DPPaymentDetail</code>
      * </ul>
      * 
-     * @param debtPosition
-     *            the bean to validate
+     * @param debtPosition the bean to validate
      * @throws ValidationException
      * @see DebtPosition
      * @see ValidationException
      */
     @Override
     public void validate(DebtPosition debtPosition) throws ValidationException {
-        checkConstraints(debtPosition);
+	checkConstraints(debtPosition);
 
-        checkUniqueIdentificationType(debtPosition);
+	checkUniqueIdentificationType(debtPosition);
 
-        checkReceivedIuv(debtPosition);
+	checkReceivedIuv(debtPosition);
 
-        checkSinglePaymentsDetailList(debtPosition);
+	checkSinglePaymentsDetailList(debtPosition);
 
-        checkAmounts(debtPosition);
+	checkAmounts(debtPosition);
     }
 
     /**
-     * @param objectToValidate
-     *            the bean to validate. It can be the debt position or one of
-     *            its components.
+     * @param objectToValidate the bean to validate. It can be the debt position or
+     *                         one of its components.
      * @throws ValidationException
      * @see ValidationException
      */
     public <T> void checkConstraints(T objectToValidate) throws ValidationException {
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        Set<ConstraintViolation<T>> validationInputResults = validator.validate(objectToValidate);
-        if (!validationInputResults.isEmpty()) {
-            throw new ValidationException(validationInputResults);
-        }
+	Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+	Set<ConstraintViolation<T>> validationInputResults = validator.validate(objectToValidate);
+	if (!validationInputResults.isEmpty()) {
+	    throw new ValidationException(validationInputResults);
+	}
     }
 
     /**
@@ -82,15 +79,15 @@ public class DebtPositionValidationImpl implements DebtPositionValidation {
      * @see DebtPosition
      */
     private void checkUniqueIdentificationType(DebtPosition debtPosition) {
-        if (debtPosition.getPayer().getUniqueIdentificationType().equals(StTipoIdentificativoUnivocoPersFG.G)) {
-            if (GenericValidation.checkVatNumber(debtPosition.getPayer().getUniqueIdentificationCode())) {
-                throw new ValidationException(ErrorMessages.VALIDATION_VAT_NUMBER_ERROR);
-            }
-        } else if (debtPosition.getPayer().getUniqueIdentificationType().equals(StTipoIdentificativoUnivocoPersFG.F)) {
-            if (GenericValidation.checkFiscalCode(debtPosition.getPayer().getUniqueIdentificationCode()) > 0) {
-                throw new ValidationException(ErrorMessages.VALIDATION_FISCAL_CODE_ERROR);
-            }
-        }
+	if (debtPosition.getPayer().getUniqueIdentificationType().equals(StTipoIdentificativoUnivocoPersFG.G)
+		&& GenericValidation.checkVatNumber(debtPosition.getPayer().getUniqueIdentificationCode())) {
+	    throw new ValidationException(ErrorMessages.VALIDATION_VAT_NUMBER_ERROR);
+
+	} else if (debtPosition.getPayer().getUniqueIdentificationType().equals(StTipoIdentificativoUnivocoPersFG.F)
+		&& GenericValidation.checkFiscalCode(debtPosition.getPayer().getUniqueIdentificationCode()) > 0) {
+	    throw new ValidationException(ErrorMessages.VALIDATION_FISCAL_CODE_ERROR);
+
+	}
     }
 
     /**
@@ -98,34 +95,34 @@ public class DebtPositionValidationImpl implements DebtPositionValidation {
      * @see DebtPosition
      */
     private void checkReceivedIuv(DebtPosition debtPosition) {
-        String iuv = debtPosition.getPaymentDetail().getIuv();
-        int auxDigit = debtPosition.getPaymentDetail().getAuxDigit();
-        Integer applicationCode = debtPosition.getPaymentDetail().getApplicationCode();
-        if (iuv != null && !iuv.trim().isEmpty()) {
-            IuvCodeGenerator iuvCodeGenerator = new IuvCodeGenerator.Builder().setAuxDigit(auxDigit)
-                    .setSegregationCode(debtPosition.getPaymentDetail().getSegregationCode()).build();
-            IuvCodeValidation iuvCodeValidation = new IuvCodeValidationImpl();
-            iuvCodeValidation.validate(iuvCodeGenerator);
+	String iuv = debtPosition.getPaymentDetail().getIuv();
+	int auxDigit = debtPosition.getPaymentDetail().getAuxDigit();
+	Integer applicationCode = debtPosition.getPaymentDetail().getApplicationCode();
+	if (iuv != null && !iuv.trim().isEmpty()) {
+	    IuvCodeGenerator iuvCodeGenerator = new IuvCodeGenerator.Builder().setAuxDigit(auxDigit)
+		    .setSegregationCode(debtPosition.getPaymentDetail().getSegregationCode()).build();
+	    IuvCodeValidation iuvCodeValidation = new IuvCodeValidationImpl();
+	    iuvCodeValidation.validate(iuvCodeGenerator);
 
-            BigDecimal checkDigitReceived;
-            BigDecimal checkDigitCalculated;
-            if (auxDigit == Constants.AUX_DIGIT_0) {
-                if (Optional.ofNullable(applicationCode).orElse(0) == 0) {
-                    throw new ValidationException(ErrorMessages.VALIDATION_APPLICATION_CODE_ERROR);
-                }
-                checkDigitReceived = new BigDecimal(iuv.substring(13));
-                checkDigitCalculated = new BigDecimal(auxDigit + applicationCode + iuv.substring(0, 13))
-                        .remainder(new BigDecimal(93));
-            } else if (auxDigit == Constants.AUX_DIGIT_3) {
-                checkDigitReceived = new BigDecimal(iuv.substring(15));
-                checkDigitCalculated = new BigDecimal(auxDigit + iuv.substring(0, 15)).remainder(new BigDecimal(93));
-            } else {
-                throw new ValidationException(ErrorMessages.VALIDATION_AUXDIGIT_ERROR);
-            }
-            if (checkDigitReceived.compareTo(checkDigitCalculated) != 0) {
-                throw new ValidationException(ErrorMessages.VALIDATION_CHECK_DIGIT_ERROR);
-            }
-        }
+	    BigDecimal checkDigitReceived;
+	    BigDecimal checkDigitCalculated;
+	    if (auxDigit == Constants.AUX_DIGIT_0) {
+		if (Optional.ofNullable(applicationCode).orElse(0) == 0) {
+		    throw new ValidationException(ErrorMessages.VALIDATION_APPLICATION_CODE_ERROR);
+		}
+		checkDigitReceived = new BigDecimal(iuv.substring(13));
+		checkDigitCalculated = new BigDecimal(auxDigit + applicationCode + iuv.substring(0, 13))
+			.remainder(new BigDecimal(93));
+	    } else if (auxDigit == Constants.AUX_DIGIT_3) {
+		checkDigitReceived = new BigDecimal(iuv.substring(15));
+		checkDigitCalculated = new BigDecimal(auxDigit + iuv.substring(0, 15)).remainder(new BigDecimal(93));
+	    } else {
+		throw new ValidationException(ErrorMessages.VALIDATION_AUXDIGIT_ERROR);
+	    }
+	    if (checkDigitReceived.compareTo(checkDigitCalculated) != 0) {
+		throw new ValidationException(ErrorMessages.VALIDATION_CHECK_DIGIT_ERROR);
+	    }
+	}
     }
 
     /**
@@ -133,9 +130,9 @@ public class DebtPositionValidationImpl implements DebtPositionValidation {
      * @see DebtPosition
      */
     private void checkSinglePaymentsDetailList(DebtPosition debtPosition) {
-        if (debtPosition.getSinglePaymentDetailList().size() > Constants.SINGLE_PAYMENT_LIST_MAX_SIZE) {
-            throw new ValidationException(ErrorMessages.VALIDATION_SINGLE_PAYMENT_LIST_SIZE_ERROR);
-        }
+	if (debtPosition.getSinglePaymentDetailList().size() > Constants.SINGLE_PAYMENT_LIST_MAX_SIZE) {
+	    throw new ValidationException(ErrorMessages.VALIDATION_SINGLE_PAYMENT_LIST_SIZE_ERROR);
+	}
     }
 
     /**
@@ -143,10 +140,10 @@ public class DebtPositionValidationImpl implements DebtPositionValidation {
      * @see DebtPosition
      */
     private void checkAmounts(DebtPosition debtPosition) {
-        BigDecimal amountSinglePaymentSum = debtPosition.getSinglePaymentDetailList().stream()
-                .map(DPSinglePaymentDetail::getAmountSinglePayment).reduce(BigDecimal.ZERO, BigDecimal::add);
-        if (debtPosition.getPaymentDetail().getTotalAmountPayment().compareTo(amountSinglePaymentSum) != 0) {
-            throw new ValidationException(ErrorMessages.VALIDATION_AMOUNTS_ERROR);
-        }
+	BigDecimal amountSinglePaymentSum = debtPosition.getSinglePaymentDetailList().stream()
+		.map(DPSinglePaymentDetail::getAmountSinglePayment).reduce(BigDecimal.ZERO, BigDecimal::add);
+	if (debtPosition.getPaymentDetail().getTotalAmountPayment().compareTo(amountSinglePaymentSum) != 0) {
+	    throw new ValidationException(ErrorMessages.VALIDATION_AMOUNTS_ERROR);
+	}
     }
 }

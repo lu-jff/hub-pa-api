@@ -85,7 +85,10 @@ public class GenericValidation {
 	} catch (Exception e) {
 	    return 5;
 	}
-
+	return checkCharFrom11To15(cf);
+	
+    }
+    private static int checkCharFrom11To15(String cf) {
 	if (!(Character.isLetter(cf.charAt(11)))) {
 	    return 6;
 	}
@@ -105,10 +108,8 @@ public class GenericValidation {
 	if (!(Character.isLetter(cf.charAt(15)))) {
 	    return 7;
 	}
-
 	return 0;
     }
-
     private static String deleteWhiteSpace(String str) {
 	if (str == null || str.length() == 0) {
 	    return str;
@@ -142,7 +143,7 @@ public class GenericValidation {
 	    yyyy = Integer.parseInt(yyInf);
 	    if (yyyy > Integer.parseInt(yy)) {
 		yyyy = Integer.parseInt(yySup + yy);
-	    }else {
+	    } else {
 		yyyy = Integer.parseInt(yySup + "00") - 100 + Integer.parseInt(yy);
 	    }
 	    return yyyy;
