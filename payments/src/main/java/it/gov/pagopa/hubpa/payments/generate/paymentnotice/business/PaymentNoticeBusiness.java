@@ -14,6 +14,9 @@ import it.gov.pagopa.hubpa.payments.generate.paymentnotice.validation.PaymentNot
  * Business logic class
  */
 public class PaymentNoticeBusiness {
+    private PaymentNoticeBusiness() {
+	throw new IllegalStateException("PaymentNoticeBusiness class");
+    }
 
     /**
      * Validates a payment notice

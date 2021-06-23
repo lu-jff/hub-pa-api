@@ -76,18 +76,18 @@ public class BankingSection {
         Paragraph paragraph2 = new Paragraph();
         paragraph2.setWidthPercent(100).setPaddingTop(3).setMarginLeft(10).setTextAlignment(TextAlignment.RIGHT)
                 .setFixedLeading(10);
-        Text text2_1 = new Text(PaymentNoticeConstants.PDF_TEXT_BANK_SINGLE_INSTALLMENT);
-        text2_1.setFont(PdfPaymentNoticeManagement.getTrilliumWebBlack()).setFontSize(9);
-        paragraph2.add(text2_1);
+        Text text2a1 = new Text(PaymentNoticeConstants.PDF_TEXT_BANK_SINGLE_INSTALLMENT);
+        text2a1.setFont(PdfPaymentNoticeManagement.getTrilliumWebBlack()).setFontSize(9);
+        paragraph2.add(text2a1);
         Date expirationDate = PaymentNoticeBusiness.getExpirationDate(paymentNotice.getDebtPositionList());
         if (expirationDate != null) {
-            Text text2_2 = new Text(PaymentNoticeConstants.PDF_TEXT_BANK_WITHIN);
-            text2_2.setFont(PdfPaymentNoticeManagement.getTitiilliumWebBold()).setFontSize(9);
-            paragraph2.add(text2_2);
+            Text text2a2 = new Text(PaymentNoticeConstants.PDF_TEXT_BANK_WITHIN);
+            text2a2.setFont(PdfPaymentNoticeManagement.getTitiilliumWebBold()).setFontSize(9);
+            paragraph2.add(text2a2);
             DateFormat formatter = new SimpleDateFormat(PaymentNoticeConstants.PDF_TEXT_EXPIRATION_DATE_FORMAT);
-            Text text2_3 = new Text("    " + formatter.format(expirationDate));
-            text2_3.setFont(PdfPaymentNoticeManagement.getTitiilliumWebBold()).setFontSize(9);
-            paragraph2.add(text2_3);
+            Text text2a3 = new Text("    " + formatter.format(expirationDate));
+            text2a3.setFont(PdfPaymentNoticeManagement.getTitiilliumWebBold()).setFontSize(9);
+            paragraph2.add(text2a3);
         }
         cell2.add(paragraph2);
         table.addCell(cell2);
@@ -110,21 +110,21 @@ public class BankingSection {
         cell1.setBorder(Border.NO_BORDER);
         Paragraph paragraph1 = new Paragraph();
         paragraph1.setWidthPercent(100).setMarginTop(15).setMarginLeft(10).setFixedLeading(10);
-        Text text1_1 = new Text(PaymentNoticeConstants.PDF_TEXT_BANK_PAYMENT_CODES_PART1);
-        text1_1.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(9);
-        paragraph1.add(text1_1);
-        Text text1_2 = new Text(PaymentNoticeConstants.PDF_TEXT_BANK_PAYMENT_CODES_PART2);
-        text1_2.setFont(PdfPaymentNoticeManagement.getTitiilliumWebBold()).setFontSize(9);
-        paragraph1.add(text1_2);
-        Text text1_3 = new Text(PaymentNoticeConstants.PDF_TEXT_BANK_PAYMENT_CODES_PART3);
-        text1_3.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(9);
-        paragraph1.add(text1_3);
-        Text text1_4 = new Text(PaymentNoticeConstants.PDF_TEXT_BANK_PAYMENT_CODES_PART4);
-        text1_4.setFont(PdfPaymentNoticeManagement.getTitiilliumWebBold()).setFontSize(9);
-        paragraph1.add(text1_4);
-        Text text1_5 = new Text(PaymentNoticeConstants.PDF_TEXT_BANK_PAYMENT_CODES_PART5);
-        text1_5.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(9);
-        paragraph1.add(text1_5);
+        Text text1a1 = new Text(PaymentNoticeConstants.PDF_TEXT_BANK_PAYMENT_CODES_PART1);
+        text1a1.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(9);
+        paragraph1.add(text1a1);
+        Text text1a2 = new Text(PaymentNoticeConstants.PDF_TEXT_BANK_PAYMENT_CODES_PART2);
+        text1a2.setFont(PdfPaymentNoticeManagement.getTitiilliumWebBold()).setFontSize(9);
+        paragraph1.add(text1a2);
+        Text text1a3 = new Text(PaymentNoticeConstants.PDF_TEXT_BANK_PAYMENT_CODES_PART3);
+        text1a3.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(9);
+        paragraph1.add(text1a3);
+        Text text1a4 = new Text(PaymentNoticeConstants.PDF_TEXT_BANK_PAYMENT_CODES_PART4);
+        text1a4.setFont(PdfPaymentNoticeManagement.getTitiilliumWebBold()).setFontSize(9);
+        paragraph1.add(text1a4);
+        Text text1a5 = new Text(PaymentNoticeConstants.PDF_TEXT_BANK_PAYMENT_CODES_PART5);
+        text1a5.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(9);
+        paragraph1.add(text1a5);
         cell1.add(paragraph1);
         table.addCell(cell1);
 
@@ -185,14 +185,14 @@ public class BankingSection {
         Paragraph paragraph3 = new Paragraph();
         paragraph3.setWidthPercent(100).setMargin(0).setPadding(0).setFixedLeading(11)
                 .setTextAlignment(TextAlignment.RIGHT).setVerticalAlignment(VerticalAlignment.TOP);
-        Text text3_1 = new Text(PaymentNoticeConstants.PDF_TEXT_BANK_EURO);
-        text3_1.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(11);
-        paragraph3.add(text3_1);
+        Text text3a1 = new Text(PaymentNoticeConstants.PDF_TEXT_BANK_EURO);
+        text3a1.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(11);
+        paragraph3.add(text3a1);
         String amountString = String.format(Locale.ITALY, PaymentNoticeConstants.PDF_TEXT_AMOUNT_FORMAT,
                 PaymentNoticeBusiness.getPaymentTotaleAmount(paymentNotice.getDebtPositionList()));
-        Text text3_2 = new Text(amountString);
-        text3_2.setFont(PdfPaymentNoticeManagement.getRobotoFontBold()).setFontSize(11);
-        paragraph3.add(text3_2);
+        Text text3a2 = new Text(amountString);
+        text3a2.setFont(PdfPaymentNoticeManagement.getRobotoFontBold()).setFontSize(11);
+        paragraph3.add(text3a2);
         cell3.add(paragraph3);
         table.addCell(cell3);
 

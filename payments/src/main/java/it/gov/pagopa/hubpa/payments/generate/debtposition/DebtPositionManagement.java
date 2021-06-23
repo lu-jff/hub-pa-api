@@ -8,6 +8,9 @@ import it.gov.pagopa.hubpa.payments.generate.debtposition.enumeration.PaymentSta
  * Contains the methods for managing the <code>DebtPosition</code>
  */
 public class DebtPositionManagement {
+    private DebtPositionManagement() {
+	throw new IllegalStateException("DebtPositionManagement class");
+    }
 
     /**
      * Validates a debt position
@@ -16,7 +19,7 @@ public class DebtPositionManagement {
      * @throws Exception
      * @see DebtPosition
      */
-    public static void validate(DebtPosition debtPosition) throws Exception {
+    public static void validate(DebtPosition debtPosition) {
         DebtPositionBusiness.validate(debtPosition);
     }
 
@@ -43,7 +46,7 @@ public class DebtPositionManagement {
      * @throws Exception
      * @see DebtPosition
      */
-    public static DebtPosition makeNotPayable(DebtPosition debtPosition) throws Exception {
+    public static DebtPosition makeNotPayable(DebtPosition debtPosition) {
         DebtPositionBusiness.changePaymentStatus(debtPosition, PaymentStatusEnum.NOT_PAYABLE);
         return debtPosition;
     }
@@ -57,7 +60,7 @@ public class DebtPositionManagement {
      * @throws Exception
      * @see DebtPosition
      */
-    public static DebtPosition makeCancel(DebtPosition debtPosition) throws Exception {
+    public static DebtPosition makeCancel(DebtPosition debtPosition) {
         DebtPositionBusiness.changePaymentStatus(debtPosition, PaymentStatusEnum.CANCELED);
         return debtPosition;
     }
@@ -71,7 +74,7 @@ public class DebtPositionManagement {
      * @throws Exception
      * @see DebtPosition
      */
-    public static DebtPosition makePaid(DebtPosition debtPosition) throws Exception {
+    public static DebtPosition makePaid(DebtPosition debtPosition) {
         DebtPositionBusiness.changePaymentStatus(debtPosition, PaymentStatusEnum.PAID);
         return debtPosition;
     }

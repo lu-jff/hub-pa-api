@@ -92,7 +92,7 @@ class DebtPositionManagementTest {
      * @see DebtPositionManagement
      */
     @Test
-    public void testMakeNotPayable() throws Exception {
+    void testMakeNotPayable() throws Exception {
 	assertThat(DebtPositionManagement.makeNotPayable(debtPosition).getPaymentDetail().getPaymentStatus())
 		.isEqualTo(PaymentStatusEnum.NOT_PAYABLE);
     }

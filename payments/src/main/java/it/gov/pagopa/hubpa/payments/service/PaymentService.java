@@ -305,7 +305,7 @@ public class PaymentService {
 	String ciName = paDto.getComune();
 	String ciFiscalCode = paDto.getCodiceFiscale();
 	String ciWebsite = paDto.getSitoIstituzionale();
-	// TODO
+
 	String ciSector = "";
 
 	String ciInfo = paDto.getIndirizzo();

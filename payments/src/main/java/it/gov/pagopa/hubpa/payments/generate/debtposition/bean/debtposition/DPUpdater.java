@@ -6,6 +6,9 @@ import it.gov.pagopa.hubpa.payments.generate.debtposition.enumeration.PaymentSta
  * Allows the set of bean protected fields
  */
 public class DPUpdater {
+    private DPUpdater() {
+	throw new IllegalStateException("DPUpdater class");
+    }
 
     /**
      * Allows the set of the iuv in DPPaymentDetail
@@ -15,7 +18,7 @@ public class DPUpdater {
      * @see pagopa.gov.it.toolkit.debtPositionGenerator.bean.debtPosition.DPPaymentDetail
      */
     public static void setIuv(DPPaymentDetail paymentDetail, String iuv) {
-        paymentDetail.setIuv(iuv);
+	paymentDetail.setIuv(iuv);
     }
 
     /**
@@ -26,7 +29,7 @@ public class DPUpdater {
      * @see pagopa.gov.it.toolkit.debtPositionGenerator.bean.debtPosition.DPPaymentDetail
      */
     public static void setNoticeNumber(DPPaymentDetail paymentDetail, String noticeNumber) {
-        paymentDetail.setNoticeNumber(noticeNumber);
+	paymentDetail.setNoticeNumber(noticeNumber);
     }
 
     /**
@@ -37,6 +40,6 @@ public class DPUpdater {
      * @see pagopa.gov.it.toolkit.debtPositionGenerator.bean.debtPosition.DPPaymentDetail
      */
     public static void setPaymentStatus(DPPaymentDetail paymentDetail, PaymentStatusEnum paymentStatus) {
-        paymentDetail.setPaymentStatus(paymentStatus);
+	paymentDetail.setPaymentStatus(paymentStatus);
     }
 }

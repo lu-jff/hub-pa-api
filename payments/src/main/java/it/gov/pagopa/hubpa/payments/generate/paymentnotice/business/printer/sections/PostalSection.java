@@ -100,12 +100,12 @@ public class PostalSection {
         cell2.setBorder(Border.NO_BORDER);
         Paragraph paragraph2 = new Paragraph();
         paragraph2.setWidthPercent(100).setMarginTop(0).setMarginLeft(10).setFixedLeading(10);
-        Text text2_1 = new Text(PaymentNoticeConstants.PDF_TEXT_POSTAL_BANCO);
-        text2_1.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(9);
-        paragraph2.add(text2_1);
-        Text text2_2 = new Text(PaymentNoticeConstants.PDF_TEXT_POSTAL_POSTA);
-        text2_2.setFont(PdfPaymentNoticeManagement.getTrilliumWebBlack()).setFontSize(9);
-        paragraph2.add(text2_2);
+        Text text2a1 = new Text(PaymentNoticeConstants.PDF_TEXT_POSTAL_BANCO);
+        text2a1.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(9);
+        paragraph2.add(text2a1);
+        Text text2a2 = new Text(PaymentNoticeConstants.PDF_TEXT_POSTAL_POSTA);
+        text2a2.setFont(PdfPaymentNoticeManagement.getTrilliumWebBlack()).setFontSize(9);
+        paragraph2.add(text2a2);
         cell2.add(paragraph2);
         table.addCell(cell2);
 
@@ -114,20 +114,20 @@ public class PostalSection {
         Paragraph paragraph3 = new Paragraph();
         paragraph3.setWidthPercent(100).setMarginTop(0).setMarginLeft(10).setTextAlignment(TextAlignment.RIGHT)
                 .setFixedLeading(10);
-        Text text3_1 = new Text(
+        Text text3a1 = new Text(
                 installmentNumber > 0 ? (installmentNumber) + PaymentNoticeConstants.PDF_TEXT_POSTAL_INSTALLMENT_NUMBER
                         : PaymentNoticeConstants.PDF_TEXT_POSTAL_SINGLE_INSTALLMENT);
-        text3_1.setFont(PdfPaymentNoticeManagement.getTrilliumWebBlack()).setFontSize(9);
-        paragraph3.add(text3_1);
+        text3a1.setFont(PdfPaymentNoticeManagement.getTrilliumWebBlack()).setFontSize(9);
+        paragraph3.add(text3a1);
         if (referenceDebtPosition.getPaymentDetail().getExpirationDate() != null) {
-            Text text3_2 = new Text(PaymentNoticeConstants.PDF_TEXT_POSTAL_WITHIN);
-            text3_2.setFont(PdfPaymentNoticeManagement.getTitiilliumWebBold()).setFontSize(9);
-            paragraph3.add(text3_2);
+            Text text3a2 = new Text(PaymentNoticeConstants.PDF_TEXT_POSTAL_WITHIN);
+            text3a2.setFont(PdfPaymentNoticeManagement.getTitiilliumWebBold()).setFontSize(9);
+            paragraph3.add(text3a2);
             DateFormat formatter = new SimpleDateFormat(PaymentNoticeConstants.PDF_TEXT_EXPIRATION_DATE_FORMAT);
-            Text text3_3 = new Text(
+            Text text3a3 = new Text(
                     "    " + formatter.format(referenceDebtPosition.getPaymentDetail().getExpirationDate()));
-            text3_3.setFont(PdfPaymentNoticeManagement.getTitiilliumWebBold()).setFontSize(9);
-            paragraph3.add(text3_3);
+            text3a3.setFont(PdfPaymentNoticeManagement.getTitiilliumWebBold()).setFontSize(9);
+            paragraph3.add(text3a3);
         }
         cell3.add(paragraph3);
         table.addCell(cell3);
@@ -162,14 +162,14 @@ public class PostalSection {
         sb.append(PaymentNoticeConstants.PDF_TEXT_POSTAL_INFO_PART2);
         sb.append(PaymentNoticeConstants.PDF_TEXT_POSTAL_INFO_PART3);
         sb.append(PaymentNoticeConstants.PDF_TEXT_POSTAL_INFO_PART4);
-        Text text1_1 = new Text(sb.toString());
-        text1_1.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(8);
-        paragraph1.add(text1_1);
-        Text text1_2 = new Text("\r" + (paymentNotice.getCreditorInstitution().getPostalAuthorizationCode() != null
+        Text text1a1 = new Text(sb.toString());
+        text1a1.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(8);
+        paragraph1.add(text1a1);
+        Text text1a2 = new Text("\r" + (paymentNotice.getCreditorInstitution().getPostalAuthorizationCode() != null
                 ? paymentNotice.getCreditorInstitution().getPostalAuthorizationCode() : " "));
-        text1_2.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontColor(ColorConstants.DARK_GRAY)
+        text1a2.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontColor(ColorConstants.DARK_GRAY)
                 .setFontSize(6);
-        paragraph1.add(text1_2);
+        paragraph1.add(text1a2);
         cell1.add(paragraph1);
         table.addCell(cell1);
 
@@ -183,12 +183,12 @@ public class PostalSection {
             paragraph2.setMarginTop(34);
         } else
             paragraph2.setMarginTop(2);
-        Text text2_1 = new Text(PaymentNoticeConstants.PDF_TEXT_POSTAL_CC);
-        text2_1.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(11);
-        paragraph2.add(text2_1);
-        Text text2_2 = new Text(paymentNotice.getCreditorInstitution().getPostalAccountNumber());
-        text2_2.setFont(PdfPaymentNoticeManagement.getRobotoFontBold()).setFontSize(11);
-        paragraph2.add(text2_2);
+        Text text2a1 = new Text(PaymentNoticeConstants.PDF_TEXT_POSTAL_CC);
+        text2a1.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(11);
+        paragraph2.add(text2a1);
+        Text text2a2 = new Text(paymentNotice.getCreditorInstitution().getPostalAccountNumber());
+        text2a2.setFont(PdfPaymentNoticeManagement.getRobotoFontBold()).setFontSize(11);
+        paragraph2.add(text2a2);
         cell2.add(paragraph2);
         table.addCell(cell2);
 
@@ -203,14 +203,14 @@ public class PostalSection {
             paragraph3.setMarginTop(34);
         } else
             paragraph3.setMarginTop(2);
-        Text text3_1 = new Text(PaymentNoticeConstants.PDF_TEXT_POSTAL_EURO);
-        text3_1.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(11);
-        paragraph3.add(text3_1);
+        Text text3a1 = new Text(PaymentNoticeConstants.PDF_TEXT_POSTAL_EURO);
+        text3a1.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(11);
+        paragraph3.add(text3a1);
         String amountString = String.format(Locale.ITALY, PaymentNoticeConstants.PDF_TEXT_AMOUNT_FORMAT,
                 referenceDebtPosition.getPaymentDetail().getTotalAmountPayment());
-        Text text3_2 = new Text(amountString);
-        text3_2.setFont(PdfPaymentNoticeManagement.getRobotoFontBold()).setFontSize(11);
-        paragraph3.add(text3_2);
+        Text text3a2 = new Text(amountString);
+        text3a2.setFont(PdfPaymentNoticeManagement.getRobotoFontBold()).setFontSize(11);
+        paragraph3.add(text3a2);
         cell3.add(paragraph3);
         table.addCell(cell3);
 

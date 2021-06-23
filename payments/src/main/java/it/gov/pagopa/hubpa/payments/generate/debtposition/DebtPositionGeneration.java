@@ -17,6 +17,9 @@ import it.gov.pagopa.hubpa.payments.generate.rpt.xsd.StTipoIdentificativoUnivoco
  * Main class for the generation of the <code>DebtPosition</code>
  */
 public class DebtPositionGeneration {
+    private DebtPositionGeneration() {
+	throw new IllegalStateException("DebtPositionGeneration class");
+    }
 
     /**
      * Generates the component <code>DPPayer</code> of <code>DebtPosition</code>
@@ -153,15 +156,12 @@ public class DebtPositionGeneration {
      * @see DebtPosition
      */
     public static DebtPosition generate(DPPayer payer, DPPaymentDetail paymentDetail,
-            List<DPSinglePaymentDetail> singlePaymentsDetailList) throws Exception {
+            List<DPSinglePaymentDetail> singlePaymentsDetailList) {
 
         DebtPosition debtPosition = new DebtPosition.Builder().setPayer(payer).setPaymentDetail(paymentDetail)
                 .setSinglePaymentsDetail(singlePaymentsDetailList).build();
 
         DebtPositionBusiness.validate(debtPosition);
-
-        //TODO
-        //DebtPositionBusiness.generateIUV(debtPosition);
 
         DebtPositionBusiness.generateNoticeNumber(debtPosition);
 

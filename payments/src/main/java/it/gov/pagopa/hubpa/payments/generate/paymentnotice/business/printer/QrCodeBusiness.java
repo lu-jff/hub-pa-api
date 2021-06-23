@@ -8,6 +8,9 @@ import it.gov.pagopa.hubpa.payments.generate.debtposition.bean.DebtPosition;
  * Business logic for generating QR code
  */
 public class QrCodeBusiness {
+    private QrCodeBusiness() {
+	throw new IllegalStateException("QrCodeBusiness class");
+    }
 
     private static final String PAGOPA_QR_CODE_STRING = "PAGOPA|002|%1$s|%2$s|%3$s";
     private static final String DIGIT_OF_2 = "%02d";
@@ -36,8 +39,7 @@ public class QrCodeBusiness {
     private static String createQrCode(BigDecimal amount, String noticeNumber, String creditorInstitutionFiscalCode) {
         String centsAmount = String.valueOf((amount.multiply(new BigDecimal(100)).intValue()));
         String centsAmountPadQr = String.format(DIGIT_OF_2, Integer.parseInt(centsAmount));
-        String qrCode = String.format(PAGOPA_QR_CODE_STRING, noticeNumber, creditorInstitutionFiscalCode,
+       return String.format(PAGOPA_QR_CODE_STRING, noticeNumber, creditorInstitutionFiscalCode,
                 centsAmountPadQr);
-        return qrCode;
     }
 }
