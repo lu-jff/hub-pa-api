@@ -1,5 +1,6 @@
 package it.gov.pagopa.hubpa.payments.generate.paymentnotice;
 
+import java.io.IOException;
 import java.util.List;
 
 import it.gov.pagopa.hubpa.payments.generate.debtposition.bean.DebtPosition;
@@ -53,12 +54,12 @@ public class PaymentNoticeGeneration {
      * @param debtPositionList
      * @param creditorInstitution
      * @return paymentNotice (ByteArray)
-     * @throws Exception
+     * @throws IOException 
      * @see DebtPosition
      * @see PNCreditorInstitution
      */
     public static byte[] generate(List<DebtPosition> debtPositionList, PNCreditorInstitution creditorInstitution,
-            Boolean isModello1or2) throws Exception {
+            Boolean isModello1or2) throws IOException {
 
         PaymentNotice paymentNotice = new PaymentNotice.Builder().setDebtPositionList(debtPositionList)
                 .setCreditorInstitution(creditorInstitution).setIsModello1or2(isModello1or2).build();

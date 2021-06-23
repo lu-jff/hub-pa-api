@@ -1,5 +1,6 @@
 package it.gov.pagopa.hubpa.payments.generate.paymentnotice.business.printer.sections;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -79,9 +80,9 @@ public class PostalSection {
      * Generates the heading of <code>PostalSection</code>
      * 
      * @return
-     * @throws Exception
+     * @throws IOException 
      */
-    public Table createFirstRow() throws Exception {
+    public Table createFirstRow() throws IOException {
         float[] colWidths = { 145, 235, 180 };
         Table table = new Table(colWidths);
         table.setHeight(26).setMargin(0).setPadding(0).setMarginLeft(10).setMarginTop(4);
@@ -139,9 +140,9 @@ public class PostalSection {
      * Generates the information part of <code>PostalSection</code>
      * 
      * @return
-     * @throws Exception
+     * @throws IOException 
      */
-    public Table createSecondRow() throws Exception {
+    public Table createSecondRow() throws IOException {
         float[] colWidths = { 155, 310, 95 };
         Table table = new Table(colWidths);
         table.setMargin(0).setPadding(0);
@@ -231,9 +232,9 @@ public class PostalSection {
 
     /**
      * @return
-     * @throws Exception
+     * @throws IOException 
      */
-    private Table createPostalPaymentInfo() throws Exception {
+    private Table createPostalPaymentInfo() throws IOException {
         float[] colWidths = { 60, 30, 40, 40, 147 };
         Table table = new Table(colWidths);
         table.setMargin(0).setPadding(0);

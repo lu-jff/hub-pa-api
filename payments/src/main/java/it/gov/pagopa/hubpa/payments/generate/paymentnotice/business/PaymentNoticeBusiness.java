@@ -1,5 +1,6 @@
 package it.gov.pagopa.hubpa.payments.generate.paymentnotice.business;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
@@ -49,10 +50,10 @@ public class PaymentNoticeBusiness {
      * 
      * @param paymentNotice
      * @return the pdf in byte array
-     * @throws Exception
+     * @throws IOException 
      * @see PaymentNotice
      */
-    public static byte[] generatePaymentNotice(PaymentNotice paymentNotice) throws Exception {
+    public static byte[] generatePaymentNotice(PaymentNotice paymentNotice) throws IOException {
         PdfPaymentNoticeCreator pdfPaymentNoticeCreator = new PdfPaymentNoticeCreator(paymentNotice);
         pdfPaymentNoticeCreator.createDocument();
         pdfPaymentNoticeCreator.closeStreams();

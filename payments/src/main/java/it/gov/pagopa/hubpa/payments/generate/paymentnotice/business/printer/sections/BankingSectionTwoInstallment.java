@@ -1,5 +1,6 @@
 package it.gov.pagopa.hubpa.payments.generate.paymentnotice.business.printer.sections;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -50,9 +51,9 @@ public class BankingSectionTwoInstallment {
      * Generates the heading of <code>BankingSectionTwoInstallment</code>
      * 
      * @return
-     * @throws Exception
+     * @throws IOException 
      */
-    public Table createFirstRow() throws Exception {
+    public Table createFirstRow() throws IOException {
         float[] colWidths = { 258, 8, 258 };
         Table table = new Table(colWidths);
         table.setHeight(20).setMargin(0).setPadding(0).setMarginLeft(20).setMarginTop(2);
@@ -70,9 +71,9 @@ public class BankingSectionTwoInstallment {
      * <code>BankingSectionTwoInstallment</code>
      * 
      * @return
-     * @throws Exception
+     * @throws IOException 
      */
-    public Table createSecondRow() throws Exception {
+    public Table createSecondRow() throws IOException {
         float[] colWidths = { 258, 16, 258 };
         Table table = new Table(colWidths);
         table.setHeight(228).setMargin(0).setPadding(0).setMarginLeft(20);
@@ -86,9 +87,9 @@ public class BankingSectionTwoInstallment {
     /**
      * @param installmentNumber
      * @return
-     * @throws Exception
+     * @throws IOException 
      */
-    private Cell createPaymentInfoCell(int installmentNumber) throws Exception {
+    private Cell createPaymentInfoCell(int installmentNumber) throws IOException {
         float[] colWidths = { 60, 64, 134 };
         Table table = new Table(colWidths);
         table.setHeight(200).setMargin(0).setPadding(0);
@@ -114,9 +115,9 @@ public class BankingSectionTwoInstallment {
 
     /**
      * @return
-     * @throws Exception
+     * @throws IOException 
      */
-    private Cell createBankingInfoCell() throws Exception {
+    private Cell createBankingInfoCell() throws IOException {
         Cell cell = new Cell(1, 3);
         cell.setBorder(Border.NO_BORDER).setMargin(0).setPadding(0);
         Paragraph paragraph = new Paragraph();

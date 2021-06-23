@@ -1,5 +1,7 @@
 package it.gov.pagopa.hubpa.payments.generate.paymentnotice.business.printer.sections;
 
+import java.io.IOException;
+
 import com.itextpdf.layout.border.Border;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
@@ -36,9 +38,9 @@ public class PaymentInfoSection {
      * Generates the heading of <code>PaymentInfoSection</code>
      * 
      * @return
-     * @throws Exception
+     * @throws IOException 
      */
-    public Table createFirstRow() throws Exception {
+    public Table createFirstRow() throws IOException {
         float[] colWidths = { 276f, 4f, 273f };
         Table table = new Table(colWidths);
         table.setHeight(23).setMarginLeft(10).setMarginTop(4).setPadding(0).setBorder(Border.NO_BORDER);
@@ -84,9 +86,9 @@ public class PaymentInfoSection {
      * Generates the first information row of <code>PaymentInfoSection</code>
      * 
      * @return
-     * @throws Exception
+     * @throws IOException 
      */
-    public Table createSecondRow() throws Exception {
+    public Table createSecondRow() throws IOException {
         float[] colWidths = { 273f, 4f, 273f };
         Table table = new Table(colWidths);
         table.setHeight(30).setMarginLeft(11).setMarginTop(0);
@@ -120,9 +122,9 @@ public class PaymentInfoSection {
      * Generates the second information row of <code>PaymentInfoSection</code>
      * 
      * @return
-     * @throws Exception
+     * @throws IOException 
      */
-    public Table createThirdRow() throws Exception {
+    public Table createThirdRow() throws IOException {
         float[] colWidths = { 273f, 4f, 273f };
         Table table = new Table(colWidths);
         table.setHeight(28).setMarginLeft(10).setMarginTop(0);
@@ -156,9 +158,9 @@ public class PaymentInfoSection {
      * Generates the third information row of <code>PaymentInfoSection</code>
      * 
      * @return
-     * @throws Exception
+     * @throws IOException 
      */
-    public Table createFourthRow() throws Exception {
+    public Table createFourthRow() throws IOException {
         float[] colWidths = { 273f, 4f, 273f };
         Table table = new Table(colWidths);
         table.setHeight(52).setMarginLeft(10).setMarginTop(0);

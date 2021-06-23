@@ -177,7 +177,7 @@ public class PaymentsController {
     @ApiOperation(value = "Genera avvisi pagamento", notes = "Genera avvisi pagamento")
     @PostMapping(value = "/exportPayments")
     public ResponseEntity<Resource> exportPayments(@RequestBody final ExportModel exportModel,
-	    HttpServletResponse response) throws Exception {
+	    HttpServletResponse response) throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException, IOException {
 	logger.info("POST exportZip");
 
 	String nomeFile = "export-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyykkmmss")) + ".";
@@ -210,7 +210,8 @@ public class PaymentsController {
     }
 
     private ByteArrayResource exportNotificationPdf(String fiscalCode, List<PaymentPosition> paymentPositions)
-	    throws Exception {
+	    throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException, IOException
+	     {
 
 	ByteArrayResource resource = null;
 
@@ -227,8 +228,8 @@ public class PaymentsController {
 	return resource;
     }
 
-    private ByteArrayResource exportNotificationZip(String fiscalCode, List<PaymentPosition> paymentPositions)
-	    throws Exception {
+    private ByteArrayResource exportNotificationZip(String fiscalCode, List<PaymentPosition> paymentPositions) throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException, IOException
+	     {
 	ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	ByteArrayResource resource = null;
 	try (ZipOutputStream zos = new ZipOutputStream(baos)) {

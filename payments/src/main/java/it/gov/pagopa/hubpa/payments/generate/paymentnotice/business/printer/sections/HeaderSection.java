@@ -1,5 +1,7 @@
 package it.gov.pagopa.hubpa.payments.generate.paymentnotice.business.printer.sections;
 
+import java.io.IOException;
+
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.layout.border.Border;
 import com.itextpdf.layout.border.SolidBorder;
@@ -66,9 +68,9 @@ public class HeaderSection {
      * Generates header section of the pdf
      * 
      * @return
-     * @throws Exception
+     * @throws IOException 
      */
-    public Table createHeaderSection() throws Exception {
+    public Table createHeaderSection() throws IOException {
         float[] colWidths = { 400, 110 };
         Table table = new Table(colWidths);
         table.setHeight(105).setMarginLeft(20).setPadding(0);
