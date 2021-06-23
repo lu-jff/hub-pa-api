@@ -1,5 +1,7 @@
 package it.gov.pagopa.hubpa.payments.endpoint;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -51,7 +53,7 @@ class PartnerXsdValidationTest {
     }
 
     @Test
-    void shouldXsdValiationErrorWithPaVerifyPaymentNoticeTest() throws Exception {
+    void shouldXsdValiationErrorWithPaVerifyPaymentNoticeTest() throws DatatypeConfigurationException {
 
         String invalidRequest = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:paf=\"http://pagopa-api.pagopa.gov.it/pa/paForNode.xsd\"><soapenv:Header/><soapenv:Body><paf:paVerifyPaymentNoticeReq><idPA>?</idPA><idBrokerPA>1</idBrokerPA><idStation>1</idStation><qrCode><fiscalCode>1</fiscalCode><noticeNumber>1</noticeNumber></qrCode></paf:paVerifyPaymentNoticeReq></soapenv:Body></soapenv:Envelope>";
 
@@ -61,9 +63,9 @@ class PartnerXsdValidationTest {
     }
 
     @Test
-    void shouldGenericErrorWithPaVerifyPaymentNoticeTest() throws Exception {
+    void shouldGenericErrorWithPaVerifyPaymentNoticeTest() throws DatatypeConfigurationException {
 
-        Mockito.when(partnerService.paVerifyPaymentNotice(Mockito.any())).thenThrow(Exception.class);
+        Mockito.when(partnerService.paVerifyPaymentNotice(Mockito.any())).thenThrow(DatatypeConfigurationException.class);
 
         String request = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:paf=\"http://pagopa-api.pagopa.gov.it/pa/paForNode.xsd\"><soapenv:Header/><soapenv:Body><paf:paVerifyPaymentNoticeReq><idPA>77777777777</idPA><idBrokerPA>77777777777</idBrokerPA><idStation>77777777777</idStation><qrCode><fiscalCode>77777777777</fiscalCode><noticeNumber>311111111112222222</noticeNumber></qrCode></paf:paVerifyPaymentNoticeReq></soapenv:Body></soapenv:Envelope>";
 
