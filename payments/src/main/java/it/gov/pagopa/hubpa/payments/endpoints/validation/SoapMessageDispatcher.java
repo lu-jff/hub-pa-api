@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
 
+import it.gov.pagopa.hubpa.payments.endpoints.validation.exceptions.SoapValidationException;
+import it.gov.pagopa.hubpa.payments.model.PaaErrorEnum;
 import it.gov.pagopa.hubpa.payments.model.partner.CtFaultBean;
 import it.gov.pagopa.hubpa.payments.model.partner.CtResponse;
 import it.gov.pagopa.hubpa.payments.model.partner.ObjectFactory;
@@ -31,7 +33,8 @@ public class SoapMessageDispatcher extends MessageDispatcherServlet {
             throws Exception {
 
         String fultCode = null;
-        String faultDescription = null;
+        String faultString = null;
+        String description = null;
 
         try {
 
@@ -39,14 +42,15 @@ public class SoapMessageDispatcher extends MessageDispatcherServlet {
         } catch (SoapValidationException e) {
 
             log.error("Processing resulted in exception: " + e.getMessage());
-            fultCode = "PAA_SINTASSI_XSD";
-            faultDescription = "Structure error in request: " + e.getMessage();
+            fultCode = e.getFaultCode().getValue();
+            faultString = e.getFaultString();
+            description = e.getDescription();
             httpServletResponse.setStatus(200);
         } catch (Exception e) {
 
             log.error("Processing resulted in generic exception: " + e.getMessage());
-            fultCode = "PAA_SEMANTICA";
-            faultDescription = "Generic Error";
+            fultCode = PaaErrorEnum.PAA_SEMANTICA.getValue();
+            faultString = "Generic Error";
             httpServletResponse.setStatus(500);
         }
 
@@ -54,8 +58,9 @@ public class SoapMessageDispatcher extends MessageDispatcherServlet {
 
             CtResponse response = factory.createCtResponse();
             CtFaultBean faultBean = factory.createCtFaultBean();
-            faultBean.setDescription(faultDescription);
+            faultBean.setDescription(description);
             faultBean.setFaultCode(fultCode);
+            faultBean.setFaultString(faultString);
             response.setOutcome(StOutcome.KO);
             response.setFault(faultBean);
 

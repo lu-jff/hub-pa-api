@@ -10,6 +10,7 @@ import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 import org.springframework.ws.soap.server.endpoint.annotation.SoapAction;
 
+import it.gov.pagopa.hubpa.payments.endpoints.validation.exceptions.SoapValidationException;
 import it.gov.pagopa.hubpa.payments.model.partner.ObjectFactory;
 import it.gov.pagopa.hubpa.payments.model.partner.PaGetPaymentReq;
 import it.gov.pagopa.hubpa.payments.model.partner.PaGetPaymentRes;
@@ -34,7 +35,8 @@ public class PartnerEndpoint {
   @PayloadRoot(localPart = "paVerifyPaymentNoticeReq", namespace = "http://pagopa-api.pagopa.gov.it/partner")
   @ResponsePayload
   public JAXBElement<PaVerifyPaymentNoticeRes> paVerifyPaymentNotice(
-      @RequestPayload JAXBElement<PaVerifyPaymentNoticeReq> request) throws DatatypeConfigurationException {
+      @RequestPayload JAXBElement<PaVerifyPaymentNoticeReq> request)
+      throws DatatypeConfigurationException, SoapValidationException {
 
     log.info(" paVerifyPaymentNotice START ");
     return factory.createPaVerifyPaymentNoticeRes(partnerService.paVerifyPaymentNotice(request.getValue()));

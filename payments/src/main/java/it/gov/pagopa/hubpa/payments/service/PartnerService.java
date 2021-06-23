@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import it.gov.pagopa.hubpa.payments.endpoints.validation.PaymentValidator;
+import it.gov.pagopa.hubpa.payments.endpoints.validation.exceptions.SoapValidationException;
 import it.gov.pagopa.hubpa.payments.entity.PaymentOptions;
 import it.gov.pagopa.hubpa.payments.entity.PaymentPosition;
 import it.gov.pagopa.hubpa.payments.enumeration.PaymentOptionStatusEnum;
@@ -45,98 +47,46 @@ public class PartnerService {
   @Autowired
   private ObjectFactory factory;
 
-  @Value("${pt.id_dominio}")
-  private String ptIdDominio;
-
-  @Value("${pt.id_intermediario}")
-  private String ptIdIntermediario;
-
-  @Value("${pt.id_stazione}")
-  private String ptIdStazione;
+  @Autowired
+  private PaymentValidator partnerValidator;
 
   public PaVerifyPaymentNoticeRes paVerifyPaymentNotice(PaVerifyPaymentNoticeReq request)
-      throws DatatypeConfigurationException {
+      throws DatatypeConfigurationException, SoapValidationException {
 
-    log.debug(String.format("paVerifyPaymentNotice %s", request.getIdPA()));
+    log.debug("[paVerifyPaymentNotice] isAuthorize check");
+    partnerValidator.isAuthorize(request.getIdPA(), request.getIdBrokerPA(), request.getIdStation());
+
+    log.debug(String.format("[paVerifyPaymentNotice] get Payment %s", request.getQrCode().getNoticeNumber()));
+    Optional<PaymentOptions> option = paymentOptionsRepository
+        .findByNotificationCode(request.getQrCode().getNoticeNumber());
+    Optional<PaymentPosition> position = Optional
+        .ofNullable((option.isPresent() ? option.get().getPaymentPosition() : null));
+
+    log.debug("[paVerifyPaymentNotice] isPayable check");
+    partnerValidator.isPayable(position, option);
+
+    log.debug("[paVerifyPaymentNotice] Response generation");
     PaVerifyPaymentNoticeRes result = factory.createPaVerifyPaymentNoticeRes();
-    CtFaultBean faultError = factory.createCtFaultBean();
     CtPaymentOptionsDescriptionListPA paymentList = factory.createCtPaymentOptionsDescriptionListPA();
     CtPaymentOptionDescriptionPA paymentOption = factory.createCtPaymentOptionDescriptionPA();
-    // verificare che l' idPA /Intermediario /Stazione
-    // corrispondono con quelli configurati altrimenti restituire rispettivamente i
-    // seguenti FaultCode
-    // PAA_ID_DOMINIO_ERRATO
-    // PAA_ID_INTERMEDIARIO_ERRATO
-    // PAA_STAZIONE_INT_ERRATA
-    if (!request.getIdPA().equals(ptIdDominio)) {
-      result.setOutcome(StOutcome.KO);
-      faultError.setDescription("L'idPA ricevuto non e' tra quelli configurati");
-      faultError.setFaultCode(PaaErrorEnum.PAA_ID_DOMINIO_ERRATO.getValue());
-      faultError.setFaultString("ID dominio errato");
-      result.setFault(faultError);
-    } else if (!request.getIdBrokerPA().equals(ptIdIntermediario)) {
-      result.setOutcome(StOutcome.KO);
-      faultError.setDescription("L'IdBrokerPA ricevuto non e' tra quelli configurati");
-      faultError.setFaultCode(PaaErrorEnum.PAA_ID_INTERMEDIARIO_ERRATO.getValue());
-      faultError.setFaultString("IdBrokerPA errato");
-      result.setFault(faultError);
-    } else if (!request.getIdStation().equals(ptIdStazione)) {
-      result.setOutcome(StOutcome.KO);
-      faultError.setDescription("L'IdStazione ricevuto non e' tra quelli configurati");
-      faultError.setFaultCode(PaaErrorEnum.PAA_STAZIONE_INT_ERRATA.getValue());
-      faultError.setFaultString("IdStazione errato");
-      result.setFault(faultError);
-    } else {
-      // verificare che se esiste un payment_options NON_PAGATO che ha un
-      // notification_code
-      // uguale a noticeNumber e se lo stato della relativa payment_position e'
-      // PUBBLICATO
+    // generare una paVerifyPaymentNoticeRes positiva
+    result.setOutcome(StOutcome.OK);
+    // paymentList
+    paymentOption.setAmount(option.get().getAmount());
+    paymentOption.setOptions(StAmountOption.EQ); // de-scoping
+    paymentOption
+        .setDueDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(option.get().getDuoDate().toString()));
+    paymentOption.setDetailDescription(position.get().getDescription());
+    paymentOption.setAllCCP(isAllCCPostalIban(option)); // allCPP fa parte del modello del option
+    paymentList.getPaymentOptionDescription().add(paymentOption);
 
-      Optional<PaymentOptions> option = paymentOptionsRepository
-          .findByNotificationCode(request.getQrCode().getNoticeNumber());
+    result.setPaymentList(paymentList);
+    // general info
+    result.setPaymentDescription(position.get().getDescription());
+    result.setFiscalCodePA(request.getIdPA());
+    result.setCompanyName(position.get().getCompanyName());
+    result.setOfficeName(position.get().getOfficeName());
 
-      Optional<PaymentPosition> position = Optional
-          .ofNullable((option.isPresent() ? option.get().getPaymentPosition() : null));
-
-      if ((!option.isPresent() || !position.isPresent())
-          || (!position.get().getStatus().equals(PaymentStatusEnum.PUBBLICATO.getStatus())
-              && (!position.get().getStatus().equals(PaymentStatusEnum.PAGATO_PARZIALE.getStatus())))) {
-        result.setOutcome(StOutcome.KO);
-        faultError
-            .setDescription("L'id del pagamento ricevuto " + request.getQrCode().getNoticeNumber() + " non esiste");
-        faultError.setFaultCode(PaaErrorEnum.PAA_PAGAMENTO_SCONOSCIUTO.getValue());
-        faultError.setFaultString("pagamento sconosciuto");
-        result.setFault(faultError);
-      } else {
-        if (!option.isPresent() || !option.get().getStatus().equals(PaymentOptionStatusEnum.NON_PAGATO.getStatus())) {
-          result.setOutcome(StOutcome.KO);
-          faultError
-              .setDescription("L'id del pagamento ricevuto " + request.getQrCode().getNoticeNumber() + " e' duplicato");
-          faultError.setFaultCode(PaaErrorEnum.PAA_PAGAMENTO_DUPLICATO.getValue());
-          faultError.setFaultString("pagamento duplicato");
-          result.setFault(faultError);
-        } else {
-          // generare una paVerifyPaymentNoticeRes positiva
-          result.setOutcome(StOutcome.OK);
-          // paymentList
-          paymentOption.setAmount(option.get().getAmount());
-          paymentOption.setOptions(StAmountOption.EQ); // de-scoping
-          paymentOption
-              .setDueDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(option.get().getDuoDate().toString()));
-          paymentOption.setDetailDescription(position.get().getDescription());
-          paymentOption.setAllCCP(isAllCCPostalIban(option)); // allCPP fa parte del modello del option
-          paymentList.getPaymentOptionDescription().add(paymentOption);
-
-          result.setPaymentList(paymentList);
-          // general info
-          result.setPaymentDescription(position.get().getDescription());
-          result.setFiscalCodePA(ptIdDominio);
-          result.setCompanyName(position.get().getCompanyName());
-          result.setOfficeName(position.get().getOfficeName());
-
-        }
-      }
-    }
     return result;
 
   }

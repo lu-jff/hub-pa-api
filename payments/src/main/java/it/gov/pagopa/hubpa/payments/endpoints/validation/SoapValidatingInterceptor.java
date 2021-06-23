@@ -9,6 +9,9 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor;
 import org.xml.sax.SAXParseException;
 
+import it.gov.pagopa.hubpa.payments.endpoints.validation.exceptions.SoapValidationException;
+import it.gov.pagopa.hubpa.payments.model.PaaErrorEnum;
+
 public class SoapValidatingInterceptor extends PayloadValidatingInterceptor {
 
     @Override
@@ -19,7 +22,8 @@ public class SoapValidatingInterceptor extends PayloadValidatingInterceptor {
             String validationErrorsString = Arrays.stream(errors).map(
                     error -> "[" + error.getLineNumber() + "," + error.getColumnNumber() + "]: " + error.getMessage())
                     .collect(Collectors.joining(" -- "));
-            throw new SoapValidationException("Validation Errors: " + validationErrorsString);
+            throw new SoapValidationException(PaaErrorEnum.PAA_SINTASSI_XSD, "Xsd Validation Error",
+                    validationErrorsString);
         }
         return true;
     }

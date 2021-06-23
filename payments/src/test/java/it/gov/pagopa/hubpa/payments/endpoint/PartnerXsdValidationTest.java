@@ -17,6 +17,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import it.gov.pagopa.hubpa.payments.PaymentsApplication;
 import it.gov.pagopa.hubpa.payments.config.WebServicesConfiguration;
 import it.gov.pagopa.hubpa.payments.controller.PaymentsController;
+import it.gov.pagopa.hubpa.payments.endpoints.validation.PaymentValidator;
 import it.gov.pagopa.hubpa.payments.repository.DebitorRepository;
 import it.gov.pagopa.hubpa.payments.repository.IncrementalIuvNumberRepository;
 import it.gov.pagopa.hubpa.payments.repository.PaymentPositionRepository;
@@ -25,7 +26,7 @@ import it.gov.pagopa.hubpa.payments.service.PaymentService;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ContextConfiguration(classes = { WebServicesConfiguration.class, PaymentsApplication.class })
+@ContextConfiguration(classes = { WebServicesConfiguration.class, PaymentsApplication.class, PaymentValidator.class })
 class PartnerXsdValidationTest {
 
     @Autowired
@@ -69,8 +70,9 @@ class PartnerXsdValidationTest {
 
     @Test
     void shouldGenericErrorWithPaVerifyPaymentNoticeTest() throws DatatypeConfigurationException {
-	ReflectionTestUtils.setField(paymentsController, "entePath", "");
-        Mockito.when(partnerService.paVerifyPaymentNotice(Mockito.any())).thenThrow(DatatypeConfigurationException.class);
+
+        Mockito.when(partnerService.paVerifyPaymentNotice(Mockito.any()))
+                .thenThrow(DatatypeConfigurationException.class);
 
         String request = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:paf=\"http://pagopa-api.pagopa.gov.it/pa/paForNode.xsd\"><soapenv:Header/><soapenv:Body><paf:paVerifyPaymentNoticeReq><idPA>77777777777</idPA><idBrokerPA>77777777777</idBrokerPA><idStation>77777777777</idStation><qrCode><fiscalCode>77777777777</fiscalCode><noticeNumber>311111111112222222</noticeNumber></qrCode></paf:paVerifyPaymentNoticeReq></soapenv:Body></soapenv:Envelope>";
 

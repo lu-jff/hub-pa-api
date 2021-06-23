@@ -2,6 +2,10 @@ package it.gov.pagopa.hubpa.payments.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
 
 import java.util.Optional;
 
@@ -11,9 +15,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
+import it.gov.pagopa.hubpa.payments.endpoints.validation.PaymentValidator;
+import it.gov.pagopa.hubpa.payments.endpoints.validation.exceptions.SoapValidationException;
+import it.gov.pagopa.hubpa.payments.entity.PaymentOptions;
 import it.gov.pagopa.hubpa.payments.mock.DebitorMock;
 import it.gov.pagopa.hubpa.payments.mock.PaGetPaymentReqMock;
 import it.gov.pagopa.hubpa.payments.mock.PaSendRTReqMock;
@@ -31,7 +38,6 @@ import it.gov.pagopa.hubpa.payments.model.partner.StAmountOption;
 import it.gov.pagopa.hubpa.payments.repository.DebitorRepository;
 import it.gov.pagopa.hubpa.payments.repository.IncrementalIuvNumberRepository;
 import it.gov.pagopa.hubpa.payments.repository.PaymentOptionsRepository;
-import it.gov.pagopa.hubpa.payments.repository.PaymentPositionRepository;
 
 @ExtendWith(MockitoExtension.class)
 class PartnerServiceTest {
@@ -42,14 +48,14 @@ class PartnerServiceTest {
   @Mock
   DebitorRepository debitorRepository;
 
-  // @Mock
-  // PaymentPositionRepository paymentPositionRepository;
-
   @Mock
   PaymentOptionsRepository paymentOptionRepository;
 
   @Mock
   IncrementalIuvNumberRepository incrementalIuvNumberRepository;
+
+  @Mock
+  PaymentValidator paymentValidator;
 
   @Mock
   private ObjectFactory factory;
@@ -59,14 +65,11 @@ class PartnerServiceTest {
   @Test
   void paVerifyPaymentNoticeTest() throws DatatypeConfigurationException {
 
-    ReflectionTestUtils.setField(partnerService, "ptIdDominio", "77777777777");
-    ReflectionTestUtils.setField(partnerService, "ptIdIntermediario", "77777777777");
-    ReflectionTestUtils.setField(partnerService, "ptIdStazione", "77777777777_01");
-
     // Test preconditions
     PaVerifyPaymentNoticeReq requestBody = PaVerifyPaymentNoticeReqMock.getMock();
 
-    when(factory.createCtFaultBean()).thenReturn(factoryUtil.createCtFaultBean());
+    doNothing().when(paymentValidator).isAuthorize(Mockito.any(), Mockito.any(), Mockito.any());
+    doNothing().when(paymentValidator).isPayable(Mockito.any(), Mockito.any());
     when(factory.createPaVerifyPaymentNoticeRes()).thenReturn(factoryUtil.createPaVerifyPaymentNoticeRes());
     when(factory.createCtPaymentOptionDescriptionPA()).thenReturn(factoryUtil.createCtPaymentOptionDescriptionPA());
     when(factory.createCtPaymentOptionsDescriptionListPA())
@@ -93,118 +96,139 @@ class PartnerServiceTest {
   @Test
   void paVerifyPaymentNoticeTestKOsconosciuto() throws DatatypeConfigurationException {
 
-    ReflectionTestUtils.setField(partnerService, "ptIdDominio", "77777777777");
-    ReflectionTestUtils.setField(partnerService, "ptIdIntermediario", "77777777777");
-    ReflectionTestUtils.setField(partnerService, "ptIdStazione", "77777777777_01");
-
     // Test preconditions
     PaVerifyPaymentNoticeReq requestBody = PaVerifyPaymentNoticeReqMock.getMock();
-
-    when(factory.createCtFaultBean()).thenReturn(factoryUtil.createCtFaultBean());
-    when(factory.createPaVerifyPaymentNoticeRes()).thenReturn(factoryUtil.createPaVerifyPaymentNoticeRes());
-    when(factory.createCtPaymentOptionDescriptionPA()).thenReturn(factoryUtil.createCtPaymentOptionDescriptionPA());
-    when(factory.createCtPaymentOptionsDescriptionListPA())
-        .thenReturn(factoryUtil.createCtPaymentOptionsDescriptionListPA());
+    PaymentOptions option = DebitorMock.createPaymentOptionsMock5();
+    String description = "Description";
+    String faultString = "faultString";
 
     when(paymentOptionRepository.findByNotificationCode(requestBody.getQrCode().getNoticeNumber()))
-        .thenReturn(Optional.of(DebitorMock.createPaymentOptionsMock6()));
+        .thenReturn(Optional.of(option));
+
+    doNothing().when(paymentValidator).isAuthorize(Mockito.any(), Mockito.any(), Mockito.any());
+
+    doThrow(new SoapValidationException(PaaErrorEnum.PAA_PAGAMENTO_SCONOSCIUTO, faultString, description))
+        .when(paymentValidator).isPayable(Optional.of(option.getPaymentPosition()), Optional.of(option));
 
     // Test execution
-    PaVerifyPaymentNoticeRes responseBody = partnerService.paVerifyPaymentNotice(requestBody);
+    try {
 
-    // Test postcondiction
-    assertThat(responseBody.getOutcome()).isEqualTo(StOutcome.KO);
-    assertThat(responseBody.getFault().getFaultCode()).isEqualTo(PaaErrorEnum.PAA_PAGAMENTO_SCONOSCIUTO.getValue());
+      partnerService.paVerifyPaymentNotice(requestBody);
+
+    } catch (SoapValidationException e) {
+      // Test postcondiction
+      assertThat(e.getFaultCode().getValue()).isEqualTo(PaaErrorEnum.PAA_PAGAMENTO_SCONOSCIUTO.getValue());
+      assertThat(e.getDescription()).isEqualTo(description);
+      assertThat(e.getFaultString()).isEqualTo(faultString);
+    }
   }
 
   @Test
   void paVerifyPaymentNoticeTestKOpagato() throws DatatypeConfigurationException {
 
-    ReflectionTestUtils.setField(partnerService, "ptIdDominio", "77777777777");
-    ReflectionTestUtils.setField(partnerService, "ptIdIntermediario", "77777777777");
-    ReflectionTestUtils.setField(partnerService, "ptIdStazione", "77777777777_01");
-
     // Test preconditions
     PaVerifyPaymentNoticeReq requestBody = PaVerifyPaymentNoticeReqMock.getMock();
-
-    when(factory.createCtFaultBean()).thenReturn(factoryUtil.createCtFaultBean());
-    when(factory.createPaVerifyPaymentNoticeRes()).thenReturn(factoryUtil.createPaVerifyPaymentNoticeRes());
-    when(factory.createCtPaymentOptionDescriptionPA()).thenReturn(factoryUtil.createCtPaymentOptionDescriptionPA());
-    when(factory.createCtPaymentOptionsDescriptionListPA())
-        .thenReturn(factoryUtil.createCtPaymentOptionsDescriptionListPA());
+    PaymentOptions option = DebitorMock.createPaymentOptionsMock5();
+    String description = "Description";
+    String faultString = "faultString";
 
     when(paymentOptionRepository.findByNotificationCode(requestBody.getQrCode().getNoticeNumber()))
-        .thenReturn(Optional.of(DebitorMock.createPaymentOptionsMock5()));
+        .thenReturn(Optional.of(option));
+
+    doNothing().when(paymentValidator).isAuthorize(Mockito.any(), Mockito.any(), Mockito.any());
+
+    doThrow(new SoapValidationException(PaaErrorEnum.PAA_PAGAMENTO_DUPLICATO, faultString, description))
+        .when(paymentValidator).isPayable(Optional.of(option.getPaymentPosition()), Optional.of(option));
 
     // Test execution
-    PaVerifyPaymentNoticeRes responseBody = partnerService.paVerifyPaymentNotice(requestBody);
+    try {
 
-    // Test postcondiction
-    assertThat(responseBody.getOutcome()).isEqualTo(StOutcome.KO);
-    assertThat(responseBody.getFault().getFaultCode()).isEqualTo(PaaErrorEnum.PAA_PAGAMENTO_DUPLICATO.getValue());
+      partnerService.paVerifyPaymentNotice(requestBody);
+
+    } catch (SoapValidationException e) {
+      // Test postcondiction
+      assertThat(e.getFaultCode().getValue()).isEqualTo(PaaErrorEnum.PAA_PAGAMENTO_DUPLICATO.getValue());
+      assertThat(e.getDescription()).isEqualTo(description);
+      assertThat(e.getFaultString()).isEqualTo(faultString);
+    }
+
   }
 
   @Test
   void paVerifyPaymentNoticeTestKOdominio() throws DatatypeConfigurationException {
 
-    ReflectionTestUtils.setField(partnerService, "ptIdDominio", "77777777778");
-    ReflectionTestUtils.setField(partnerService, "ptIdIntermediario", "77777777777");
-    ReflectionTestUtils.setField(partnerService, "ptIdStazione", "77777777777_01");
-
     // Test preconditions
     PaVerifyPaymentNoticeReq requestBody = PaVerifyPaymentNoticeReqMock.getMock();
+    String description = "Description";
+    String faultString = "faultString";
 
-    when(factory.createCtFaultBean()).thenReturn(factoryUtil.createCtFaultBean());
-    when(factory.createPaVerifyPaymentNoticeRes()).thenReturn(factoryUtil.createPaVerifyPaymentNoticeRes());
+    doThrow(new SoapValidationException(PaaErrorEnum.PAA_ID_DOMINIO_ERRATO, faultString, description))
+        .when(paymentValidator)
+        .isAuthorize(requestBody.getIdPA(), requestBody.getIdBrokerPA(), requestBody.getIdStation());
 
     // Test execution
-    PaVerifyPaymentNoticeRes responseBody = partnerService.paVerifyPaymentNotice(requestBody);
+    try {
 
-    // Test postcondiction
-    assertThat(responseBody.getOutcome()).isEqualTo(StOutcome.KO);
-    assertThat(responseBody.getFault().getFaultCode()).isEqualTo(PaaErrorEnum.PAA_ID_DOMINIO_ERRATO.getValue());
+      partnerService.paVerifyPaymentNotice(requestBody);
+
+    } catch (SoapValidationException e) {
+      // Test postcondiction
+      assertThat(e.getFaultCode().getValue()).isEqualTo(PaaErrorEnum.PAA_ID_DOMINIO_ERRATO.getValue());
+      assertThat(e.getDescription()).isEqualTo(description);
+      assertThat(e.getFaultString()).isEqualTo(faultString);
+    }
+
   }
 
   @Test
   void paVerifyPaymentNoticeTestKOintermediario() throws DatatypeConfigurationException {
 
-    ReflectionTestUtils.setField(partnerService, "ptIdDominio", "77777777777");
-    ReflectionTestUtils.setField(partnerService, "ptIdIntermediario", "77777777778");
-    ReflectionTestUtils.setField(partnerService, "ptIdStazione", "77777777777_01");
-
     // Test preconditions
     PaVerifyPaymentNoticeReq requestBody = PaVerifyPaymentNoticeReqMock.getMock();
+    String description = "Description";
+    String faultString = "faultString";
 
-    when(factory.createCtFaultBean()).thenReturn(factoryUtil.createCtFaultBean());
-    when(factory.createPaVerifyPaymentNoticeRes()).thenReturn(factoryUtil.createPaVerifyPaymentNoticeRes());
+    doThrow(new SoapValidationException(PaaErrorEnum.PAA_ID_INTERMEDIARIO_ERRATO, faultString, description))
+        .when(paymentValidator)
+        .isAuthorize(requestBody.getIdPA(), requestBody.getIdBrokerPA(), requestBody.getIdStation());
 
     // Test execution
-    PaVerifyPaymentNoticeRes responseBody = partnerService.paVerifyPaymentNotice(requestBody);
+    try {
 
-    // Test postcondiction
-    assertThat(responseBody.getOutcome()).isEqualTo(StOutcome.KO);
-    assertThat(responseBody.getFault().getFaultCode()).isEqualTo(PaaErrorEnum.PAA_ID_INTERMEDIARIO_ERRATO.getValue());
+      partnerService.paVerifyPaymentNotice(requestBody);
+
+    } catch (SoapValidationException e) {
+      // Test postcondiction
+      assertThat(e.getFaultCode().getValue()).isEqualTo(PaaErrorEnum.PAA_ID_INTERMEDIARIO_ERRATO.getValue());
+      assertThat(e.getDescription()).isEqualTo(description);
+      assertThat(e.getFaultString()).isEqualTo(faultString);
+    }
+
   }
 
   @Test
   void paVerifyPaymentNoticeTestKOstazione() throws DatatypeConfigurationException {
 
-    ReflectionTestUtils.setField(partnerService, "ptIdDominio", "77777777777");
-    ReflectionTestUtils.setField(partnerService, "ptIdIntermediario", "77777777777");
-    ReflectionTestUtils.setField(partnerService, "ptIdStazione", "77777777777_02");
-
     // Test preconditions
     PaVerifyPaymentNoticeReq requestBody = PaVerifyPaymentNoticeReqMock.getMock();
+    String description = "Description";
+    String faultString = "faultString";
 
-    when(factory.createCtFaultBean()).thenReturn(factoryUtil.createCtFaultBean());
-    when(factory.createPaVerifyPaymentNoticeRes()).thenReturn(factoryUtil.createPaVerifyPaymentNoticeRes());
+    doThrow(new SoapValidationException(PaaErrorEnum.PAA_ID_DOMINIO_ERRATO, faultString, description))
+        .when(paymentValidator)
+        .isAuthorize(requestBody.getIdPA(), requestBody.getIdBrokerPA(), requestBody.getIdStation());
 
     // Test execution
-    PaVerifyPaymentNoticeRes responseBody = partnerService.paVerifyPaymentNotice(requestBody);
+    try {
 
-    // Test postcondiction
-    assertThat(responseBody.getOutcome()).isEqualTo(StOutcome.KO);
-    assertThat(responseBody.getFault().getFaultCode()).isEqualTo(PaaErrorEnum.PAA_STAZIONE_INT_ERRATA.getValue());
+      partnerService.paVerifyPaymentNotice(requestBody);
+
+    } catch (SoapValidationException e) {
+      // Test postcondiction
+      assertThat(e.getFaultCode().getValue()).isEqualTo(PaaErrorEnum.PAA_ID_DOMINIO_ERRATO.getValue());
+      assertThat(e.getDescription()).isEqualTo(description);
+      assertThat(e.getFaultString()).isEqualTo(faultString);
+    }
   }
 
   @Test

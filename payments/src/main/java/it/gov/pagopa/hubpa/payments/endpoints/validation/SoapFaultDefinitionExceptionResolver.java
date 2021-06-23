@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointExceptionResolver;
 
+import it.gov.pagopa.hubpa.payments.endpoints.validation.exceptions.SoapValidationException;
+
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class SoapFaultDefinitionExceptionResolver implements EndpointExceptionResolver {
