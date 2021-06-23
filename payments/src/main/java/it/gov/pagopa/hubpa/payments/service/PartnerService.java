@@ -28,10 +28,8 @@ import it.gov.pagopa.hubpa.payments.model.partner.PaSendRTRes;
 import it.gov.pagopa.hubpa.payments.model.partner.PaVerifyPaymentNoticeReq;
 import it.gov.pagopa.hubpa.payments.model.partner.PaVerifyPaymentNoticeRes;
 import it.gov.pagopa.hubpa.payments.model.partner.StOutcome;
-import it.gov.pagopa.hubpa.payments.repository.DebitorRepository;
 import it.gov.pagopa.hubpa.payments.repository.IncrementalIuvNumberRepository;
 import it.gov.pagopa.hubpa.payments.repository.PaymentOptionsRepository;
-import it.gov.pagopa.hubpa.payments.repository.PaymentPositionRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -39,13 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PartnerService {
 
   @Autowired
-  private DebitorRepository debitorRepository;
-
-  @Autowired
   IncrementalIuvNumberRepository incrementalIuvNumberRepository;
-
-  @Autowired
-  private PaymentPositionRepository paymentPositionRepository;
 
   @Autowired
   private PaymentOptionsRepository paymentOptionsRepository;
