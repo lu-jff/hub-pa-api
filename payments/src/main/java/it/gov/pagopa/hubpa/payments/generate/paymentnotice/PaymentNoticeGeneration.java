@@ -11,6 +11,9 @@ import it.gov.pagopa.hubpa.payments.generate.paymentnotice.business.PaymentNotic
  * Main class for the generation of the pdf of <code>PaymentNotice</code>
  */
 public class PaymentNoticeGeneration {
+    private PaymentNoticeGeneration() {
+	throw new IllegalStateException("PaymentNoticeGeneration class");
+    }
 
     /**
      * Generates the component <code>PNCreditorInstitution</code>

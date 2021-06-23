@@ -8,12 +8,14 @@ import it.gov.pagopa.hubpa.payments.generate.debtposition.bean.debtposition.DPUp
 import it.gov.pagopa.hubpa.payments.generate.debtposition.enumeration.PaymentStatusEnum;
 import it.gov.pagopa.hubpa.payments.generate.debtposition.validation.DebtPositionValidation;
 import it.gov.pagopa.hubpa.payments.generate.debtposition.validation.DebtPositionValidationImpl;
-//import pagopa.gov.it.toolkit.iuvGenerator.IuvCodeGeneration;
 
 /**
  * Business logic class
  */
 public class DebtPositionBusiness {
+    private DebtPositionBusiness() {
+	throw new IllegalStateException("DebtPositionBusiness class");
+    }
 
     /**
      * Validates a debt position
@@ -40,27 +42,6 @@ public class DebtPositionBusiness {
         DebtPositionValidation debtPositionValidation = new DebtPositionValidationImpl();
         debtPositionValidation.checkConstraints(objectToValidate);
     }
-
-    /**
-     * Generates the <code>iuv</code> and updates the <code>debtPosition</code>
-     * 
-     * @param debtPosition
-     * @throws Exception
-     * @see DebtPosition
-     * @see pagopa.gov.it.toolkit.debtPositionGenerator.bean.debtPosition.DPPaymentDetail
-     * @see pagopa.gov.it.toolkit.iuvGenerator.IuvCodeGeneration
-     */
-    
-    //TODO
-    /*public static void generateIUV(DebtPosition debtPosition) throws Exception {
-        String iuv = debtPosition.getPaymentDetail().getIuv();
-        if (iuv == null || iuv.trim().isEmpty()) {
-            DPUpdater.setIuv(debtPosition.getPaymentDetail(),
-                    IuvCodeGeneration.generate(debtPosition.getPaymentDetail().getAuxDigit(),
-                            debtPosition.getPaymentDetail().getSegregationCode(),
-                            debtPosition.getPaymentDetail().getApplicationCode()));
-        }
-    }*/
 
     /**
      * Generates the <code>noticeNumber</code> by <code>iuv</code> and updates

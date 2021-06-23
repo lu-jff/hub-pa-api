@@ -2,10 +2,8 @@ package it.gov.pagopa.hubpa.payments.generate.paymentnotice.business.printer;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 
 import javax.imageio.ImageIO;
 
@@ -31,18 +29,20 @@ import it.gov.pagopa.hubpa.payments.generate.paymentnotice.constants.PaymentNoti
  * etc...)
  */
 public class PdfPaymentNoticeManagement {
+    private PdfPaymentNoticeManagement() {
+	throw new IllegalStateException("PdfPaymentNoticeManagement class");
+    }
 
     /**
      * Creates iText template of the pdf
      * 
-     * @param imgagePath
-     *            path of the template to use
+     * @param imgagePath path of the template to use
      * @return
      * @throws IOException
      */
     public static ImageData creaImgData(String imgagePath) throws IOException {
 	InputStream is = TypeReference.class.getResourceAsStream(new StringBuffer(imgagePath).toString());
-        return ImageDataFactory.create(StreamUtils.copyToByteArray(is));
+	return ImageDataFactory.create(StreamUtils.copyToByteArray(is));
     }
 
     /**
@@ -52,10 +52,9 @@ public class PdfPaymentNoticeManagement {
      * @throws IOException
      */
     public static PdfFont getRobotoFontRegular() throws IOException {
-	InputStream is = TypeReference.class.getResourceAsStream(new StringBuffer(PaymentNoticeConstants.ROBOTOFONTREGULAR).toString());
-        return PdfFontFactory.createFont(
-        	StreamUtils.copyToByteArray(is),
-                PdfEncodings.IDENTITY_H);
+	InputStream is = TypeReference.class
+		.getResourceAsStream(new StringBuffer(PaymentNoticeConstants.ROBOTOFONTREGULAR).toString());
+	return PdfFontFactory.createFont(StreamUtils.copyToByteArray(is), PdfEncodings.IDENTITY_H);
     }
 
     /**
@@ -65,10 +64,9 @@ public class PdfPaymentNoticeManagement {
      * @throws IOException
      */
     public static PdfFont getRobotoFontBold() throws IOException {
-	InputStream is = TypeReference.class.getResourceAsStream(new StringBuffer(PaymentNoticeConstants.ROBOTOFONTBOLD).toString());
-        return PdfFontFactory.createFont(
-        	StreamUtils.copyToByteArray(is),
-                PdfEncodings.IDENTITY_H);
+	InputStream is = TypeReference.class
+		.getResourceAsStream(new StringBuffer(PaymentNoticeConstants.ROBOTOFONTBOLD).toString());
+	return PdfFontFactory.createFont(StreamUtils.copyToByteArray(is), PdfEncodings.IDENTITY_H);
     }
 
     /**
@@ -78,10 +76,9 @@ public class PdfPaymentNoticeManagement {
      * @throws IOException
      */
     public static PdfFont getTitilliumWebRegular() throws IOException {
-	InputStream is = TypeReference.class.getResourceAsStream(new StringBuffer(PaymentNoticeConstants.TITILLIUM_WEB_REGULAR).toString());
-        return PdfFontFactory.createFont(
-        	StreamUtils.copyToByteArray(is),
-                PdfEncodings.IDENTITY_H);
+	InputStream is = TypeReference.class
+		.getResourceAsStream(new StringBuffer(PaymentNoticeConstants.TITILLIUM_WEB_REGULAR).toString());
+	return PdfFontFactory.createFont(StreamUtils.copyToByteArray(is), PdfEncodings.IDENTITY_H);
     }
 
     /**
@@ -91,10 +88,9 @@ public class PdfPaymentNoticeManagement {
      * @throws IOException
      */
     public static PdfFont getTitiilliumWebBold() throws IOException {
-	InputStream is = TypeReference.class.getResourceAsStream(new StringBuffer(PaymentNoticeConstants.TITILLIUM_WEB_BOLD).toString());
-        return PdfFontFactory.createFont(
-        	StreamUtils.copyToByteArray(is),
-                PdfEncodings.IDENTITY_H);
+	InputStream is = TypeReference.class
+		.getResourceAsStream(new StringBuffer(PaymentNoticeConstants.TITILLIUM_WEB_BOLD).toString());
+	return PdfFontFactory.createFont(StreamUtils.copyToByteArray(is), PdfEncodings.IDENTITY_H);
     }
 
     /**
@@ -104,49 +100,45 @@ public class PdfPaymentNoticeManagement {
      * @throws IOException
      */
     public static PdfFont getTrilliumWebBlack() throws IOException {
-	InputStream is = TypeReference.class.getResourceAsStream(new StringBuffer(PaymentNoticeConstants.TITILLIUM_WEB_BLACK).toString());
-        return PdfFontFactory.createFont(
-        	StreamUtils.copyToByteArray(is),
-                PdfEncodings.IDENTITY_H);
+	InputStream is = TypeReference.class
+		.getResourceAsStream(new StringBuffer(PaymentNoticeConstants.TITILLIUM_WEB_BLACK).toString());
+	return PdfFontFactory.createFont(StreamUtils.copyToByteArray(is), PdfEncodings.IDENTITY_H);
     }
 
     /**
      * Instantiates an empty cell of the pdf
      * 
-     * @param width
-     *            width of the new cell
+     * @param width width of the new cell
      * @return
      */
     public static Cell getEmptyCell(int width) {
-        Cell emptyCell = new Cell();
-        emptyCell.setWidth(width);
-        emptyCell.setBorder(Border.NO_BORDER);
-        Paragraph emptyPar = new Paragraph();
-        emptyPar.add("  ");
-        emptyCell.add(emptyPar);
-        return emptyCell;
+	Cell emptyCell = new Cell();
+	emptyCell.setWidth(width);
+	emptyCell.setBorder(Border.NO_BORDER);
+	Paragraph emptyPar = new Paragraph();
+	emptyPar.add("  ");
+	emptyCell.add(emptyPar);
+	return emptyCell;
     }
 
     /**
      * Creates iText Image of the logo from image
      * 
-     * @param byteImg
-     *            byte array of the image
-     * @param autoscale
-     *            true if autoscale, otherwise false
+     * @param byteImg   byte array of the image
+     * @param autoscale true if autoscale, otherwise false
      * @return
      * @throws IOException
      */
     public static Image getScaleOfGrayLogoImageFromByte(byte[] byteImg, boolean autoscale) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(byteImg));
-        BufferedImage newBi = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(),
-                BufferedImage.TYPE_USHORT_GRAY);
-        newBi.getGraphics().drawImage(bufferedImage, 0, 0, null);
-        ImageIO.write(newBi, PaymentNoticeConstants.PDF_TEXT_LOGO_EXTENSION, baos);
-        ImageData imageData = ImageDataFactory.create(baos.toByteArray());
-        Image img = new Image(imageData);
-        img.setAutoScale(autoscale).setHorizontalAlignment(HorizontalAlignment.CENTER);
-        return img;
+	ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(byteImg));
+	BufferedImage newBi = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(),
+		BufferedImage.TYPE_USHORT_GRAY);
+	newBi.getGraphics().drawImage(bufferedImage, 0, 0, null);
+	ImageIO.write(newBi, PaymentNoticeConstants.PDF_TEXT_LOGO_EXTENSION, baos);
+	ImageData imageData = ImageDataFactory.create(baos.toByteArray());
+	Image img = new Image(imageData);
+	img.setAutoScale(autoscale).setHorizontalAlignment(HorizontalAlignment.CENTER);
+	return img;
     }
 }

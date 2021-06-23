@@ -103,8 +103,6 @@ public class DebtPositionValidationImpl implements DebtPositionValidation {
         Integer applicationCode = debtPosition.getPaymentDetail().getApplicationCode();
         if (iuv != null && !iuv.trim().isEmpty()) {
             IuvCodeGenerator iuvCodeGenerator = new IuvCodeGenerator.Builder().setAuxDigit(auxDigit)
-        	    //TODO
-                    //.setApplicationCode(debtPosition.getPaymentDetail().getApplicationCode())
                     .setSegregationCode(debtPosition.getPaymentDetail().getSegregationCode()).build();
             IuvCodeValidation iuvCodeValidation = new IuvCodeValidationImpl();
             iuvCodeValidation.validate(iuvCodeGenerator);

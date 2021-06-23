@@ -51,14 +51,14 @@ public class PaymentDetailSection {
         cell1.setBorder(Border.NO_BORDER);
         Paragraph paragraph1 = new Paragraph();
         paragraph1.setWidthPercent(100).setMarginTop(0).setMarginLeft(10).setFixedLeading(10);
-        Text text1_1 = new Text(PaymentNoticeConstants.PDF_TEXT_HOWMUCH_WHEN_TOPAY);
-        text1_1.setFont(PdfPaymentNoticeManagement.getTitiilliumWebBold()).setFontSize(9);
-        paragraph1.add(text1_1);
+        Text text1a1 = new Text(PaymentNoticeConstants.PDF_TEXT_HOWMUCH_WHEN_TOPAY);
+        text1a1.setFont(PdfPaymentNoticeManagement.getTitiilliumWebBold()).setFontSize(9);
+        paragraph1.add(text1a1);
         if (paymentNotice.getDebtPositionList().size() > 1
                 && PaymentNoticeBusiness.hasSingleInstallment(paymentNotice)) {
-            Text text1_2 = new Text(PaymentNoticeConstants.PDF_TEXT_OPTIONAL_INSTALLMENT_PAYMENT);
-            text1_2.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(8f);
-            paragraph1.add(text1_2);
+            Text text1a2 = new Text(PaymentNoticeConstants.PDF_TEXT_OPTIONAL_INSTALLMENT_PAYMENT);
+            text1a2.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(8f);
+            paragraph1.add(text1a2);
         }
         cell1.add(paragraph1);
         table.addCell(cell1);
@@ -69,15 +69,15 @@ public class PaymentDetailSection {
         cell2.setBorder(Border.NO_BORDER);
         Paragraph paragraph2 = new Paragraph();
         paragraph2.setWidthPercent(100).setMarginTop(0).setMarginLeft(10).setFixedLeading(10);
-        Text text2_1 = new Text(PaymentNoticeConstants.PDF_TEXT_WHERE_TOPAY);
-        text2_1.setFont(PdfPaymentNoticeManagement.getTitiilliumWebBold()).setFontSize(9);
-        paragraph2.add(text2_1);
-        Text text2_2 = new Text(PaymentNoticeConstants.PDF_TEXT_PAYMENT_CHANNELS_LIST);
-        text2_2.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(8f);
-        paragraph2.add(text2_2);
-        Text text2_3 = new Text(PaymentNoticeConstants.PDF_TEXT_PAGOPA_WEBSITE);
-        text2_3.setFont(PdfPaymentNoticeManagement.getTitiilliumWebBold()).setFontSize(8f);
-        paragraph2.add(text2_3);
+        Text text2a1 = new Text(PaymentNoticeConstants.PDF_TEXT_WHERE_TOPAY);
+        text2a1.setFont(PdfPaymentNoticeManagement.getTitiilliumWebBold()).setFontSize(9);
+        paragraph2.add(text2a1);
+        Text text2a2 = new Text(PaymentNoticeConstants.PDF_TEXT_PAYMENT_CHANNELS_LIST);
+        text2a2.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(8f);
+        paragraph2.add(text2a2);
+        Text text2a3 = new Text(PaymentNoticeConstants.PDF_TEXT_PAGOPA_WEBSITE);
+        text2a3.setFont(PdfPaymentNoticeManagement.getTitiilliumWebBold()).setFontSize(8f);
+        paragraph2.add(text2a3);
         cell2.add(paragraph2);
         table.addCell(cell2);
 
@@ -195,33 +195,33 @@ public class PaymentDetailSection {
      * @throws Exception
      */
     private void createAmountInfoPart1(Paragraph paragraph) throws Exception {
-        Text text1_1 = new Text(PaymentNoticeConstants.PDF_TEXT_YOU_CAN_PAY);
-        text1_1.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(8);
-        paragraph.add(text1_1);
+        Text text1a1 = new Text(PaymentNoticeConstants.PDF_TEXT_YOU_CAN_PAY);
+        text1a1.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(8);
+        paragraph.add(text1a1);
         if (paymentNotice.getDebtPositionList().size() == 1
                 || PaymentNoticeBusiness.hasSingleInstallment(paymentNotice)) {
-            Text text1_2 = new Text(PaymentNoticeConstants.PDF_TEXT_WITH);
-            text1_2.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(8);
-            paragraph.add(text1_2);
-            Text text1_3 = new Text(PaymentNoticeConstants.PDF_TEXT_SINGLE_INSTALLMENT);
-            text1_3.setFont(PdfPaymentNoticeManagement.getTitiilliumWebBold()).setFontSize(8);
-            paragraph.add(text1_3);
+            Text text1a2 = new Text(PaymentNoticeConstants.PDF_TEXT_WITH);
+            text1a2.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(8);
+            paragraph.add(text1a2);
+            Text text1a3 = new Text(PaymentNoticeConstants.PDF_TEXT_SINGLE_INSTALLMENT);
+            text1a3.setFont(PdfPaymentNoticeManagement.getTitiilliumWebBold()).setFontSize(8);
+            paragraph.add(text1a3);
         }
         if (paymentNotice.getDebtPositionList().size() == 1) {
-            Text text1_4 = new Text(PaymentNoticeConstants.PDF_TEXT_POINT);
-            text1_4.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(8);
-            paragraph.add(text1_4);
+            Text text1a4 = new Text(PaymentNoticeConstants.PDF_TEXT_POINT);
+            text1a4.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(8);
+            paragraph.add(text1a4);
         } else {
             if (PaymentNoticeBusiness.hasSingleInstallment(paymentNotice)) {
-                Text text1_5 = new Text(PaymentNoticeConstants.PDF_TEXT_OR);
-                text1_5.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(8);
-                paragraph.add(text1_5);
+                Text text1a5 = new Text(PaymentNoticeConstants.PDF_TEXT_OR);
+                text1a5.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(8);
+                paragraph.add(text1a5);
             }
-            Text text1_6 = new Text(PaymentNoticeConstants.PDF_TEXT_INSTALLMENT_PAYMENT_INFO.replace(
+            Text text1a6 = new Text(PaymentNoticeConstants.PDF_TEXT_INSTALLMENT_PAYMENT_INFO.replace(
                     PaymentNoticeConstants.PDF_TEXT_DEBT_POSITION_LIST_SIZE_PLACEHOLDER,
                     String.valueOf(paymentNotice.getDebtPositionList().size())));
-            text1_6.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(8);
-            paragraph.add(text1_6);
+            text1a6.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(8);
+            paragraph.add(text1a6);
         }
     }
 
@@ -248,7 +248,7 @@ public class PaymentDetailSection {
         text1.setFont(PdfPaymentNoticeManagement.getTitiilliumWebBold()).setFontSize(10f);
         paragraph.add(text1);
         StringBuilder sb = new StringBuilder("\r");
-        if (paymentNotice.getIsModello1or2()) {
+        if (paymentNotice.getIsModello1or2().booleanValue()) {
             sb.append(PaymentNoticeConstants.PDF_TEXT_YOUR_CREDITOR_INSTITUTION);
             if (paymentNotice.getCreditorInstitution().getWebsite() != null)
                 sb.append(PaymentNoticeConstants.PDF_TEXT_CI_WEBSITE.replace(
@@ -294,12 +294,12 @@ public class PaymentDetailSection {
         Text text1 = new Text(PaymentNoticeConstants.PDF_TEXT_HOW_TOPAY);
         text1.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(11);
         paragraph.add(text1);
-        String text2_1 = ((paymentNotice.getDebtPositionList().size() > 1
+        String text2a1 = ((paymentNotice.getDebtPositionList().size() > 1
                 && PaymentNoticeBusiness.hasSingleInstallment(paymentNotice))
                         ? PaymentNoticeConstants.PDF_TEXT_TO_THE_INSTALLMENT : "")
                 + PaymentNoticeConstants.PDF_TEXT_PREFERRED_PAYMENT_CHANNEL;
-        Text text2_2 = new Text(text2_1);
-        text2_2.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(11);
-        paragraph.add(text2_2);
+        Text text2a2 = new Text(text2a1);
+        text2a2.setFont(PdfPaymentNoticeManagement.getTitilliumWebRegular()).setFontSize(11);
+        paragraph.add(text2a2);
     }
 }
