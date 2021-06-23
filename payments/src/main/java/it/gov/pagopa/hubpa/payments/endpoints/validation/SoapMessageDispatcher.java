@@ -1,5 +1,7 @@
 package it.gov.pagopa.hubpa.payments.endpoints.validation;
 
+import java.io.IOException;
+
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,10 +58,18 @@ public class SoapMessageDispatcher extends MessageDispatcherServlet {
             response.setOutcome(StOutcome.KO);
             response.setFault(faultBean);
 
-            ServletOutputStream outputStream = httpServletResponse.getOutputStream();
-            httpServletResponse.setContentType("text/xml");
-            JAXB.marshal(response, outputStream);
-            outputStream.flush();
+            try {
+
+                ServletOutputStream outputStream = httpServletResponse.getOutputStream();
+                httpServletResponse.setContentType("text/xml");
+                JAXB.marshal(response, outputStream);
+                outputStream.flush();
+
+            } catch (IOException e) {
+
+                httpServletResponse.setStatus(500);
+            }
+
         }
 
     }
