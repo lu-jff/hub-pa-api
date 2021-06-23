@@ -408,7 +408,7 @@ class PaymentNoticeGenerationTest {
         singlePaymentDetailList.add(singlePaymentDetail);
 
         DebtPosition debtPosition = DebtPositionGeneration.generate(payer, paymentDetail, singlePaymentDetailList);
-        debtPosition.getPaymentDetail().setNoticeNumberTestJunit("012345678901234567890");
+        debtPosition.getPaymentDetail().setNoticeNumberManual("012345678901234567890");
         return debtPosition;
     }
 
@@ -437,7 +437,7 @@ class PaymentNoticeGenerationTest {
         singlePaymentDetailList.add(singlePaymentDetail);
 
         DebtPosition debtPosition = DebtPositionGeneration.generate(payer, paymentDetail, singlePaymentDetailList);
-        debtPosition.getPaymentDetail().setNoticeNumberTestJunit("012345678901234567890");
+        debtPosition.getPaymentDetail().setNoticeNumberManual("012345678901234567890");
         return debtPosition;
     }
 

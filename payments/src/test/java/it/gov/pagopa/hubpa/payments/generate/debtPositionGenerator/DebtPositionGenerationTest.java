@@ -97,7 +97,7 @@ class DebtPositionGenerationTest {
         List<DPSinglePaymentDetail> singlePaymentDetailList = new LinkedList<DPSinglePaymentDetail>();
         singlePaymentDetailList.add(singlePaymentDetail);
         DebtPosition debtPosition = DebtPositionGeneration.generate(payer, paymentDetail, singlePaymentDetailList);
-        debtPosition.getPaymentDetail().setNoticeNumberTestJunit("012345678901234567890");
+        debtPosition.getPaymentDetail().setNoticeNumberManual("012345678901234567890");
         assertThat(debtPosition).isNotNull();
         assertThat(debtPosition.getPaymentDetail().getNoticeNumber()).isNotNull();
     }
@@ -135,7 +135,7 @@ class DebtPositionGenerationTest {
         List<DPSinglePaymentDetail> singlePaymentDetailList = new LinkedList<DPSinglePaymentDetail>();
         singlePaymentDetailList.add(singlePaymentDetail);
         DebtPosition debtPosition = DebtPositionGeneration.generate(payer, paymentDetail, singlePaymentDetailList);
-        debtPosition.getPaymentDetail().setNoticeNumberTestJunit("012345678901234567890");
+        debtPosition.getPaymentDetail().setNoticeNumberManual("012345678901234567890");
         
         assertThat(debtPosition).isNotNull();
     }
