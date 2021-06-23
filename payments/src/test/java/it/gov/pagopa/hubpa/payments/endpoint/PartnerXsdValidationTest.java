@@ -21,7 +21,7 @@ import it.gov.pagopa.hubpa.payments.service.PaymentService;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ContextConfiguration(classes = { WebServicesConfiguration.class, PaymentsApplication.class })
-public class PartnerXsdValidationTest {
+class PartnerXsdValidationTest {
 
     @Autowired
     private WebTestClient webClient;

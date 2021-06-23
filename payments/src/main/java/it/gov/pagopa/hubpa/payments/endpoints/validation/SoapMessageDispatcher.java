@@ -30,7 +30,8 @@ public class SoapMessageDispatcher extends MessageDispatcherServlet {
     protected void doService(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
             throws Exception {
 
-        String fultCode = null, faultDescription = null;
+        String fultCode = null;
+        String faultDescription = null;
 
         try {
 
