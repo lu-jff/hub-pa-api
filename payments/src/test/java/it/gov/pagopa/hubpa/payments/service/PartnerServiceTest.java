@@ -26,7 +26,7 @@ class PartnerServiceTest {
 	private PartnerService partnerService;
 
 	@Test
-	void paVerifyPaymentNoticeTest() {
+	void paVerifyPaymentNoticeTest() throws Exception {
 
 		// Test preconditions
 		PaVerifyPaymentNoticeReq requestBody = PaVerifyPaymentNoticeReqMock.getMock();
