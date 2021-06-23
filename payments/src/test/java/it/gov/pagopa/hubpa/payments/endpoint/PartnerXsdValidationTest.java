@@ -2,6 +2,7 @@ package it.gov.pagopa.hubpa.payments.endpoint;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -59,4 +60,14 @@ class PartnerXsdValidationTest {
                 .expectBody(String.class).returnResult().getResponseBody().contains(PAA_SINTASSI_XSD);
     }
 
+    @Test
+    void shouldGenericErrorWithPaVerifyPaymentNoticeTest() throws Exception {
+
+        Mockito.when(partnerService.paVerifyPaymentNotice(Mockito.any())).thenThrow(Exception.class);
+
+        String request = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:paf=\"http://pagopa-api.pagopa.gov.it/pa/paForNode.xsd\"><soapenv:Header/><soapenv:Body><paf:paVerifyPaymentNoticeReq><idPA>77777777777</idPA><idBrokerPA>77777777777</idBrokerPA><idStation>77777777777</idStation><qrCode><fiscalCode>77777777777</fiscalCode><noticeNumber>311111111112222222</noticeNumber></qrCode></paf:paVerifyPaymentNoticeReq></soapenv:Body></soapenv:Envelope>";
+
+        this.webClient.post().uri("/partner").header("SOAPAction", "paVerifyPaymentNotice")
+                .contentType(MediaType.TEXT_XML).bodyValue(request).exchange().expectStatus().is5xxServerError();
+    }
 }

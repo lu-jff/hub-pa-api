@@ -33,7 +33,7 @@ public class PartnerEndpoint {
     @PayloadRoot(localPart = "paVerifyPaymentNoticeReq", namespace = "http://pagopa-api.pagopa.gov.it/partner")
     @ResponsePayload
     public JAXBElement<PaVerifyPaymentNoticeRes> paVerifyPaymentNotice(
-            @RequestPayload JAXBElement<PaVerifyPaymentNoticeReq> request) {
+            @RequestPayload JAXBElement<PaVerifyPaymentNoticeReq> request) throws Exception {
 
         log.info(" paVerifyPaymentNotice START ");
         return factory.createPaVerifyPaymentNoticeRes(partnerService.paVerifyPaymentNotice(request.getValue()));

@@ -43,7 +43,7 @@ class PartnerEndpointTest {
 	private ObjectFactory factoryUtil = new ObjectFactory();
 
 	@Test
-	void paVerifyPaymentNoticeTest() {
+	void paVerifyPaymentNoticeTest() throws Exception {
 
 		// Test preconditions
 		PaVerifyPaymentNoticeReq requestBody = PaVerifyPaymentNoticeReqMock.getMock();
