@@ -50,7 +50,7 @@ public class SoapMessageDispatcher extends MessageDispatcherServlet {
             httpServletResponse.setStatus(500);
         }
 
-        if (fultCode != null && faultDescription != null) {
+        if (fultCode != null) {
 
             CtResponse response = factory.createCtResponse();
             CtFaultBean faultBean = factory.createCtFaultBean();
