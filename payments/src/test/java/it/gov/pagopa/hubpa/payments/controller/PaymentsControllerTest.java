@@ -244,6 +244,14 @@ class PaymentsControllerTest {
 		assertThat(paymentsModel.getDebitors().get(0).getPaymentPosition().get(0).getPaymentOptions().get(0)
 				.getTransfers().get(1).getPostalAuthCode())
 						.isEqualTo(uploadCsvModelMock.getTributeService().getPostalAuthCodeSecondary());
+		assertThat(paymentsModel.getDebitors().get(0).getPaymentPosition().get(0).getPaymentOptions().get(0)
+				.getTransfers().get(0).getPostalIbanHolder())
+						.isEqualTo(uploadCsvModelMock.getTributeService().getPostalIbanHolderPrimary());
+
+		assertThat(paymentsModel.getDebitors().get(0).getPaymentPosition().get(0).getPaymentOptions().get(0)
+				.getTransfers().get(1).getPostalIbanHolder())
+						.isEqualTo(uploadCsvModelMock.getTributeService().getPostalIbanHolderSecondary());
+
 	}
 
 	@Test
