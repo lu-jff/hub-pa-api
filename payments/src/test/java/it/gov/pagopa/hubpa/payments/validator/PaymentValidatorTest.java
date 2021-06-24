@@ -53,7 +53,7 @@ class PaymentValidatorTest {
   }
 
   @Test
-  void isPaybleOKTest() {
+  void isPayableOKTest() {
 
     PaymentOptions option = DebitorMock.createPaymentOptionsMock4();
     PaymentPosition position = option.getPaymentPosition();
@@ -117,7 +117,7 @@ class PaymentValidatorTest {
   }
 
   @Test
-  void isPaybleNullPositionKOTest() {
+  void isPayableNullPositionKOTest() {
 
     PaymentOptions option = DebitorMock.createPaymentOptionsMock4();
     PaymentPosition position = null;
@@ -135,7 +135,7 @@ class PaymentValidatorTest {
   }
 
   @Test
-  void isPaybleNullPositionAndOptionKOTest() {
+  void isPayableNullPositionAndOptionKOTest() {
 
     PaymentOptions option = null;
     PaymentPosition position = null;
@@ -153,7 +153,7 @@ class PaymentValidatorTest {
   }
 
   @Test
-  void isPaybleAlreadyPaidOptionKOTest() {
+  void isPayableAlreadyPaidOptionKOTest() {
 
     PaymentOptions option = DebitorMock.createPaymentOptionsMock4();
     PaymentPosition position = option.getPaymentPosition();
@@ -172,7 +172,7 @@ class PaymentValidatorTest {
   }
 
   @Test
-  void isPaybleNotPublishedOptionKOTest() {
+  void isPayableNotPublishedOptionKOTest() {
 
     PaymentOptions option = DebitorMock.createPaymentOptionsMock4();
     PaymentPosition position = option.getPaymentPosition();
