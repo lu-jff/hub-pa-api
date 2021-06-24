@@ -16,8 +16,8 @@ public class SoapValidationException extends IllegalArgumentException {
 
     public SoapValidationException(PaaErrorEnum faultCode, String faultString, String description) {
         super(description);
-        this.faultCode = faultCode;
-        this.description = description;
-        this.faultString = faultString;
+        this.setFaultCode(faultCode);
+        this.setDescription(description);
+        this.setFaultString(faultString);
     }
 }

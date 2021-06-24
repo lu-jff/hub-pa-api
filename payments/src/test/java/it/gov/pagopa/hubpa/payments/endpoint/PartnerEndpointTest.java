@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import it.gov.pagopa.hubpa.payments.endpoints.PartnerEndpoint;
+import it.gov.pagopa.hubpa.payments.endpoints.validation.exceptions.SoapValidationException;
 import it.gov.pagopa.hubpa.payments.mock.PaGetPaymentReqMock;
 import it.gov.pagopa.hubpa.payments.mock.PaGetPaymentResMock;
 import it.gov.pagopa.hubpa.payments.mock.PaSendRTReqMock;
@@ -63,7 +64,7 @@ class PartnerEndpointTest {
   }
 
   @Test
-  void paGetPaymentTest() {
+  void paGetPaymentTest() throws SoapValidationException, DatatypeConfigurationException {
 
     // Test preconditions
     PaGetPaymentReq requestBody = PaGetPaymentReqMock.getMock();

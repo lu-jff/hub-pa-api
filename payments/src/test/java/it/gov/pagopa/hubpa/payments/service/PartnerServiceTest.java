@@ -4,12 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyString;
 
 import java.util.Optional;
 
 import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -232,17 +231,54 @@ class PartnerServiceTest {
   }
 
   @Test
-  void paGetPaymentTest() {
+  void paGetPaymentTest() throws SoapValidationException, DatatypeConfigurationException {
 
     // Test preconditions
     PaGetPaymentReq requestBody = PaGetPaymentReqMock.getMock();
+    PaymentOptions option = DebitorMock.createPaymentOptionsMock4();
+
+    when(factory.createPaGetPaymentRes()).thenReturn(factoryUtil.createPaGetPaymentRes());
+    when(factory.createCtPaymentPA()).thenReturn(factoryUtil.createCtPaymentPA());
+    when(factory.createCtSubject()).thenReturn(factoryUtil.createCtSubject());
+    when(factory.createCtEntityUniqueIdentifier()).thenReturn(factoryUtil.createCtEntityUniqueIdentifier());
+    when(factory.createCtTransferListPA()).thenReturn(factoryUtil.createCtTransferListPA());
+    when(factory.createCtTransferPA()).thenReturn(factoryUtil.createCtTransferPA());
+
+    when(paymentOptionRepository.findByNotificationCode(requestBody.getQrCode().getNoticeNumber()))
+        .thenReturn(Optional.of(option));
 
     // Test execution
     PaGetPaymentRes responseBody = partnerService.paGetPayment(requestBody);
 
     // Test postcondiction
-    assertThat(responseBody.getData().getCompanyName()).isEqualTo("company name");
-    assertThat(responseBody.getData().getCreditorReferenceId()).isEqualTo("id");
+    assertThat(responseBody.getData().getCompanyName()).isEqualTo(option.getPaymentPosition().getCompanyName());
+    assertThat(responseBody.getData().getCreditorReferenceId()).isEqualTo(option.getNotificationCode().substring(1));
+    assertThat(responseBody.getData().getDebtor().getFullName())
+        .isEqualTo(option.getPaymentPosition().getDebitor().getName());
+    assertThat(responseBody.getData().getDebtor().getCity())
+        .isEqualTo(option.getPaymentPosition().getDebitor().getArea());
+    assertThat(responseBody.getData().getDebtor().getCivicNumber())
+        .isEqualTo(option.getPaymentPosition().getDebitor().getNumber());
+    assertThat(responseBody.getData().getDebtor().getCountry())
+        .isEqualTo(option.getPaymentPosition().getDebitor().getCountry());
+    assertThat(responseBody.getData().getDebtor().getEMail())
+        .isEqualTo(option.getPaymentPosition().getDebitor().getEmail());
+    assertThat(responseBody.getData().getDebtor().getPostalCode())
+        .isEqualTo(option.getPaymentPosition().getDebitor().getCap());
+    assertThat(responseBody.getData().getDebtor().getStateProvinceRegion())
+        .isEqualTo(option.getPaymentPosition().getDebitor().getProvince());
+    assertThat(responseBody.getData().getDebtor().getStreetName())
+        .isEqualTo(option.getPaymentPosition().getDebitor().getAddress());
+    assertThat(responseBody.getData().getDebtor().getUniqueIdentifier().getEntityUniqueIdentifierValue())
+        .isEqualTo(option.getPaymentPosition().getDebitor().getFiscalCode());
+    assertThat(responseBody.getData().getDebtor().getUniqueIdentifier().getEntityUniqueIdentifierType().value())
+        .isEqualTo(option.getPaymentPosition().getDebitor().getType().equals(1) ? "F" : "G");
+    assertThat(responseBody.getData().getDescription()).isEqualTo(option.getPaymentPosition().getDescription());
+    assertThat(responseBody.getData().getDueDate())
+        .isEqualTo(DatatypeFactory.newInstance().newXMLGregorianCalendar(option.getDuoDate().toString()));
+    assertThat(responseBody.getData().getRetentionDate())
+        .isEqualTo(DatatypeFactory.newInstance().newXMLGregorianCalendar(option.getRetentionDate().toString()));
+    assertThat(responseBody.getData().getOfficeName()).isEqualTo(option.getPaymentPosition().getOfficeName());
   }
 
   @Test

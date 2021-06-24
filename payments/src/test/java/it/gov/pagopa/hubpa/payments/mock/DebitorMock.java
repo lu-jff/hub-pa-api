@@ -77,7 +77,7 @@ public class DebitorMock {
     mock.setTotalOptions(mock.getPaymentOptions().size());
     mock.setPaidOptions(0);
     mock.setReportedOptions(0);
-
+    mock.setDebitor(DebitorMock.getMock());
     return mock;
   }
 
@@ -91,9 +91,9 @@ public class DebitorMock {
     mock.setMetadata(null);
     mock.setNotificationCode("311111111112222222");
     mock.setPaymentDate(null);
-    mock.setRetentionDate(null);
+    mock.setRetentionDate(LocalDate.now(ZoneId.of("Europe/Paris")));
     mock.setStatus(PaymentOptionStatusEnum.NON_PAGATO.getStatus());
-
+    
     mock.addTransfers(createTransfersMock1a());
     mock.addTransfers(createTransfersMock1b());
     mock.setPaymentPosition(createPaymentPositionMock1()); // PUBBLICATO

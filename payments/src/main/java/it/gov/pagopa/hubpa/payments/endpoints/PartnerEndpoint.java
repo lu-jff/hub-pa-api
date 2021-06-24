@@ -45,7 +45,8 @@ public class PartnerEndpoint {
   @SoapAction("paGetPayment")
   @PayloadRoot(localPart = "paGetPaymentReq", namespace = "http://pagopa-api.pagopa.gov.it/partner")
   @ResponsePayload
-  public JAXBElement<PaGetPaymentRes> paGetPayment(@RequestPayload JAXBElement<PaGetPaymentReq> request) {
+  public JAXBElement<PaGetPaymentRes> paGetPayment(@RequestPayload JAXBElement<PaGetPaymentReq> request)
+      throws SoapValidationException, DatatypeConfigurationException {
 
     log.info(" paGetPayment START ");
     return factory.createPaGetPaymentRes(partnerService.paGetPayment(request.getValue()));
