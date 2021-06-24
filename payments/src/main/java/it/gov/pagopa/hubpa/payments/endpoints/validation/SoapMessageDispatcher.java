@@ -46,12 +46,13 @@ public class SoapMessageDispatcher extends MessageDispatcherServlet {
             faultString = e.getFaultString();
             description = e.getDescription();
             httpServletResponse.setStatus(200);
-        } catch (Exception e) {
+        }
 
-            log.error("Processing resulted in generic exception: " + e.getMessage());
+        if (httpServletResponse.getStatus() == 500) {
+
+            log.error("Processing resulted in generic error");
             fultCode = PaaErrorEnum.PAA_SEMANTICA.getValue();
             faultString = "Generic Error";
-            httpServletResponse.setStatus(500);
         }
 
         if (fultCode != null) {

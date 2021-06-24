@@ -53,10 +53,31 @@ class PaymentValidatorTest {
   }
 
   @Test
-  void isPayableOKTest() {
+  void isPayablePublishOKTest() {
 
     PaymentOptions option = DebitorMock.createPaymentOptionsMock4();
     PaymentPosition position = option.getPaymentPosition();
+
+    try {
+
+      paymentValidator.isPayable(position, option);
+
+    } catch (SoapValidationException e) {
+
+      assertFalse(true);
+
+    }
+    assertTrue(true);
+
+  }
+
+  @Test
+  void isPayablePartialOKTest() {
+
+    PaymentOptions option = DebitorMock.createPaymentOptionsMock4();
+    PaymentPosition position = option.getPaymentPosition();
+
+    position.setStatus(PaymentStatusEnum.PAGATO_PARZIALE.getStatus());
 
     try {
 

@@ -18,6 +18,7 @@ import it.gov.pagopa.hubpa.payments.PaymentsApplication;
 import it.gov.pagopa.hubpa.payments.config.WebServicesConfiguration;
 import it.gov.pagopa.hubpa.payments.controller.PaymentsController;
 import it.gov.pagopa.hubpa.payments.endpoints.validation.PaymentValidator;
+import it.gov.pagopa.hubpa.payments.endpoints.validation.exceptions.SoapValidationException;
 import it.gov.pagopa.hubpa.payments.repository.DebitorRepository;
 import it.gov.pagopa.hubpa.payments.repository.IncrementalIuvNumberRepository;
 import it.gov.pagopa.hubpa.payments.repository.PaymentPositionRepository;
@@ -37,7 +38,7 @@ class PartnerXsdValidationTest {
 
     @MockBean
     private PaymentService paymentService;
-    
+
     @MockBean
     private PaymentsController paymentsController;
 
@@ -54,13 +55,13 @@ class PartnerXsdValidationTest {
 
     @Test
     void shouldGetWsdlTest() throws Exception {
-	ReflectionTestUtils.setField(paymentsController, "entePath", "");
+        ReflectionTestUtils.setField(paymentsController, "entePath", "");
         this.webClient.get().uri("/partner/partner.wsdl").exchange().expectStatus().isOk();
     }
 
     @Test
     void shouldXsdValiationErrorWithPaVerifyPaymentNoticeTest() throws DatatypeConfigurationException {
-	ReflectionTestUtils.setField(paymentsController, "entePath", "");
+        ReflectionTestUtils.setField(paymentsController, "entePath", "");
         String invalidRequest = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:paf=\"http://pagopa-api.pagopa.gov.it/pa/paForNode.xsd\"><soapenv:Header/><soapenv:Body><paf:paVerifyPaymentNoticeReq><idPA>?</idPA><idBrokerPA>1</idBrokerPA><idStation>1</idStation><qrCode><fiscalCode>1</fiscalCode><noticeNumber>1</noticeNumber></qrCode></paf:paVerifyPaymentNoticeReq></soapenv:Body></soapenv:Envelope>";
 
         this.webClient.post().uri("/partner").header("SOAPAction", "paVerifyPaymentNotice")
@@ -73,6 +74,18 @@ class PartnerXsdValidationTest {
 
         Mockito.when(partnerService.paVerifyPaymentNotice(Mockito.any()))
                 .thenThrow(DatatypeConfigurationException.class);
+
+        String request = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:paf=\"http://pagopa-api.pagopa.gov.it/pa/paForNode.xsd\"><soapenv:Header/><soapenv:Body><paf:paVerifyPaymentNoticeReq><idPA>77777777777</idPA><idBrokerPA>77777777777</idBrokerPA><idStation>77777777777</idStation><qrCode><fiscalCode>77777777777</fiscalCode><noticeNumber>311111111112222222</noticeNumber></qrCode></paf:paVerifyPaymentNoticeReq></soapenv:Body></soapenv:Envelope>";
+
+        this.webClient.post().uri("/partner").header("SOAPAction", "paVerifyPaymentNotice")
+                .contentType(MediaType.TEXT_XML).bodyValue(request).exchange().expectStatus().is5xxServerError();
+    }
+
+    @Test
+    void shouldGenericErrorExceptionWithPaVerifyPaymentNoticeTest()
+            throws SoapValidationException, DatatypeConfigurationException {
+
+        Mockito.when(partnerService.paVerifyPaymentNotice(Mockito.any())).thenThrow(RuntimeException.class);
 
         String request = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:paf=\"http://pagopa-api.pagopa.gov.it/pa/paForNode.xsd\"><soapenv:Header/><soapenv:Body><paf:paVerifyPaymentNoticeReq><idPA>77777777777</idPA><idBrokerPA>77777777777</idBrokerPA><idStation>77777777777</idStation><qrCode><fiscalCode>77777777777</fiscalCode><noticeNumber>311111111112222222</noticeNumber></qrCode></paf:paVerifyPaymentNoticeReq></soapenv:Body></soapenv:Envelope>";
 

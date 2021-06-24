@@ -39,3 +39,5 @@ build/
 **/.env
 
 metals.*
+
+**/src/test/resources/*.pdf
