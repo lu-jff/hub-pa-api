@@ -43,17 +43,16 @@ public class PaymentValidator {
         }
     }
 
-    public void isPayable(Optional<PaymentPosition> maybePosition, Optional<PaymentOptions> maybeOption) {
+    public void isPayable(PaymentPosition position, PaymentOptions option) {
 
-        if ((!maybeOption.isPresent() || !maybePosition.isPresent())
-                || (!maybePosition.get().getStatus().equals(PaymentStatusEnum.PUBBLICATO.getStatus())
-                        && (!maybePosition.get().getStatus().equals(PaymentStatusEnum.PAGATO_PARZIALE.getStatus())))) {
+        if ((option == null || position == null)
+                || (!position.getStatus().equals(PaymentStatusEnum.PUBBLICATO.getStatus())
+                        && (!position.getStatus().equals(PaymentStatusEnum.PAGATO_PARZIALE.getStatus())))) {
             throw new SoapValidationException(PaaErrorEnum.PAA_PAGAMENTO_SCONOSCIUTO, "pagamento sconosciuto",
                     "L'id del pagamento ricevuto non esiste");
         }
 
-        if (!maybeOption.isPresent()
-                || !maybeOption.get().getStatus().equals(PaymentOptionStatusEnum.NON_PAGATO.getStatus())) {
+        if (option == null || !option.getStatus().equals(PaymentOptionStatusEnum.NON_PAGATO.getStatus())) {
             throw new SoapValidationException(PaaErrorEnum.PAA_PAGAMENTO_DUPLICATO, "pagamento duplicato",
                     "L'id del pagamento ricevuto  e' duplicato");
         }

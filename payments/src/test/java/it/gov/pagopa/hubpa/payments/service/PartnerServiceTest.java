@@ -107,7 +107,7 @@ class PartnerServiceTest {
     doNothing().when(paymentValidator).isAuthorize(Mockito.any(), Mockito.any(), Mockito.any());
 
     doThrow(new SoapValidationException(PaaErrorEnum.PAA_PAGAMENTO_SCONOSCIUTO, faultString, description))
-        .when(paymentValidator).isPayable(Optional.of(option.getPaymentPosition()), Optional.of(option));
+        .when(paymentValidator).isPayable(option.getPaymentPosition(), option);
 
     // Test execution
     try {
@@ -137,7 +137,7 @@ class PartnerServiceTest {
     doNothing().when(paymentValidator).isAuthorize(Mockito.any(), Mockito.any(), Mockito.any());
 
     doThrow(new SoapValidationException(PaaErrorEnum.PAA_PAGAMENTO_DUPLICATO, faultString, description))
-        .when(paymentValidator).isPayable(Optional.of(option.getPaymentPosition()), Optional.of(option));
+        .when(paymentValidator).isPayable(option.getPaymentPosition(), option);
 
     // Test execution
     try {
