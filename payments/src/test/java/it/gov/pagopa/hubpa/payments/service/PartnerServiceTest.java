@@ -82,7 +82,7 @@ class PartnerServiceTest {
 
     // Test postcondiction
     assertThat(responseBody.getOutcome()).isEqualTo(StOutcome.OK);
-    assertThat(responseBody.getPaymentList().getPaymentOptionDescription().get(0).isAllCCP()).isEqualTo(true);
+    assertThat(responseBody.getPaymentList().getPaymentOptionDescription().get(0).isAllCCP()).isTrue();
     assertThat(responseBody.getPaymentList().getPaymentOptionDescription().get(0).getAmount())
         .isEqualTo(DebitorMock.createPaymentOptionsMock4().getAmount());
     assertThat(responseBody.getPaymentList().getPaymentOptionDescription().get(0).getOptions())

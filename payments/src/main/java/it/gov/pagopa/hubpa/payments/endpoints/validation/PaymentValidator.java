@@ -50,7 +50,7 @@ public class PaymentValidator {
                     "L'id del pagamento ricevuto non esiste");
         }
 
-        if (option == null || !option.getStatus().equals(PaymentOptionStatusEnum.NON_PAGATO.getStatus())) {
+        if (!option.getStatus().equals(PaymentOptionStatusEnum.NON_PAGATO.getStatus())) {
             throw new SoapValidationException(PaaErrorEnum.PAA_PAGAMENTO_DUPLICATO, "pagamento duplicato",
                     "L'id del pagamento ricevuto  e' duplicato");
         }
