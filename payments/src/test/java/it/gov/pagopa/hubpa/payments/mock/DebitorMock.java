@@ -141,62 +141,6 @@ public class DebitorMock {
     return mock;
   }
 
-  public static PaymentOptions createPaymentOptionsMock1() {
-
-    PaymentOptions mock = new PaymentOptions();
-    mock.setAmount(new BigDecimal(200));
-    mock.setDuoDate(LocalDate.now(ZoneId.of("Europe/Paris")));
-    mock.setFiscalCode("12345678901");
-    mock.setIsConclusive(Boolean.TRUE);
-    mock.setMetadata(null);
-    mock.setNotificationCode("02252556125612");
-    mock.setPaymentDate(null);
-    mock.setRetentionDate(null);
-    mock.setStatus(1);
-
-    mock.addTransfers(createTransfersMock1a());
-    mock.addTransfers(createTransfersMock1b());
-
-    return mock;
-  }
-
-  private static PaymentOptions createPaymentOptionsMock2() {
-
-    PaymentOptions mock = new PaymentOptions();
-    mock.setAmount(new BigDecimal(120));
-    mock.setDuoDate(LocalDate.now(ZoneId.of("Europe/Paris")));
-    mock.setFiscalCode("12345678901");
-    mock.setIsConclusive(Boolean.FALSE);
-    mock.setMetadata(null);
-    mock.setNotificationCode("02252556125612");
-    mock.setPaymentDate(null);
-    mock.setRetentionDate(null);
-    mock.setStatus(1);
-
-    mock.addTransfers(createTransfersMock2a());
-
-    return mock;
-  }
-
-  private static PaymentOptions createPaymentOptionsMock3() {
-
-    PaymentOptions mock = new PaymentOptions();
-    mock.setAmount(new BigDecimal(80));
-    mock.setDuoDate(LocalDate.now(ZoneId.of("Europe/Paris")));
-    mock.setFiscalCode("12345678901");
-    mock.setIsConclusive(Boolean.FALSE);
-    mock.setMetadata(null);
-    mock.setNotificationCode("02252556125612");
-    mock.setPaymentDate(null);
-    mock.setRetentionDate(null);
-    mock.setStatus(1);
-
-    mock.addTransfers(createTransfersMock3a());
-    mock.addTransfers(createTransfersMock3b());
-
-    return mock;
-  }
-
   public static Transfers createTransfersMock1a() {
     Transfers mock = new Transfers();
     mock.setIban("IT12345677889");
@@ -249,6 +193,62 @@ public class DebitorMock {
     mock.setPartialAmount(new BigDecimal(50));
     mock.setReason("causale tari tefa");
     mock.setTaxonomy("20/22252/20");
+
+    return mock;
+  }
+
+  private static PaymentOptions createPaymentOptionsMock1() {
+
+    PaymentOptions mock = new PaymentOptions();
+    mock.setAmount(new BigDecimal(200));
+    mock.setDuoDate(LocalDate.now(ZoneId.of("Europe/Paris")).plusDays(2));
+    mock.setFiscalCode("12345678901");
+    mock.setIsConclusive(Boolean.TRUE);
+    mock.setMetadata(null);
+    mock.setNotificationCode("022525561256120256");
+    mock.setPaymentDate(null);
+    mock.setRetentionDate(null);
+    mock.setStatus(1);
+
+    mock.addTransfers(createTransfersMock1a());
+    mock.addTransfers(createTransfersMock1b());
+
+    return mock;
+  }
+
+  private static PaymentOptions createPaymentOptionsMock2() {
+
+    PaymentOptions mock = new PaymentOptions();
+    mock.setAmount(new BigDecimal(120));
+    mock.setDuoDate(LocalDate.now(ZoneId.of("Europe/Paris")).plusDays(32));
+    mock.setFiscalCode("12345678901");
+    mock.setIsConclusive(Boolean.FALSE);
+    mock.setMetadata(null);
+    mock.setNotificationCode("022525561256129875");
+    mock.setPaymentDate(null);
+    mock.setRetentionDate(null);
+    mock.setStatus(1);
+
+    mock.addTransfers(createTransfersMock2a());
+
+    return mock;
+  }
+
+  private static PaymentOptions createPaymentOptionsMock3() {
+
+    PaymentOptions mock = new PaymentOptions();
+    mock.setAmount(new BigDecimal(80));
+    mock.setDuoDate(LocalDate.now(ZoneId.of("Europe/Paris")).plusDays(62));
+    mock.setFiscalCode("12345678901");
+    mock.setIsConclusive(Boolean.FALSE);
+    mock.setMetadata(null);
+    mock.setNotificationCode("022525561256123642");
+    mock.setPaymentDate(null);
+    mock.setRetentionDate(null);
+    mock.setStatus(1);
+
+    mock.addTransfers(createTransfersMock3a());
+    mock.addTransfers(createTransfersMock3b());
 
     return mock;
   }
