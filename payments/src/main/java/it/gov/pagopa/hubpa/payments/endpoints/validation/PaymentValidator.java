@@ -1,7 +1,5 @@
 package it.gov.pagopa.hubpa.payments.endpoints.validation;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
